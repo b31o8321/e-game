@@ -1,0 +1,19 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; but you can do it manually too.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="知识神塔"
+config/features=PackedStringArray("4.3", "Forward Plus")
+run/main_scene="res://src/ui/main_menu.tscn"
+
+[autoload]
+
+GameState="*res://src/core/autoloads/game_state.gd"
