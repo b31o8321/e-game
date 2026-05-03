@@ -43,7 +43,28 @@ func on_question_answered(question_id: String, correct: bool) -> void:
 	pass
 
 func get_buildings() -> Array[Dictionary]:
-	return []
+	return [
+		{
+			"id": "vocabulary_library",
+			"name": "词汇图书馆",
+			"max_level": 3,
+			"upgrade_costs": {
+				1: { "vocabulary_crystal": 3 },
+				2: { "vocabulary_crystal": 8 },
+				3: { "vocabulary_crystal": 15 },
+			}
+		},
+		{
+			"id": "grammar_academy",
+			"name": "语法学院",
+			"max_level": 3,
+			"upgrade_costs": {
+				1: { "grammar_ore": 3 },
+				2: { "grammar_ore": 8 },
+				3: { "grammar_ore": 15 },
+			}
+		}
+	]
 
 func get_skills(bd_path: String) -> Array[Dictionary]:
 	return []

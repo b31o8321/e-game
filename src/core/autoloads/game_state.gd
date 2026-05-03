@@ -26,6 +26,10 @@ var city_building_levels: Dictionary = {}  # building_id -> level
 # 当前远征状态
 var expedition_active: bool = false
 var expedition_loot: Dictionary = {}
+## 待进入战斗的敌人，ExplorationController 写入，BattleController 读取后置 null
+var pending_enemy: EnemyData = null
+## 战斗结束后返回的场景路径；空字符串 = 不跳转（单元测试场景）
+var expedition_return_scene: String = ""
 
 # 信号
 signal hp_changed(new_hp: int, max_hp: int)
