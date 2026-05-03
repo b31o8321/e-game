@@ -52,22 +52,20 @@ func _setup_question_ui() -> void:
 	_question_controller.answered.connect(_on_question_answered)
 
 func _show_next_question() -> void:
-	if _current_index >= _question_ids.size():
-		_show_results()
-		return
 	if _pack == null:
 		_show_no_data()
 		return
-	var qid: String = _question_ids[_current_index]
-	var q: Dictionary = _pack.get_question_by_id(qid)
-	if q.is_empty():
+	while _current_index < _question_ids.size():
+		var qid: String = _question_ids[_current_index]
+		var q: Dictionary = _pack.get_question_by_id(qid)
+		if not q.is_empty():
+			_progress_label.text = "第 %d / %d 题" % [_current_index + 1, _question_ids.size()]
+			_question_controller.load_question(q)
+			_question_ui.visible = true
+			_next_button.visible = false
+			return
 		_current_index += 1
-		_show_next_question()
-		return
-	_progress_label.text = "第 %d / %d 题" % [_current_index + 1, _question_ids.size()]
-	_question_controller.load_question(q)
-	_question_ui.visible = true
-	_next_button.visible = false
+	_show_results()
 
 func _on_question_answered(correct: bool, question_id: String) -> void:
 	GameState.srs_system.record_answer(question_id, correct)

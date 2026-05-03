@@ -90,7 +90,7 @@ func start_expedition() -> void:
 func end_expedition(victory: bool) -> void:
 	if not expedition_active:
 		return
-	var tracker_report: Dictionary = expedition_tracker.build_report()
+	var tracker_report: Dictionary = expedition_tracker.build_report() if expedition_tracker else {}
 	last_expedition_report = {
 		"victory": victory,
 		"loot": expedition_loot.duplicate(),

@@ -27,7 +27,7 @@ func _build_ui() -> void:
 
 func _on_skill_selected(skill_id: String) -> void:
 	selected_skill_id = skill_id
-	GameState.active_bd_skills = [skill_id]
 	GameState.start_expedition()
+	GameState.active_bd_skills = [skill_id]
 	skill_chosen.emit(skill_id)
 	get_tree().change_scene_to_file("res://src/exploration/exploration_scene.tscn")

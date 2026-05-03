@@ -20,7 +20,7 @@ func _ready() -> void:
 	practice_btn.text = "训练道场"
 	practice_btn.pressed.connect(func():
 		get_tree().change_scene_to_file("res://src/city/practice_arena_scene.tscn"))
-	add_child(practice_btn)
+	_building_container.add_child(practice_btn)
 	_update_resource_bar()
 
 func _build_building_slots() -> void:
