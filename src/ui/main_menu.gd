@@ -11,8 +11,7 @@ func _ready() -> void:
 	gate_button.disabled = GameState.content_loader.get_active_pack() == null
 
 func _on_start_pressed() -> void:
-	# Phase 3: switch to exploration scene
-	pass
+	get_tree().change_scene_to_file("res://src/battle/expedition_setup.tscn")
 
 func _on_city_pressed() -> void:
 	# Phase 3: switch to city scene
