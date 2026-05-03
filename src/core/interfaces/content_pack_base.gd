@@ -1,4 +1,4 @@
-class_name ContentPackBase extends Resource
+class_name ContentPackBase extends Node
 
 ## 学科包唯一标识，如 "english_grade4_6"
 @export var pack_id: String = ""
