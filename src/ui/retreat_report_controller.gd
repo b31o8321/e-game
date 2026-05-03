@@ -51,7 +51,9 @@ func _display_report(report: Dictionary) -> void:
 
 func _on_practice_pressed() -> void:
 	var wrong_ids: Dictionary = GameState.last_expedition_report.get("most_wrong_ids", {})
-	GameState.practice_target_ids = wrong_ids.keys()
+	var ids: Array[String] = []
+	ids.assign(wrong_ids.keys())
+	GameState.practice_target_ids = ids
 	get_tree().change_scene_to_file("res://src/city/practice_arena_scene.tscn")
 
 func _on_return_pressed() -> void:
