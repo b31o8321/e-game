@@ -42,6 +42,11 @@ func get_gate_questions(gate_id: String, count: int) -> Array[Dictionary]:
 func on_question_answered(question_id: String, correct: bool) -> void:
 	pass
 
+func get_question_by_id(question_id: String) -> Dictionary:
+	if question_id.begins_with("q_mock") or question_id.begins_with("q_gate"):
+		return get_question("vocabulary", 1, [])
+	return {}
+
 func get_buildings() -> Array[Dictionary]:
 	return [
 		{

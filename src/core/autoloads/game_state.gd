@@ -30,6 +30,11 @@ var expedition_loot: Dictionary = {}
 var pending_enemy: EnemyData = null
 ## 战斗结束后返回的场景路径；空字符串 = 不跳转（单元测试场景）
 var expedition_return_scene: String = ""
+var expedition_tracker: ExpeditionTracker
+## 上次远征完整统计报告，供 RetreatReportController 读取
+var last_expedition_report: Dictionary = {}
+## 专项练习指定题目 ID 列表；空 = 自动从 SRS 选取
+var practice_target_ids: Array[String] = []
 
 # 信号
 signal hp_changed(new_hp: int, max_hp: int)
@@ -43,6 +48,8 @@ func _ready() -> void:
 	add_child(content_loader)
 	srs_system = SRSSystem.new()
 	add_child(srs_system)
+	expedition_tracker = ExpeditionTracker.new()
+	add_child(expedition_tracker)
 	save_system = SaveSystem.new()
 	add_child(save_system)
 	save_system.load_game_state()
@@ -67,15 +74,32 @@ func take_damage(amount: int) -> void:
 func increment_combo() -> void:
 	combo_count += 1
 	combo_changed.emit(combo_count)
+	if expedition_tracker:
+		expedition_tracker.update_peak_combo(combo_count)
+
+## 开始新远征：重置状态并启动追踪器
+func start_expedition() -> void:
+	expedition_loot = {}
+	combo_count = 0
+	player_hp = player_max_hp
+	active_bd_skills.clear()
+	expedition_tracker.reset()
+	expedition_active = true
 
 func end_expedition(victory: bool) -> void:
 	if not expedition_active:
 		return
-	var report: Dictionary = {
+	var tracker_report: Dictionary = expedition_tracker.build_report()
+	last_expedition_report = {
 		"victory": victory,
 		"loot": expedition_loot.duplicate(),
-		"peak_combo": combo_count
+		"peak_combo": tracker_report.get("peak_combo", 0),
+		"total_questions": tracker_report.get("total_questions", 0),
+		"correct_count": tracker_report.get("correct_count", 0),
+		"accuracy": tracker_report.get("accuracy", 0.0),
+		"by_attack_type": tracker_report.get("by_attack_type", {}),
+		"most_wrong_ids": tracker_report.get("most_wrong_ids", {}),
 	}
 	reset_expedition()
-	expedition_ended.emit(report)
+	expedition_ended.emit(last_expedition_report)
 	save_system.save_game_state()

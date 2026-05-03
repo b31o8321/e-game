@@ -48,6 +48,8 @@ func on_question_answered(correct: bool, question_id: String) -> void:
 		return
 	state = State.RESOLVING
 	GameState.srs_system.record_answer(question_id, correct)
+	if GameState.expedition_active:
+		GameState.expedition_tracker.record_answer(question_id, current_attack_type, correct)
 	if correct:
 		_apply_player_attack()
 	else:
@@ -205,5 +207,11 @@ func _on_battle_ended(victory: bool) -> void:
 	var return_scene: String = GameState.expedition_return_scene
 	GameState.expedition_return_scene = ""
 	if return_scene.is_empty():
-		return  # 单元测试场景：不跳转
-	get_tree().change_scene_to_file(return_scene)
+		return  # 单元测试：不跳转
+	if victory:
+		get_tree().change_scene_to_file(return_scene)  # 胜利 → 继续探索
+	else:
+		# 失败：end_expedition 可能已经通过 take_damage→player_hp==0 触发
+		if GameState.expedition_active:
+			GameState.end_expedition(false)
+		get_tree().change_scene_to_file("res://src/ui/retreat_report_scene.tscn")

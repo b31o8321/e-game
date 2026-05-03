@@ -73,6 +73,8 @@ func _on_node_question_requested(node: ResourceNode, question: Dictionary) -> vo
 func _on_question_answered(correct: bool, question_id: String) -> void:
 	_question_ui.visible = false
 	GameState.srs_system.record_answer(question_id, correct)
+	if _pending_node and GameState.expedition_active:
+		GameState.expedition_tracker.record_answer(question_id, _pending_node.attack_type_id, correct)
 	if _pending_node:
 		_pending_node.on_question_answered(correct)
 		_pending_node = null
@@ -90,7 +92,11 @@ func _update_resource_bar() -> void:
 	_resource_bar.text = "背包: " + (", ".join(parts) if not parts.is_empty() else "空")
 
 func _on_return_pressed() -> void:
-	get_tree().change_scene_to_file("res://src/city/city_scene.tscn")
+	if GameState.expedition_active:
+		GameState.end_expedition(false)
+		get_tree().change_scene_to_file("res://src/ui/retreat_report_scene.tscn")
+	else:
+		get_tree().change_scene_to_file("res://src/city/city_scene.tscn")
 
 func _spawn_enemy_nodes() -> void:
 	var scene: PackedScene = load("res://src/exploration/enemy_encounter_node.tscn")

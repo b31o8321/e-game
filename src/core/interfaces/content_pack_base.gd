@@ -32,6 +32,11 @@ func get_gate_questions(gate_id: String, count: int) -> Array[Dictionary]:
 func on_question_answered(question_id: String, correct: bool) -> void:
 	pass
 
+## 根据题目 ID 直接获取题目；若不存在返回空 Dictionary
+## 调用方须检查返回值 is_empty() 后再使用
+func get_question_by_id(question_id: String) -> Dictionary:
+	return {}
+
 # ── 建筑 ─────────────────────────────────────────────────────────
 ## 返回城市建筑定义列表
 ## 每项格式: { id, name, max_level, upgrades: [{level, cost, effects}] }
