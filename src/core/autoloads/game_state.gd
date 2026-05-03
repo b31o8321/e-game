@@ -1,5 +1,9 @@
 extends Node
 
+var content_loader: ContentLoader
+var srs_system: SRSSystem
+var save_system: SaveSystem
+
 # 玩家核心状态
 var player_hp: int = 100
 var player_max_hp: int = 100
@@ -29,6 +33,15 @@ signal combo_changed(count: int)
 signal knowledge_unlocked(knowledge_id: String)
 signal gate_completed(gate_id: String)
 signal expedition_ended(report: Dictionary)
+
+func _ready() -> void:
+	content_loader = ContentLoader.new()
+	add_child(content_loader)
+	srs_system = SRSSystem.new()
+	add_child(srs_system)
+	save_system = SaveSystem.new()
+	add_child(save_system)
+	save_system.load_game_state()
 
 func reset_expedition() -> void:
 	expedition_active = false
@@ -61,3 +74,4 @@ func end_expedition(victory: bool) -> void:
 	}
 	reset_expedition()
 	expedition_ended.emit(report)
+	save_system.save_game_state()
