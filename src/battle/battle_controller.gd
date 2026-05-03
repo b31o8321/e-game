@@ -179,3 +179,31 @@ func _on_player_hp_changed(new_hp: int, max_hp: int) -> void:
 func _on_combo_changed(count: int) -> void:
 	if combo_label:
 		combo_label.text = "连击: " + str(count)
+
+func _ready() -> void:
+	# 连接节点引用（单元测试中无子节点，get_node_or_null 返回 null 则跳过）
+	var enemy_name_lbl := get_node_or_null("EnemyArea/EnemyNameLabel") as Label
+	var enemy_hp_bar_node := get_node_or_null("EnemyArea/EnemyHpBar") as ProgressBar
+	var weakness_lbl := get_node_or_null("EnemyArea/WeaknessLabel") as Label
+	var player_hp_bar_node := get_node_or_null("PlayerArea/PlayerHpBar") as ProgressBar
+	var combo_lbl := get_node_or_null("PlayerArea/ComboLabel") as Label
+	var attack_btns := get_node_or_null("AttackButtons") as HBoxContainer
+	var question_ui := get_node_or_null("QuestionUIInstance") as Control
+	if enemy_name_lbl:
+		setup_scene_nodes(enemy_name_lbl, enemy_hp_bar_node, weakness_lbl,
+			player_hp_bar_node, combo_lbl, attack_btns, question_ui)
+	# 从 GameState 自动拾取待战敌人
+	if GameState.pending_enemy != null:
+		setup(GameState.pending_enemy, GameState.content_loader.get_active_pack())
+		refresh_enemy_ui()
+		build_attack_buttons()
+		start_player_turn()
+	battle_ended.connect(_on_battle_ended)
+
+func _on_battle_ended(victory: bool) -> void:
+	GameState.pending_enemy = null
+	var return_scene: String = GameState.expedition_return_scene
+	GameState.expedition_return_scene = ""
+	if return_scene.is_empty():
+		return  # 单元测试场景：不跳转
+	get_tree().change_scene_to_file(return_scene)

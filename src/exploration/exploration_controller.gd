@@ -8,6 +8,28 @@ const RESOURCE_NODE_CONFIGS: Array[Dictionary] = [
 	{ "resource_type": "grammar_ore",        "attack_type": "grammar",    "amount": 1, "label": "📝 语法矿石 ×1" },
 ]
 
+## 敌人节点配置
+const ENEMY_CONFIGS: Array[Dictionary] = [
+	{
+		"enemy_id": "forest_goblin",
+		"enemy_name": "森林哥布林",
+		"max_hp": 40,
+		"base_attack": 6,
+		"weaknesses": ["vocabulary"],
+		"multipliers": { "vocabulary": 1.5 },
+		"label": "⚔️ 森林哥布林 (弱点: 词汇)",
+	},
+	{
+		"enemy_id": "stone_golem",
+		"enemy_name": "石头傀儡",
+		"max_hp": 60,
+		"base_attack": 8,
+		"weaknesses": ["grammar"],
+		"multipliers": { "grammar": 2.0 },
+		"label": "⚔️ 石头傀儡 (弱点: 语法)",
+	},
+]
+
 var _pending_node: ResourceNode = null
 var _question_controller: QuestionController = null
 var _question_ui: Control = null
@@ -20,6 +42,7 @@ func _ready() -> void:
 	_spawn_resource_nodes()
 	_setup_question_ui()
 	_return_button.pressed.connect(_on_return_pressed)
+	_spawn_enemy_nodes()
 	_update_resource_bar()
 
 func _spawn_resource_nodes() -> void:
@@ -68,3 +91,19 @@ func _update_resource_bar() -> void:
 
 func _on_return_pressed() -> void:
 	get_tree().change_scene_to_file("res://src/city/city_scene.tscn")
+
+func _spawn_enemy_nodes() -> void:
+	var scene: PackedScene = load("res://src/exploration/enemy_encounter_node.tscn")
+	var area: VBoxContainer = $EnemyArea
+	for cfg in ENEMY_CONFIGS:
+		var een: EnemyEncounterNode = scene.instantiate() as EnemyEncounterNode
+		var ed: EnemyData = EnemyData.new()
+		ed.enemy_id = cfg["enemy_id"]
+		ed.enemy_name = cfg["enemy_name"]
+		ed.max_hp = cfg["max_hp"]
+		ed.base_attack = cfg["base_attack"]
+		ed.weaknesses = cfg["weaknesses"]
+		ed.weakness_multipliers = cfg["multipliers"]
+		een.enemy_data = ed
+		een.text = cfg["label"]
+		area.add_child(een)
