@@ -38,22 +38,26 @@ func reset_expedition() -> void:
     active_bd_skills.clear()
 
 func take_damage(amount: int) -> void:
+    if amount <= 0:
+        return
     player_hp = max(0, player_hp - amount)
     combo_count = 0
-    emit_signal("combo_changed", combo_count)
-    emit_signal("hp_changed", player_hp, player_max_hp)
+    combo_changed.emit(combo_count)
+    hp_changed.emit(player_hp, player_max_hp)
     if player_hp == 0:
         end_expedition(false)
 
 func increment_combo() -> void:
     combo_count += 1
-    emit_signal("combo_changed", combo_count)
+    combo_changed.emit(combo_count)
 
 func end_expedition(victory: bool) -> void:
-    var report = {
+    if not expedition_active:
+        return
+    var report: Dictionary = {
         "victory": victory,
         "loot": expedition_loot.duplicate(),
         "peak_combo": combo_count
     }
     reset_expedition()
-    emit_signal("expedition_ended", report)
+    expedition_ended.emit(report)
