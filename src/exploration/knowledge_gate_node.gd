@@ -26,11 +26,16 @@ func _on_pressed() -> void:
 	if gate_config.is_empty():
 		return
 	var pack: ContentPackBase = GameState.content_loader.get_active_pack()
+	if not pack:
+		return
 	var cfg: Dictionary = gate_config
+	var gate_id: String = cfg.get("gate_id", "")
+	if gate_id.is_empty():
+		return
 	var questions_per_wave: int = cfg.get("questions_per_wave", 3)
 	var wave_count: int = cfg.get("wave_count", 0)
 	var total: int = questions_per_wave * (wave_count + 1)
 	var questions: Array[Dictionary] = []
-	questions.assign(pack.get_gate_questions(cfg["gate_id"], total))
+	questions.assign(pack.get_gate_questions(gate_id, total))
 	GameState.start_gate(cfg, questions)
 	get_tree().change_scene_to_file("res://src/gate/gate_intro_scene.tscn")
