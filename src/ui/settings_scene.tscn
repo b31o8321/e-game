@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://settings_scene"]
+
+[ext_resource type="Script" path="res://src/ui/settings_scene.gd" id="1_settings"]
+
+[node name="SettingsScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_settings")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -100.0
+offset_right = 100.0
+offset_bottom = 100.0
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+text = "游戏设置"
+
+[node name="GradeLabel" type="Label" parent="VBoxContainer"]
+text = "年级选择"
+
+[node name="Grade4Button" type="Button" parent="VBoxContainer"]
+text = "4年级"
+toggle_mode = true
+
+[node name="Grade5Button" type="Button" parent="VBoxContainer"]
+text = "5年级"
+toggle_mode = true
+
+[node name="Grade6Button" type="Button" parent="VBoxContainer"]
+text = "6年级"
+toggle_mode = true
+
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+text = "返回"
