@@ -1,0 +1,82 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/retreat_report_controller.gd" id="1_rrc"]
+
+[node name="RetreatReportScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_rrc")
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 600.0
+offset_bottom = 50.0
+text = "📋 撤退报告"
+
+[node name="StatsLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 60.0
+offset_right = 600.0
+offset_bottom = 90.0
+text = ""
+
+[node name="TypeStatsLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 100.0
+offset_right = 600.0
+offset_bottom = 180.0
+text = ""
+
+[node name="ComboLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 190.0
+offset_right = 400.0
+offset_bottom = 220.0
+text = "最高连击: 0"
+
+[node name="LootLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 230.0
+offset_right = 600.0
+offset_bottom = 260.0
+text = "获得: 无"
+
+[node name="WrongLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 270.0
+offset_right = 500.0
+offset_bottom = 300.0
+text = ""
+
+[node name="PracticeButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 310.0
+offset_right = 200.0
+offset_bottom = 350.0
+text = "一键专项练习"
+
+[node name="ReturnButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 370.0
+offset_right = 180.0
+offset_bottom = 410.0
+text = "返回城市"
+
+[node name="RetryButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 200.0
+offset_top = 370.0
+offset_right = 380.0
+offset_bottom = 410.0
+text = "再次远征"
