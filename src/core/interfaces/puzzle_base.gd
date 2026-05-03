@@ -14,6 +14,6 @@ signal puzzle_exited()
 func setup(pack: ContentPackBase) -> void:
 	pass
 
-## 检查通关条件（子类实现具体逻辑）
-func _check_completion() -> void:
+## 检查通关条件（子类实现具体逻辑，通关时调用 puzzle_completed.emit()）
+func check_completion() -> void:
 	pass

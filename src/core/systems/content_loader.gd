@@ -10,7 +10,9 @@ func get_pack(pack_id: String) -> ContentPackBase:
 	return _packs.get(pack_id, null)
 
 func set_active_pack(pack_id: String) -> void:
-	assert(_packs.has(pack_id), "Pack not registered: " + pack_id)
+	if not _packs.has(pack_id):
+		push_error("ContentLoader: Pack not registered: " + pack_id)
+		return
 	_active_pack_id = pack_id
 
 func get_active_pack() -> ContentPackBase:

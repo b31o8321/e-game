@@ -8,10 +8,10 @@ var knowledge_level: int = 1        # 当前知识层级，决定怪物难度
 var active_bd_skills: Array[String] = []
 var inventory_resources: Dictionary = {}  # resource_id -> count
 var equipment_slots: Dictionary = {
-    "weapon": "",
-    "armor": "",
-    "accessory": "",
-    "mount": ""
+	"weapon": "",
+	"armor": "",
+	"accessory": "",
+	"mount": ""
 }
 
 # 进度状态
@@ -31,33 +31,33 @@ signal gate_completed(gate_id: String)
 signal expedition_ended(report: Dictionary)
 
 func reset_expedition() -> void:
-    expedition_active = false
-    expedition_loot = {}
-    combo_count = 0
-    player_hp = player_max_hp
-    active_bd_skills.clear()
+	expedition_active = false
+	expedition_loot = {}
+	combo_count = 0
+	player_hp = player_max_hp
+	active_bd_skills.clear()
 
 func take_damage(amount: int) -> void:
-    if amount <= 0:
-        return
-    player_hp = max(0, player_hp - amount)
-    combo_count = 0
-    combo_changed.emit(combo_count)
-    hp_changed.emit(player_hp, player_max_hp)
-    if player_hp == 0:
-        end_expedition(false)
+	if amount <= 0:
+		return
+	player_hp = max(0, player_hp - amount)
+	combo_count = 0
+	combo_changed.emit(combo_count)
+	hp_changed.emit(player_hp, player_max_hp)
+	if player_hp == 0:
+		end_expedition(false)
 
 func increment_combo() -> void:
-    combo_count += 1
-    combo_changed.emit(combo_count)
+	combo_count += 1
+	combo_changed.emit(combo_count)
 
 func end_expedition(victory: bool) -> void:
-    if not expedition_active:
-        return
-    var report: Dictionary = {
-        "victory": victory,
-        "loot": expedition_loot.duplicate(),
-        "peak_combo": combo_count
-    }
-    reset_expedition()
-    expedition_ended.emit(report)
+	if not expedition_active:
+		return
+	var report: Dictionary = {
+		"victory": victory,
+		"loot": expedition_loot.duplicate(),
+		"peak_combo": combo_count
+	}
+	reset_expedition()
+	expedition_ended.emit(report)

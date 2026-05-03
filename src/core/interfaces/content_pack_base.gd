@@ -57,5 +57,6 @@ func get_puzzle_scene_path(knowledge_id: String) -> String:
 
 # ── 音频 ─────────────────────────────────────────────────────────
 ## 返回单词/句子的发音音频流
+## 返回 null 表示该文本无对应音频（调用方须做空检查）
 func get_audio(text: String) -> AudioStream:
 	return null

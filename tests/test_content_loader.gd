@@ -22,3 +22,11 @@ func test_active_pack_set_and_retrieved():
 	loader.register_pack(pack)
 	loader.set_active_pack("english_grade4_6")
 	assert_eq(loader.get_active_pack().pack_id, "english_grade4_6")
+
+func test_set_active_pack_with_unknown_id_does_not_change_active():
+	var pack = ContentPackBase.new()
+	pack.pack_id = "real_pack"
+	loader.register_pack(pack)
+	loader.set_active_pack("real_pack")
+	loader.set_active_pack("nonexistent")
+	assert_eq(loader.get_active_pack().pack_id, "real_pack")
