@@ -10,7 +10,7 @@ var _line_index: int = 0
 
 func _ready() -> void:
 	_title_label.text = "大关通过！"
-	_lines = GameState.gate_boss_defeat_lines
+	_lines = GameState.gate_boss_defeat_lines.duplicate()
 	if _lines.is_empty():
 		_lines = ["恭喜通关！"]
 	_show_current_line()
@@ -19,7 +19,14 @@ func _ready() -> void:
 	_return_button.visible = false
 
 func _show_current_line() -> void:
-	_dialogue_label.text = _lines[min(_line_index, _lines.size() - 1)]
+	if _lines.is_empty():
+		if _dialogue_label:
+			_dialogue_label.text = ""
+		_next_button.visible = false
+		_return_button.visible = true
+		return
+	if _dialogue_label:
+		_dialogue_label.text = _lines[min(_line_index, _lines.size() - 1)]
 	var is_last: bool = _line_index >= _lines.size() - 1
 	_next_button.visible = not is_last
 	_return_button.visible = is_last
