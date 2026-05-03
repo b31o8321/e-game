@@ -22,7 +22,7 @@ func _load_questions() -> void:
 	var text := file.get_as_text()
 	file.close()
 	var parsed = JSON.parse_string(text)
-	if parsed == null or not parsed.has("questions"):
+	if parsed == null or not (parsed is Dictionary) or not parsed.has("questions"):
 		push_error("EnglishContentPack: invalid JSON at " + path)
 		return
 	_questions.assign(parsed["questions"])
@@ -36,12 +36,12 @@ func _load_gates() -> void:
 	var text := file.get_as_text()
 	file.close()
 	var parsed = JSON.parse_string(text)
-	if parsed == null or not parsed.has("gates"):
+	if parsed == null or not (parsed is Dictionary) or not parsed.has("gates"):
 		push_error("EnglishContentPack: invalid JSON at " + path)
 		return
 	_gates.assign(parsed["gates"])
 
-func get_question(attack_type_id: String, difficulty: int, exclude_ids: Array[String]) -> Dictionary:
+func get_question(attack_type_id: String, _difficulty: int, exclude_ids: Array[String]) -> Dictionary:  # difficulty unused: JSON has no difficulty field
 	var candidates: Array[Dictionary] = []
 	for q in _questions:
 		if q.get("grade", 99) > GameState.player_grade:
@@ -61,7 +61,7 @@ func get_question_by_id(question_id: String) -> Dictionary:
 			return q
 	return {}
 
-func get_gate_questions(gate_id: String, count: int) -> Array[Dictionary]:
+func get_gate_questions(_gate_id: String, count: int) -> Array[Dictionary]:  # gate_id unused: single-gate pack, all grade-eligible questions serve as pool
 	var pool: Array[Dictionary] = []
 	for q in _questions:
 		if q.get("grade", 99) <= GameState.player_grade:

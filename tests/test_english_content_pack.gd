@@ -58,3 +58,11 @@ func test_get_question_by_id_returns_correct() -> void:
 	var q: Dictionary = _pack.get_question_by_id("q_vocab_001")
 	assert_false(q.is_empty(), "should return a question")
 	assert_eq(q.get("id", ""), "q_vocab_001", "id should match requested id")
+
+func test_get_question_unknown_type_returns_empty() -> void:
+	var q: Dictionary = _pack.get_question("nonexistent_type", 1, [])
+	assert_true(q.is_empty(), "unknown attack_type_id should return empty dict")
+
+func test_get_question_by_id_missing_returns_empty() -> void:
+	var q: Dictionary = _pack.get_question_by_id("does_not_exist")
+	assert_true(q.is_empty(), "missing id should return empty dict")
