@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://src/battle/battle_controller.gd" id="1_bc"]
+[ext_resource type="PackedScene" path="res://src/battle/question_ui.tscn" id="2_qui"]
+
+[node name="BattleScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_bc")
+
+[node name="EnemyArea" type="VBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 300.0
+offset_top = 80.0
+offset_right = 600.0
+offset_bottom = 250.0
+
+[node name="EnemyNameLabel" type="Label" parent="EnemyArea"]
+text = "敌人名称"
+
+[node name="EnemyHpBar" type="ProgressBar" parent="EnemyArea"]
+
+[node name="WeaknessLabel" type="Label" parent="EnemyArea"]
+text = ""
+
+[node name="PlayerArea" type="VBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 50.0
+offset_top = 80.0
+offset_right = 250.0
+offset_bottom = 250.0
+
+[node name="PlayerHpBar" type="ProgressBar" parent="PlayerArea"]
+
+[node name="ComboLabel" type="Label" parent="PlayerArea"]
+text = "连击: 0"
+
+[node name="AttackButtons" type="HBoxContainer" parent="."]
+layout_mode = 1
+offset_left = 50.0
+offset_top = 300.0
+offset_right = 700.0
+offset_bottom = 400.0
+
+[node name="QuestionUIInstance" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false

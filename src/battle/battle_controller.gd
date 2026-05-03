@@ -10,6 +10,15 @@ var base_player_damage: int = 10
 var _enemy: EnemyData
 var _pack: ContentPackBase
 
+# Scene node refs (set by scene, null-safe in unit tests)
+var enemy_name_label: Label
+var enemy_hp_bar: ProgressBar
+var weakness_label: Label
+var player_hp_bar: ProgressBar
+var combo_label: Label
+var attack_buttons_container: HBoxContainer
+var question_ui_node: Control
+
 signal battle_ended(victory: bool)
 signal attack_selected(attack_type_id: String, question: Dictionary)
 signal damage_dealt(amount: int, is_weakness: bool)
@@ -117,3 +126,56 @@ func _apply_battle_state_effects(battle_state: Dictionary) -> void:
 		enemy_hp = max(0, enemy_hp - extra)
 	if battle_state.get("ember_damage", 0) > 0:
 		enemy_hp = max(0, enemy_hp - battle_state["ember_damage"])
+
+func setup_scene_nodes(
+		p_enemy_name: Label,
+		p_enemy_hp: ProgressBar,
+		p_weakness: Label,
+		p_player_hp: ProgressBar,
+		p_combo: Label,
+		p_attack_buttons: HBoxContainer,
+		p_question_ui: Control) -> void:
+	enemy_name_label = p_enemy_name
+	enemy_hp_bar = p_enemy_hp
+	weakness_label = p_weakness
+	player_hp_bar = p_player_hp
+	combo_label = p_combo
+	attack_buttons_container = p_attack_buttons
+	question_ui_node = p_question_ui
+	GameState.hp_changed.connect(_on_player_hp_changed)
+	GameState.combo_changed.connect(_on_combo_changed)
+
+func refresh_enemy_ui() -> void:
+	if enemy_name_label:
+		enemy_name_label.text = _enemy.enemy_name
+	if enemy_hp_bar:
+		enemy_hp_bar.max_value = _enemy.max_hp
+		enemy_hp_bar.value = enemy_hp
+	if weakness_label and _pack:
+		var types: Array[Dictionary] = _pack.get_attack_types()
+		var weak_names: Array[String] = []
+		for t in types:
+			if t["id"] in _enemy.weaknesses:
+				weak_names.append(t["name"])
+		weakness_label.text = "弱点: " + ", ".join(weak_names)
+
+func build_attack_buttons() -> void:
+	if not attack_buttons_container or not _pack:
+		return
+	for child in attack_buttons_container.get_children():
+		child.queue_free()
+	for attack_type in _pack.get_attack_types():
+		var btn: Button = Button.new()
+		btn.text = attack_type.get("icon", "") + " " + attack_type.get("name", "")
+		var type_id: String = attack_type["id"]
+		btn.pressed.connect(func(): select_attack(type_id))
+		attack_buttons_container.add_child(btn)
+
+func _on_player_hp_changed(new_hp: int, max_hp: int) -> void:
+	if player_hp_bar:
+		player_hp_bar.max_value = max_hp
+		player_hp_bar.value = new_hp
+
+func _on_combo_changed(count: int) -> void:
+	if combo_label:
+		combo_label.text = "连击: " + str(count)
