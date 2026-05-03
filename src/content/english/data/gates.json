@@ -1,0 +1,45 @@
+{
+  "gates": [
+    {
+      "gate_id": "gate_en_librarian",
+      "gate_name": "遗忘图书馆",
+      "gate_description": "A mysterious library shrouded in forgotten memories, guarded by spectral entities and their master keeper.",
+      "waves": [
+        {
+          "wave_id": 1,
+          "enemy_type": "遗忘幽灵",
+          "count": 4,
+          "max_hp": 40,
+          "base_attack": 6,
+          "question_count": 4,
+          "weakness": "vocabulary"
+        },
+        {
+          "wave_id": 2,
+          "enemy_type": "遗忘幽灵",
+          "count": 4,
+          "max_hp": 40,
+          "base_attack": 6,
+          "question_count": 4,
+          "weakness": "vocabulary"
+        }
+      ],
+      "boss": {
+        "boss_id": "boss_en_librarian",
+        "boss_name": "遗忘图书管理员",
+        "max_hp": 150,
+        "base_attack": 10,
+        "question_count": 4,
+        "weakness": "grammar"
+      },
+      "attack_multipliers": {
+        "vocabulary": 1.5,
+        "grammar": 1.2
+      },
+      "reward": {
+        "experience": 500,
+        "gold": 250
+      }
+    }
+  ]
+}
