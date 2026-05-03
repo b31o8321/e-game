@@ -33,6 +33,12 @@ func test_pop_gate_question_returns_empty_when_pool_empty() -> void:
 	var q: Dictionary = controller._pop_gate_question()
 	assert_true(q.is_empty())
 
+func test_select_attack_with_empty_pool_resets_state() -> void:
+	GameState.gate_questions_pool = []
+	controller.state = BattleController.State.PLAYER_TURN
+	controller.select_attack("vocabulary")
+	assert_eq(controller.state, BattleController.State.PLAYER_TURN)
+
 func test_handle_gate_victory_increments_wave_index() -> void:
 	GameState.gate_wave_index = 0
 	GameState.gate_wave_count = 2

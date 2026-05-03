@@ -4,6 +4,9 @@ var _question_ui: Control = null
 var _question_controller: QuestionController = null
 
 func _ready() -> void:
+	# Does not call super._ready() — BattleController._ready() also connects
+	# battle_ended.connect(_on_battle_ended), which would double-connect the signal.
+	# GateWaveController owns its full setup here.
 	var enemy_name_lbl := get_node_or_null("EnemyArea/EnemyNameLabel") as Label
 	var enemy_hp_bar_node := get_node_or_null("EnemyArea/EnemyHpBar") as ProgressBar
 	var weakness_lbl := get_node_or_null("EnemyArea/WeaknessLabel") as Label
@@ -27,6 +30,9 @@ func _setup_question_ui() -> void:
 	_question_ui.visible = false
 	add_child(_question_ui)
 	_question_controller = _question_ui as QuestionController
+	if not _question_controller:
+		push_error("GateWaveController: question_ui.tscn root is not a QuestionController")
+		return
 	_question_controller.answered.connect(func(correct: bool, qid: String):
 		_question_ui.visible = false
 		on_question_answered(correct, qid))
