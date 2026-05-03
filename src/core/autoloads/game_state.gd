@@ -36,6 +36,15 @@ var last_expedition_report: Dictionary = {}
 ## 专项练习指定题目 ID 列表；空 = 自动从 SRS 选取
 var practice_target_ids: Array[String] = []
 
+# 大关状态
+var pending_gate_id: String = ""
+var pending_gate_config: Dictionary = {}
+var gate_wave_index: int = 0
+var gate_wave_count: int = 0
+var gate_questions_pool: Array[Dictionary] = []
+var is_gate_active: bool = false
+var gate_boss_defeat_lines: Array[String] = []
+
 # 信号
 signal hp_changed(new_hp: int, max_hp: int)
 signal combo_changed(count: int)
@@ -86,6 +95,33 @@ func start_expedition() -> void:
 	if expedition_tracker:
 		expedition_tracker.reset()
 	expedition_active = true
+
+## 进入大关：存储配置、预设波数、重置状态
+func start_gate(gate_config: Dictionary, questions: Array[Dictionary]) -> void:
+	pending_gate_id = gate_config.get("gate_id", "")
+	pending_gate_config = gate_config
+	gate_wave_index = 0
+	gate_wave_count = gate_config.get("wave_count", 0)
+	gate_questions_pool = questions
+	is_gate_active = true
+	player_hp = player_max_hp
+
+## 大关失败：重置波次和题目池，保留 gate config 供重试
+func fail_gate() -> void:
+	gate_wave_index = 0
+	gate_questions_pool.clear()
+	player_hp = player_max_hp
+
+## 大关通关：写入解锁，触发信号，存档
+func complete_gate() -> void:
+	var gate_id: String = pending_gate_config.get("gate_id", "")
+	if gate_id not in completed_gate_ids:
+		completed_gate_ids.append(gate_id)
+	var new_level: int = pending_gate_config.get("unlock_knowledge_level", knowledge_level)
+	knowledge_level = max(knowledge_level, new_level)
+	is_gate_active = false
+	gate_completed.emit(gate_id)
+	save_system.save_game_state()
 
 func end_expedition(victory: bool) -> void:
 	if not expedition_active:
