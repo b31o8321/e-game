@@ -146,7 +146,7 @@ return [
 var player_grade: int = 5   # 4 | 5 | 6
 ```
 
-SaveSystem 同步存读此字段。
+SaveSystem 同步存读此字段：`save_game_state()` 写入 `"player_grade": GameState.player_grade`，`load_game_state()` 读取 `data.get("player_grade", 5)`。
 
 ---
 
@@ -169,7 +169,18 @@ SaveSystem 同步存读此字段。
 
 ## ContentLoader 连接
 
-`ContentLoader` 需要加载 `EnglishContentPack` 作为默认内容包。查看 `ContentLoader` 的实现方式，若是硬编码 MockContentPack 则改为 `EnglishContentPack`。
+`ContentLoader` 通过 `register_pack()` + `set_active_pack()` 注册内容包。目前主菜单未注册任何包，`get_active_pack()` 返回 null。
+
+修改 `src/core/autoloads/game_state.gd` 的 `_ready()`，在创建 `content_loader` 后追加：
+
+```gdscript
+var english_pack := EnglishContentPack.new()
+content_loader.add_child(english_pack)
+content_loader.register_pack(english_pack)
+content_loader.set_active_pack("english_grade46")
+```
+
+这样全局所有场景调用 `GameState.content_loader.get_active_pack()` 都能拿到真实内容包。
 
 ---
 
