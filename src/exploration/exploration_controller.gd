@@ -43,6 +43,8 @@ func _ready() -> void:
 	_setup_question_ui()
 	_return_button.pressed.connect(_on_return_pressed)
 	_spawn_enemy_nodes()
+	_spawn_gate_nodes()
+	GameState.gate_completed.connect(_on_gate_completed)
 	_update_resource_bar()
 
 func _spawn_resource_nodes() -> void:
@@ -113,3 +115,19 @@ func _spawn_enemy_nodes() -> void:
 		een.enemy_data = ed
 		een.text = cfg["label"]
 		area.add_child(een)
+
+func _spawn_gate_nodes() -> void:
+	var pack: ContentPackBase = GameState.content_loader.get_active_pack()
+	if not pack:
+		return
+	var gates: Array[Dictionary] = []
+	gates.assign(pack.get_gates())
+	for cfg in gates:
+		var gn := KnowledgeGateNode.new()
+		_node_area.add_child(gn)
+		gn.setup(cfg)
+
+func _on_gate_completed(_gate_id: String) -> void:
+	for child in _node_area.get_children():
+		if child is KnowledgeGateNode:
+			child.setup(child.gate_config)
