@@ -32,3 +32,9 @@ text = "我的城市"
 
 [node name="GateButton" type="Button" parent="VBoxContainer"]
 text = "里程碑大关"
+
+[node name="ExploreButton" type="Button" parent="VBoxContainer"]
+text = "探索"
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer"]
+text = "⚙️ 设置"
