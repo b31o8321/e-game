@@ -2,10 +2,10 @@ class_name ExplorationController extends Control
 
 ## 资源节点配置：[{resource_type, attack_type, amount, label}]
 const RESOURCE_NODE_CONFIGS: Array[Dictionary] = [
-	{ "resource_type": "vocabulary_crystal", "attack_type": "vocabulary", "amount": 2, "label": "📚 词汇结晶 ×2" },
-	{ "resource_type": "vocabulary_crystal", "attack_type": "vocabulary", "amount": 1, "label": "📚 词汇结晶 ×1" },
-	{ "resource_type": "grammar_ore",        "attack_type": "grammar",    "amount": 2, "label": "📝 语法矿石 ×2" },
-	{ "resource_type": "grammar_ore",        "attack_type": "grammar",    "amount": 1, "label": "📝 语法矿石 ×1" },
+	{ "resource_type": "vocabulary_crystal", "attack_type": "vocabulary", "amount": 2, "label": "📚 词灵结晶 ×2" },
+	{ "resource_type": "vocabulary_crystal", "attack_type": "vocabulary", "amount": 1, "label": "📚 词灵结晶 ×1" },
+	{ "resource_type": "grammar_ore",        "attack_type": "grammar",    "amount": 2, "label": "📝 法则矿石 ×2" },
+	{ "resource_type": "grammar_ore",        "attack_type": "grammar",    "amount": 1, "label": "📝 法则矿石 ×1" },
 ]
 
 ## 敌人节点配置
@@ -17,7 +17,7 @@ const ENEMY_CONFIGS: Array[Dictionary] = [
 		"base_attack": 6,
 		"weaknesses": ["vocabulary"],
 		"multipliers": { "vocabulary": 1.5 },
-		"label": "⚔️ 森林哥布林 (弱点: 词汇)",
+		"label": "⚔️ 森林哥布林 (弱点: 词灵)",
 	},
 	{
 		"enemy_id": "stone_golem",
@@ -26,13 +26,13 @@ const ENEMY_CONFIGS: Array[Dictionary] = [
 		"base_attack": 8,
 		"weaknesses": ["grammar"],
 		"multipliers": { "grammar": 2.0 },
-		"label": "⚔️ 石头傀儡 (弱点: 语法)",
+		"label": "⚔️ 石头傀儡 (弱点: 法则)",
 	},
 ]
 
 var _pending_node: ResourceNode = null
 var _question_controller: QuestionController = null
-var _question_ui: Control = null
+var _question_ui: Node = null
 
 @onready var _node_area: VBoxContainer = $NodeArea
 @onready var _resource_bar: Label = $ResourceBar

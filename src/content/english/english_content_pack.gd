@@ -76,8 +76,8 @@ func get_gates() -> Array[Dictionary]:
 
 func get_attack_types() -> Array[Dictionary]:
 	return [
-		{ "id": "vocabulary", "name": "词汇", "icon": "📚", "color": "#667eea", "element": "fire" },
-		{ "id": "grammar",    "name": "语法", "icon": "📝", "color": "#f5576c", "element": "ice" },
+		{ "id": "vocabulary", "name": "词灵", "icon": "📚", "color": "#667eea", "element": "fire" },
+		{ "id": "grammar",    "name": "法则", "icon": "📝", "color": "#f5576c", "element": "ice" },
 	]
 
 func get_buildings() -> Array[Dictionary]:

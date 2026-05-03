@@ -18,6 +18,8 @@ var player_hp_bar: ProgressBar
 var combo_label: Label
 var attack_buttons_container: HBoxContainer
 var question_ui_node: Control
+var _question_ui: Node = null
+var _question_controller: QuestionController = null
 
 signal battle_ended(victory: bool)
 signal attack_selected(attack_type_id: String, question: Dictionary)
@@ -41,6 +43,9 @@ func select_attack(attack_type_id: String) -> void:
 	current_attack_type = attack_type_id
 	state = State.QUESTION
 	var question: Dictionary = _pack.get_question(attack_type_id, 1, [])
+	if _question_controller:
+		_question_controller.load_question(question)
+		_question_ui.visible = true
 	attack_selected.emit(attack_type_id, question)
 
 func on_question_answered(correct: bool, question_id: String) -> void:
@@ -180,6 +185,19 @@ func _on_combo_changed(count: int) -> void:
 	if combo_label:
 		combo_label.text = "连击: " + str(count)
 
+func _setup_question_ui() -> void:
+	var scene: PackedScene = load("res://src/battle/question_ui.tscn")
+	_question_ui = scene.instantiate()
+	_question_ui.visible = false
+	add_child(_question_ui)
+	_question_controller = _question_ui as QuestionController
+	if not _question_controller:
+		push_error("BattleController: question_ui.tscn root is not a QuestionController")
+		return
+	_question_controller.answered.connect(func(correct: bool, qid: String):
+		_question_ui.visible = false
+		on_question_answered(correct, qid))
+
 func _ready() -> void:
 	# 连接节点引用（单元测试中无子节点，get_node_or_null 返回 null 则跳过）
 	var enemy_name_lbl := get_node_or_null("EnemyArea/EnemyNameLabel") as Label
@@ -191,7 +209,8 @@ func _ready() -> void:
 	var question_ui := get_node_or_null("QuestionUIInstance") as Control
 	if enemy_name_lbl:
 		setup_scene_nodes(enemy_name_lbl, enemy_hp_bar_node, weakness_lbl,
-			player_hp_bar_node, combo_lbl, attack_btns, question_ui)
+			player_hp_bar_node, combo_lbl, attack_btns, null)
+		_setup_question_ui()
 	# 从 GameState 自动拾取待战敌人
 	if GameState.pending_enemy != null:
 		setup(GameState.pending_enemy, GameState.content_loader.get_active_pack())

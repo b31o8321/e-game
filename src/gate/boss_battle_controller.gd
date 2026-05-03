@@ -6,9 +6,6 @@ var _sealed_types: Array[String] = []
 var _pending_shuffle: bool = false
 var _timer_reduction: float = 0.0
 
-var _question_ui: Control = null
-var _question_controller: QuestionController = null
-
 func _ready() -> void:
 	# Does not call super._ready() — BattleController._ready() also connects
 	# battle_ended.connect(_on_battle_ended), which would double-connect the signal.
@@ -36,19 +33,6 @@ func _ready() -> void:
 		build_attack_buttons()
 		start_player_turn()
 	battle_ended.connect(_on_battle_ended)
-
-func _setup_question_ui() -> void:
-	var scene: PackedScene = load("res://src/battle/question_ui.tscn")
-	_question_ui = scene.instantiate() as Control
-	_question_ui.visible = false
-	add_child(_question_ui)
-	_question_controller = _question_ui as QuestionController
-	if not _question_controller:
-		push_error("BossBattleController: question_ui.tscn root is not a QuestionController")
-		return
-	_question_controller.answered.connect(func(correct: bool, qid: String):
-		_question_ui.visible = false
-		on_question_answered(correct, qid))
 
 func _get_active_skill_instances() -> Array[SkillBase]:
 	return []
