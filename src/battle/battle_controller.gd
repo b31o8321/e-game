@@ -74,8 +74,6 @@ func _apply_player_attack() -> void:
 	state = State.IDLE
 
 func _apply_enemy_attack() -> void:
-	GameState.combo_count = 0
-	GameState.combo_changed.emit(0)
 	_call_skill_hooks_on_wrong()
 	var damage: int = _enemy.base_attack
 	damage_received.emit(damage)

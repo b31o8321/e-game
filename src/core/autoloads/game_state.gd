@@ -83,7 +83,8 @@ func start_expedition() -> void:
 	combo_count = 0
 	player_hp = player_max_hp
 	active_bd_skills.clear()
-	expedition_tracker.reset()
+	if expedition_tracker:
+		expedition_tracker.reset()
 	expedition_active = true
 
 func end_expedition(victory: bool) -> void:
