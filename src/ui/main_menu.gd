@@ -14,8 +14,7 @@ func _on_start_pressed() -> void:
 	get_tree().change_scene_to_file("res://src/battle/expedition_setup.tscn")
 
 func _on_city_pressed() -> void:
-	# Phase 3: switch to city scene
-	pass
+	get_tree().change_scene_to_file("res://src/city/city_scene.tscn")
 
 func _on_gate_pressed() -> void:
 	# Phase 5: switch to knowledge gate scene
