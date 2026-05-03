@@ -28,6 +28,11 @@ func get_question(attack_type_id: String, difficulty: int, exclude_ids: Array[St
 func get_gate_questions(gate_id: String, count: int) -> Array[Dictionary]:
 	return []
 
+## 返回本学科包定义的大关列表
+## 每项格式见设计文档 Phase 5 spec
+func get_gates() -> Array[Dictionary]:
+	return []
+
 ## 记录答题结果（供 SRS 系统调用）
 func on_question_answered(question_id: String, correct: bool) -> void:
 	pass

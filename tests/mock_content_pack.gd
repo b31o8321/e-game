@@ -39,6 +39,32 @@ func get_gate_questions(gate_id: String, count: int) -> Array[Dictionary]:
 		})
 	return questions
 
+func get_gates() -> Array[Dictionary]:
+	return [{
+		"gate_id": "gate_mock_01",
+		"gate_name": "模拟大关",
+		"required_knowledge_level": 1,
+		"wave_count": 1,
+		"questions_per_wave": 2,
+		"wave_enemy": {
+			"enemy_name": "模拟哨兵",
+			"max_hp": 20,
+			"base_attack": 3,
+			"weaknesses": ["vocabulary"],
+			"multipliers": { "vocabulary": 1.5 },
+		},
+		"boss_script_path": "",
+		"boss_enemy": {
+			"enemy_name": "模拟Boss",
+			"max_hp": 50,
+			"base_attack": 5,
+			"weaknesses": [],
+			"multipliers": {},
+		},
+		"unlock_knowledge_level": 2,
+		"unlock_area_ids": [],
+	}]
+
 func on_question_answered(question_id: String, correct: bool) -> void:
 	pass
 
