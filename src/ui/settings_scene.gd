@@ -1,9 +1,9 @@
 extends Control
 
-@onready var _grade4_button: Button = $Grade4Button
-@onready var _grade5_button: Button = $Grade5Button
-@onready var _grade6_button: Button = $Grade6Button
-@onready var _back_button: Button = $BackButton
+@onready var _grade4_button: Button = $VBoxContainer/Grade4Button
+@onready var _grade5_button: Button = $VBoxContainer/Grade5Button
+@onready var _grade6_button: Button = $VBoxContainer/Grade6Button
+@onready var _back_button: Button = $VBoxContainer/BackButton
 
 func _ready() -> void:
 	_grade4_button.pressed.connect(_on_grade4_pressed)
