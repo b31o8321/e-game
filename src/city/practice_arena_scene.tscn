@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/city/practice_arena_controller.gd" id="1_pac"]
+
+[node name="PracticeArenaScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_pac")
+
+[node name="ProgressLabel" type="Label" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 600.0
+offset_bottom = 50.0
+text = "专项练习"
+
+[node name="NextButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 560.0
+offset_right = 200.0
+offset_bottom = 600.0
+text = "下一题"
+visible = false
+
+[node name="BackButton" type="Button" parent="."]
+layout_mode = 1
+offset_left = 220.0
+offset_top = 560.0
+offset_right = 380.0
+offset_bottom = 600.0
+text = "返回城市"
+
+[node name="ResultPanel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+visible = false
+
+[node name="ResultLabel" type="Label" parent="ResultPanel"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 600.0
+offset_bottom = 120.0
+text = ""
+
+[node name="FinishButton" type="Button" parent="ResultPanel"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 130.0
+offset_right = 200.0
+offset_bottom = 170.0
+text = "返回城市"

@@ -16,6 +16,11 @@ func _ready() -> void:
 	_start_button.pressed.connect(_on_start_expedition)
 	_back_button.pressed.connect(_on_back_to_menu)
 	_city_controller.building_upgraded.connect(_on_any_building_upgraded)
+	var practice_btn: Button = Button.new()
+	practice_btn.text = "训练道场"
+	practice_btn.pressed.connect(func():
+		get_tree().change_scene_to_file("res://src/city/practice_arena_scene.tscn"))
+	add_child(practice_btn)
 	_update_resource_bar()
 
 func _build_building_slots() -> void:
