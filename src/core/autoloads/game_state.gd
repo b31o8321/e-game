@@ -17,6 +17,7 @@ var equipment_slots: Dictionary = {
 	"accessory": "",
 	"mount": ""
 }
+var player_grade: int = 5       # 4 | 5 | 6，影响题目难度池
 
 # 进度状态
 var unlocked_knowledge_ids: Array[String] = []
