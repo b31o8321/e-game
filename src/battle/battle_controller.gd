@@ -600,6 +600,87 @@ func reorder_ap_queue(from_idx: int, to_idx: int) -> bool:
 	return true
 
 
+## 按 AP 顺序逐条结算所有连线。
+## 每条连线独立验证：
+##   - 对 → 填槽；若该题全填且全对，应用题效果；卡入弃牌堆
+##   - 错 → _mark_challenge_failed（弹答错模态信号）；卡入弃牌堆
+## 全对（且队列非空）→ 完美连击 → ap_bonus_next_turn = 1
+## 否则（队列非空但有错）→ ap_bonus_next_turn = 0
+## 队列为空时直接返回，不动 bonus。
+## 注：end_player_turn 由 UI 触发；submit_all_ap 只负责结算。
+func submit_all_ap() -> void:
+	if ap_queue.is_empty():
+		return
+	var ordered: Array = ap_queue.duplicate()
+	ordered.sort_custom(func(a, b): return a.slot_index < b.slot_index)
+	var perfect: bool = true
+	for conn in ordered:
+		var ok: bool = _resolve_connection(conn)
+		if not ok:
+			perfect = false
+	# 完美连击 → 下回合 +1 AP 容量
+	if perfect:
+		ap_bonus_next_turn = 1
+	else:
+		ap_bonus_next_turn = 0
+	ap_queue.clear()
+	if has_signal("hand_changed"):
+		hand_changed.emit(hand.duplicate())
+	if has_signal("board_changed"):
+		board_changed.emit()
+
+
+## 单条连线结算。返回 true 表示对，false 表示错。
+## 错连：标失败 + 弹模态信号（通过 _mark_challenge_failed），卡入弃牌堆。
+## 对连：填到 available_filled_slots[ch_idx][slot_idx]，若该题全填且全对，应用效果。
+func _resolve_connection(conn: APConnection) -> bool:
+	if conn == null or conn.card == null:
+		return false
+	var ch_idx: int = conn.challenge_index
+	if ch_idx < 0 or ch_idx >= available_challenges.size():
+		# 题已不在棋盘（被前面的连线解掉或者非法 index）→ 卡浪费
+		discard.append(conn.card)
+		return false
+	# 该题已失败：后续连线全部判错（但卡仍然消耗）
+	if ch_idx in _failed_challenge_indices:
+		discard.append(conn.card)
+		return false
+	var template: ChallengeTemplate = available_challenges[ch_idx]
+	if template == null:
+		discard.append(conn.card)
+		return false
+	if conn.question_slot_index < 0 or conn.question_slot_index >= template.slots.size():
+		discard.append(conn.card)
+		return false
+	var slot: ChallengeSlot = template.slots[conn.question_slot_index]
+	# 校验卡是否能放进该槽
+	if not CardValidator.can_place(conn.card, slot):
+		# 错连：标整道题失败（弹模态信号）+ 弃牌
+		_mark_challenge_failed(ch_idx, template)
+		discard.append(conn.card)
+		return false
+	# 对：填槽
+	if ch_idx < available_filled_slots.size():
+		var slots_state: Array = available_filled_slots[ch_idx]
+		while slots_state.size() <= conn.question_slot_index:
+			slots_state.append(null)
+		# 槽里已有卡（前面的连线已填同槽）→ 视为浪费，但不算错；新卡入弃牌堆
+		if slots_state[conn.question_slot_index] != null:
+			discard.append(conn.card)
+			return true
+		slots_state[conn.question_slot_index] = conn.card
+	# SRS 记录（与 try_place_card 保持一致）
+	if _srs != null and conn.card.id != "":
+		_srs.record_answer(conn.card.id, true)
+	# 检查是否全填且全对 → 走 submit_challenge 应用完整题效果
+	if _all_slots_filled_for(ch_idx) and not (ch_idx in _failed_challenge_indices):
+		# submit_challenge 会负责把卡进弃牌堆 + 移除该题 + 修正失败索引
+		submit_challenge(ch_idx)
+	# 注意：未全填的对连，卡已经入槽（不入弃牌堆）；submit_challenge 路径里
+	# 槽内卡也由它统一处理——所以本函数不再额外 discard。
+	return true
+
+
 ## 计算 AP 槽内单条连线的伤害预览，供 UI 显示，不应用任何状态变更。
 func _compute_preview(card: Card, ch_idx: int, slot_idx: int) -> Dictionary:
 	if ch_idx < 0 or ch_idx >= available_challenges.size():
