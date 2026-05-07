@@ -39,5 +39,17 @@ toggle_mode = true
 text = "6年级"
 toggle_mode = true
 
+[node name="FeedbackLabel" type="Label" parent="VBoxContainer"]
+text = "反馈管理"
+
+[node name="FeedbackCountLabel" type="Label" parent="VBoxContainer"]
+text = "已记录 0 条反馈"
+
+[node name="ExportFeedbackButton" type="Button" parent="VBoxContainer"]
+text = "导出反馈到剪贴板"
+
+[node name="ClearFeedbackButton" type="Button" parent="VBoxContainer"]
+text = "清空反馈"
+
 [node name="BackButton" type="Button" parent="VBoxContainer"]
 text = "返回"

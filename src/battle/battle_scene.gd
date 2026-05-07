@@ -192,6 +192,7 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 
 const APBlockViewScene = preload("res://src/battle/ap_block_view.tscn")
 const SlotDropZone = preload("res://src/battle/slot_drop_zone.gd")
+const FeedbackModalScene = preload("res://src/feedback/feedback_modal.tscn")
 
 const ANIM_PER_AP_BLOCK_S: float = 0.4
 
@@ -573,6 +574,14 @@ func _make_challenge_card(idx: int, tmpl: ChallengeTemplate) -> PanelContainer:
 	_apply_keep_button_style(keep_btn, is_kept)
 	keep_btn.pressed.connect(_on_keep_button_pressed.bind(idx))
 	header.add_child(keep_btn)
+
+	# 🚩 反馈按钮：让玩家上报这道题的内容/翻译/音频问题
+	var flag_btn := Button.new()
+	flag_btn.text = "🚩"
+	flag_btn.flat = true
+	flag_btn.tooltip_text = "反馈这题"
+	flag_btn.pressed.connect(_on_flag_pressed.bind(tmpl))
+	header.add_child(flag_btn)
 
 	# ─ Middle: dialogue with inline slots (HFlowContainer wraps content)
 	# 使用 HFlowContainer 让"text 片段 + slot 控件"在一行流式排版，超宽自动换行。
@@ -1949,3 +1958,12 @@ func _highlight_ap_block(index: int) -> void:
 		var tween := create_tween()
 		tween.tween_property(node, "modulate", Color(1.4, 1.4, 0.6), 0.1)
 		tween.tween_property(node, "modulate", Color.WHITE, 0.3)
+
+
+## 玩家点击挑战卡上的 🚩 按钮 — 弹出反馈弹窗。
+func _on_flag_pressed(template: ChallengeTemplate) -> void:
+	if template == null:
+		return
+	var modal = FeedbackModalScene.instantiate()
+	get_tree().root.add_child(modal)
+	modal.setup("question", template.template_id, template.dialogue)
