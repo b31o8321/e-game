@@ -648,10 +648,30 @@ func submit_all_ap() -> void:
 ## 单条连线结算。返回 true 表示对，false 表示错。
 ## 错连：标失败 + 弹模态信号（通过 _mark_challenge_failed），卡入弃牌堆。
 ## 对连：填到 available_filled_slots[ch_idx][slot_idx]，若该题全填且全对，应用效果。
+##
+## Task 24 修复：原实现直接用 conn.challenge_index 作为 available_challenges 的下标，
+## 但 submit_challenge 会从 available_challenges 移除已解的题（remove_at(idx)），
+## 导致后续连线 challenge_index 失效（指向错位 / 越界）。修复方案：用 conn.preview
+## 中存的 template_id 作为稳定键，每次结算前在当前 available_challenges 里按 id 重查
+## 实际下标。这样即使前面的连线把某道题解掉，后面的连线仍能找到自己的目标题（如果
+## 还在棋盘上），或者 fail-safe（不在棋盘 = 已被解掉/移除 → 卡浪费）。
 func _resolve_connection(conn: APConnection) -> bool:
 	if conn == null or conn.card == null:
 		return false
-	var ch_idx: int = conn.challenge_index
+	# 用 template_id 重新定位棋盘上的目标题（避开 index-shift bug）
+	var target_template_id: String = ""
+	if conn.preview != null and conn.preview is Dictionary:
+		target_template_id = str(conn.preview.get("template_id", ""))
+	# Fallback：preview 不可用时退回到 challenge_index（兼容直接构造的连线）
+	var ch_idx: int = -1
+	if target_template_id != "":
+		for i in available_challenges.size():
+			var t: ChallengeTemplate = available_challenges[i]
+			if t != null and t.template_id == target_template_id:
+				ch_idx = i
+				break
+	else:
+		ch_idx = conn.challenge_index
 	if ch_idx < 0 or ch_idx >= available_challenges.size():
 		# 题已不在棋盘（被前面的连线解掉或者非法 index）→ 卡浪费
 		discard.append(conn.card)
@@ -690,6 +710,8 @@ func _resolve_connection(conn: APConnection) -> bool:
 	# 检查是否全填且全对 → 走 submit_challenge 应用完整题效果
 	if _all_slots_filled_for(ch_idx) and not (ch_idx in _failed_challenge_indices):
 		# submit_challenge 会负责把卡进弃牌堆 + 移除该题 + 修正失败索引
+		# 注意：submit_challenge 移除 ch_idx 后，available_challenges 索引会左移；
+		# 后续连线在本函数开头通过 template_id 重查下标，因此不会受影响。
 		submit_challenge(ch_idx)
 	# 注意：未全填的对连，卡已经入槽（不入弃牌堆）；submit_challenge 路径里
 	# 槽内卡也由它统一处理——所以本函数不再额外 discard。

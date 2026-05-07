@@ -189,6 +189,56 @@ func test_e2e_reorder_then_submit():
 	assert_eq(c.ap_queue.size(), 0)
 
 
+func test_e2e_multi_template_perfect_combo():
+	# Task 24 regression: with multi-template AP submissions, the original
+	# implementation used conn.challenge_index directly. When the first connection
+	# resolves and submit_challenge() removes that template from
+	# available_challenges, all later indices shift left by one. The 2nd
+	# connection then either points to the wrong template (random pass/fail) or
+	# out-of-range. Fix: _resolve_connection now looks up the template by
+	# preview.template_id (stable id) at resolution time.
+	var c = BattleController.new()
+	add_child_autofree(c)
+	c.ap_max = 3
+	c.ap_bonus_next_turn = 0
+
+	var card_a = _make_card("card_a")
+	var card_b = _make_card("card_b")
+	c.set_hand_for_test([card_a, card_b])
+
+	# Two separate templates, each with one slot. card_a → t1, card_b → t2.
+	var ids_a: Array[String] = ["card_a"]
+	var ids_b: Array[String] = ["card_b"]
+	var t1 = _make_template_accepting("t_alpha", ids_a)
+	var t2 = _make_template_accepting("t_beta", ids_b)
+	var chals: Array[ChallengeTemplate] = [t1, t2]
+	c.available_challenges = chals
+	c.available_filled_slots = [[null], [null]]
+
+	# Min deps for submit_challenge
+	var enemy := EnemyData.new()
+	enemy.enemy_id = "test_enemy"
+	enemy.enemy_name = "Test"
+	enemy.max_hp = 100
+	enemy.base_attack = 0
+	c._enemy = enemy
+	c.enemy_hp = 100
+	c.enemy_max_hp = 100
+	c.set_combo_system(ComboSystem.new())
+	c.set_selector(ChallengeSelector.new())
+
+	# Queue: card_a → ch_idx 0 (t_alpha), card_b → ch_idx 1 (t_beta).
+	# After 1st resolves, ap_queue[1].challenge_index would point to bad index.
+	assert_true(c.add_to_ap_queue(card_a, 0, 0))
+	assert_true(c.add_to_ap_queue(card_b, 1, 0))
+	c.submit_all_ap()
+
+	# Both templates should have been resolved → board cleared, perfect combo.
+	assert_eq(c.ap_queue.size(), 0, "AP queue cleared")
+	assert_eq(c.available_challenges.size(), 0, "Both challenges resolved (board empty)")
+	assert_eq(c.ap_bonus_next_turn, 1, "Multi-template perfect combo grants +1 AP")
+
+
 func test_e2e_remove_returns_card_to_hand():
 	var c = BattleController.new()
 	add_child_autofree(c)
