@@ -39,7 +39,11 @@ ensure_voice_deps() {
        [ ! -f "$PROJECT_DIR/builds/voice/piper/models/en_US-lessac-medium.onnx" ] || \
        [ ! -f "$PROJECT_DIR/builds/voice/whisper/models/ggml-tiny.en.bin" ]; then
         echo -e "${YELLOW}Voice deps missing — invoking download_voice_deps.sh${NC}"
-        bash "$PROJECT_DIR/scripts/download_voice_deps.sh"
+        # Allow partial failure: VoiceClient gracefully degrades to Stub at runtime
+        # if Piper/Whisper binaries are missing, so a partial voice payload (or
+        # none at all) should not block the dmg build.
+        bash "$PROJECT_DIR/scripts/download_voice_deps.sh" || \
+            echo -e "${YELLOW}⚠️  Voice deps partial/failed — runtime will fall back to Stub backend${NC}"
     fi
 }
 
@@ -80,7 +84,7 @@ export_mac() {
     # Step 4: Add Applications symlink and repack as proper installer DMG
     ln -s /Applications "$STAGING/Applications"
     local RW_DMG="/tmp/zhishi_rw_$$.dmg"
-    hdiutil create -srcfolder "$STAGING" -volname "知识神塔" -fs HFS+ -format UDRW -size 250m "$RW_DMG" -quiet
+    hdiutil create -srcfolder "$STAGING" -volname "知识神塔" -fs HFS+ -format UDRW -size 500m "$RW_DMG" -quiet
     rm -f "$FINAL_DMG"
     hdiutil convert "$RW_DMG" -format UDZO -imagekey zlib-level=9 -o "$FINAL_DMG" -quiet
 
