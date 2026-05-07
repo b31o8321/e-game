@@ -1,234 +1,1336 @@
+## BattleController — 卡片对话战斗主控（多题棋盘改造版）
+##
+## 状态机：IDLE → PLAYER_TURN → CARD_VALIDATION → RESOLUTION → ENEMY_TURN → END
+## 详见 docs/superpowers/specs/2026-05-04-battle-system-redesign.md
+##
+## ── 多题棋盘（2026-05-04 重构）──────────────────────────────────────
+## 之前每回合只显示 1 道题，玩家无脑解；现在棋盘同时显示 BOARD_SIZE 道题，
+## 每道题有不同 effect_type（伤害/回血/护盾/抽牌/加题/弱点强击/连击翻倍），
+## 玩家根据当前血量、手牌、连击状态选解哪道——这是策略点。
+##
+## 棋盘状态：
+##   available_challenges: Array[ChallengeTemplate]   // 当前可见的 BOARD_SIZE 道题
+##   available_filled_slots: Array[Array]              // 每道题的填槽状态
+##   selected_challenge_index: int                     // 当前正在填的那道题（-1 = 未选）
+##   kept_indices: Array[int]                          // 玩家"留下"的题的 index（回合末不刷掉）
+##
+## 解题流程（B4 杀戮尖塔式：每回合 3 题，全部可解）：
+##   1) 玩家点击棋盘上某道题 → set_selected_challenge_index(i)
+##   2) 玩家点手牌 → 选中卡 → 点空槽 → try_place_card(card, slot_idx) 放入"已选中题"的槽
+##   3) 全部填满 → submit_challenge() 结算 → 该道题被移除（解了的就消失）
+##   4) 不再回合内自动补题；如果玩家解光了 3 道题就只能过牌（或留下 kept 题继续填）
+##
+## 回合末（end_player_turn）：
+##   - 弃手牌 + 退槽
+##   - kept_indices 标记的题保留；其它全部清掉
+##   - 敌人攻击；伤害先抵护盾再扣 HP
+##   - refill_board() 把空位补满（含 _queued_for_next_turn 加成）
+##
+## 兼容性：current_template + filled_slots 仍存在，作为 selected 题的"代理视图"。
+## 旧测试（test_battle_controller_flow.gd 等）通过 try_place_card(card, slot_index) +
+## current_template 继续工作，相当于在 BOARD_SIZE >= 1 的棋盘上自动选 0 号题。
 class_name BattleController extends Node
 
-enum State { IDLE, PLAYER_TURN, QUESTION, RESOLVING, ENEMY_TURN, END }
 
+enum State { IDLE, PLAYER_TURN, CARD_VALIDATION, RESOLUTION, ENEMY_TURN, END }
+
+const APConnection = preload("res://src/battle/ap_connection.gd")
+
+const HAND_SIZE: int = 5
+## 默认棋盘可见题数。可以由 setup() 通过 board_size 参数覆盖。
+const DEFAULT_BOARD_SIZE: int = 3
+## 玩家本回合最多保留 N 张手牌（待技能 / 物品修改）。
+const HAND_RETAIN_MAX_DEFAULT: int = 3
+## 玩家最多"留下"几道题（待技能 / 物品修改）。
+const QUESTION_KEEP_MAX_DEFAULT: int = 1
+
+# === 战斗参数 ===
 var state: State = State.IDLE
 var enemy_hp: int = 0
-var current_attack_type: String = ""
-var base_player_damage: int = 10
+var enemy_max_hp: int = 0
+var player_hp: int = 100
+var player_max_hp: int = 100
+## 临时护盾（shield 效果累加），敌人攻击时先扣这里再扣 HP
+var player_shield: int = 0
+## 敌人临时护盾（来自 EntityAbility "shield" 效果，玩家攻击时先扣这里再扣敌人 HP）。
+var enemy_shield: int = 0
 
+# === 牌库 ===
+var deck: Array[Card] = []
+var hand: Array[Card] = []
+var discard: Array[Card] = []
+
+# === 多题棋盘 ===
+## 当前棋盘大小（一回合可见多少道题）
+var board_size: int = DEFAULT_BOARD_SIZE
+## 棋盘可见题（长度可在回合内 < board_size，回合末 refill 补满）
+var available_challenges: Array[ChallengeTemplate] = []
+## 每道题的填槽：available_filled_slots[i][slot_index] = Card | null
+var available_filled_slots: Array = []
+## 玩家"留下"的题的 template_id 集合（回合末刷棋盘时不丢）
+var kept_template_ids: Array[String] = []
+## 玩家本回合标记保留的卡 id（回合末不被丢入弃牌堆）。
+var _retained_card_ids: Array[String] = []
+## 手牌保留上限。可被技能 / 装备覆盖。
+var hand_retain_max: int = HAND_RETAIN_MAX_DEFAULT
+## "留下"题数上限。可被技能 / 装备覆盖。
+var question_keep_max: int = QUESTION_KEEP_MAX_DEFAULT
+## 已失败的题 index（一锤定音机制：放错卡 → 整题失败）。回合末 refill 时清空。
+var _failed_challenge_indices: Array[int] = []
+## 当前正在填的题 index（-1 = 未选）
+var selected_challenge_index: int = -1
+## 下次结算的伤害修饰符（"next_x2" 表示下题打 2 倍）
+var pending_damage_modifier: String = ""
+## 卡牌能力 draw_question 累积——下回合 refill 时额外加 N 道题进棋盘
+var _queued_for_next_turn: int = 0
+
+# === AP 队列（2026-05-07 重构 Phase 3）===
+## 玩家本回合的连线队列，每条 = APConnection（卡 + 题 + 槽 + 预览）。
+## Task 11 会把 submit_challenge 改为遍历此队列；目前与单题 try_place_card 路径并存。
+var ap_queue: Array = []
+## AP 队列容量上限。默认 3，可由技能 / 装备调整。
+var ap_max: int = 3
+## 完美连击给下回合的临时容量奖励（结算后清零）。
+var ap_bonus_next_turn: int = 0
+
+# === 实体能力（敌人 / 玩家共享）===
+## 敌人能力实例（从 enemy.ability_ids 通过 AbilitiesRegistry 实例化）
+var _enemy_abilities: Array[EntityAbility] = []
+## 玩家能力实例（hook 用——后续装备 / 技能填充）
+var _player_abilities: Array[EntityAbility] = []
+## 敌人本回合额外行动次数（multi_action 能力累积）
+var _pending_enemy_extra_actions: int = 0
+
+# === 兼容代理 (旧 API: current_template / filled_slots 现在指向 selected 题) ===
+var current_template: ChallengeTemplate:
+	get:
+		if selected_challenge_index < 0 or selected_challenge_index >= available_challenges.size():
+			return null
+		return available_challenges[selected_challenge_index]
+	set(value):
+		# 旧测试可能直接赋值 null —— 找到对应位置移除
+		if value == null and selected_challenge_index >= 0:
+			# 兼容：调用方期望"清空当前题"——保持 selected_challenge_index 不变，
+			# 调用方通常紧接着会调 _advance_to_next_challenge()。
+			pass
+var filled_slots: Array:
+	get:
+		if selected_challenge_index < 0 or selected_challenge_index >= available_filled_slots.size():
+			return []
+		return available_filled_slots[selected_challenge_index]
+	set(value):
+		# 旧测试 / 内部代码可能直接赋值；忽略——通过专用 API 维护
+		pass
+
+# === 回合内统计（爽快感机制）===
+var cards_played_this_turn: int = 0
+var challenges_solved_this_turn: int = 0
+const DRAW_PER_N_CARDS: int = 2
+
+# === 内部依赖 ===
 var _enemy: EnemyData
 var _pack: ContentPackBase
+var _selector: ChallengeSelector
+var _combo: ComboSystem
+var _srs: SRSSystem
+## 本场战斗已抽过的题模板 id，用于避免重复（池足够大时）
+var _seen_template_ids: Array[String] = []
+var _used_card_ids_this_battle: Array[String] = []
 
-# Scene node refs (set by scene, null-safe in unit tests)
-var enemy_name_label: Label
-var enemy_hp_bar: ProgressBar
-var weakness_label: Label
-var player_hp_bar: ProgressBar
-var combo_label: Label
-var attack_buttons_container: HBoxContainer
-var question_ui_node: Control
-var _question_ui: Node = null
-var _question_controller: QuestionController = null
+# === 战斗日志（B6: 玩家可回顾近 30 条行动）===
+## 每条字符串可含 BBCode 标签，UI 用 RichTextLabel 渲染。
+## 超过 LOG_MAX_ENTRIES 时从头丢弃。
+const LOG_MAX_ENTRIES: int = 30
+var battle_log: Array[String] = []
 
-signal battle_ended(victory: bool)
-signal attack_selected(attack_type_id: String, question: Dictionary)
-signal damage_dealt(amount: int, is_weakness: bool)
+# === 信号 ===
+signal battle_started()
+signal card_played(card: Card, slot_index: int)
+signal card_returned(card: Card, slot_index: int)
+signal damage_dealt(amount: int, is_crit: bool, is_weakness: bool)
 signal damage_received(amount: int)
+## 旧信号：单道题切换时发；多题改造后只在"selected 题切换"时发。
+signal challenge_advanced(template: ChallengeTemplate)
+## 棋盘整体变化（题被移除 / 加入 / kept 状态变 / selected 变化）。UI 通过此重渲染棋盘。
+signal board_changed()
+signal hand_changed(hand: Array)
+signal turn_ended(was_player_turn: bool)
+signal battle_ended(victory: bool)
+signal new_cards_unlocked(card_ids: Array)
+signal cards_drawn(count: int)
+signal turn_combo_advanced(challenges_solved: int)
+## 玩家被回血了
+signal healed(amount: int)
+## 玩家加了护盾
+signal shielded(amount: int)
+## 敌人加了护盾（敌人能力 shield 效果触发）
+signal enemy_shielded(amount: int)
+## 敌人回血了（敌人能力 heal 效果触发）
+signal enemy_healed(amount: int)
+## 敌人能力被触发（icon + 描述），UI 可弹气泡 / 高亮
+signal enemy_ability_triggered(icon: String, description_zh: String)
+## 棋盘被加了题（draw_question 效果）
+signal questions_added(count: int)
+## 下一题伤害将翻倍（combo_boost 触发后）
+signal combo_boost_armed()
+## 玩家放错卡 → 整道题失败。UI 收到此信号弹出"答错反馈"模态。
+##   challenge_index：失败的那道题在 available_challenges 中的 index
+##   correct_card_id：perfect_match_card_ids[0]（如有），用于在模态里展示正确答案
+signal challenge_failed(challenge_index: int, correct_card_id: String)
+## B6 战斗日志：每次 _log() 调用后发，UI 可增量追加到滚动面板。
+signal log_appended(message: String)
 
-func setup(enemy: EnemyData, pack: ContentPackBase) -> void:
+
+# ═══════════════════════════════════════════════════════════════════
+# 战斗日志
+# ═══════════════════════════════════════════════════════════════════
+
+## 追加一条战斗日志。message 可包含 BBCode（[color=...]、[b]）以让 RichTextLabel 高亮。
+## 超过 LOG_MAX_ENTRIES 自动丢最早一条。
+func _log(message: String) -> void:
+	if message.is_empty():
+		return
+	battle_log.append(message)
+	while battle_log.size() > LOG_MAX_ENTRIES:
+		battle_log.pop_front()
+	log_appended.emit(message)
+
+
+## 把卡的人类可读名拼起来（用于"用 brave + happy 解决了..."）。
+func _format_cards_for_log(cards: Array) -> String:
+	var names: Array[String] = []
+	for c in cards:
+		if c is Card:
+			names.append(str(c.text) if c.text != "" else c.id)
+	if names.is_empty():
+		return "（无卡）"
+	return " + ".join(names)
+
+
+## 取一段对话用于日志（取前 28 字 ＋ ...）。
+func _short_dialogue(tmpl: ChallengeTemplate) -> String:
+	if tmpl == null:
+		return "?"
+	var d: String = tmpl.dialogue
+	if d.length() > 28:
+		return d.substr(0, 28) + "…"
+	return d
+
+
+# ═══════════════════════════════════════════════════════════════════
+# 公共 API
+# ═══════════════════════════════════════════════════════════════════
+
+func setup(
+		enemy: EnemyData,
+		pack: ContentPackBase,
+		battle_deck: Array[Card],
+		srs: SRSSystem = null,
+		board_size_override: int = -1) -> void:
 	_enemy = enemy
 	_pack = pack
+	_srs = srs
+	enemy_max_hp = enemy.max_hp
 	enemy_hp = enemy.max_hp
+	if Engine.has_singleton("GameState") or _has_game_state():
+		player_max_hp = GameState.player_max_hp
+		player_hp = GameState.player_hp
+	player_shield = 0
+	enemy_shield = 0
+	_pending_enemy_extra_actions = 0
+	# 重置 / 实例化敌人能力
+	_enemy_abilities.clear()
+	if enemy != null and not enemy.ability_ids.is_empty():
+		var raw_ids: Array = []
+		for v in enemy.ability_ids:
+			raw_ids.append(v)
+		_enemy_abilities = AbilitiesRegistry.make_many(raw_ids)
+	# 玩家能力 hook：当前留空，后续装备 / 技能填充
+	_player_abilities.clear()
+	deck.clear()
+	for c in battle_deck:
+		deck.append(c)
+	hand.clear()
+	discard.clear()
+	available_challenges.clear()
+	available_filled_slots.clear()
+	kept_template_ids.clear()
+	_retained_card_ids.clear()
+	hand_retain_max = HAND_RETAIN_MAX_DEFAULT
+	question_keep_max = QUESTION_KEEP_MAX_DEFAULT
+	_failed_challenge_indices.clear()
+	selected_challenge_index = -1
+	pending_damage_modifier = ""
+	_queued_for_next_turn = 0
+	_seen_template_ids.clear()
+	_used_card_ids_this_battle.clear()
+	battle_log.clear()
+	cards_played_this_turn = 0
+	challenges_solved_this_turn = 0
+	if board_size_override > 0:
+		board_size = board_size_override
+	else:
+		board_size = DEFAULT_BOARD_SIZE
+	if _selector == null:
+		_selector = ChallengeSelector.new()
+	if _combo == null:
+		_combo = ComboSystem.new()
+	_apply_boss_topic_coverage()
 	state = State.IDLE
 
-func start_player_turn() -> void:
+
+func _apply_boss_topic_coverage() -> void:
+	if _enemy == null or _pack == null or _selector == null:
+		return
+	var boss_id: String = _enemy.enemy_id
+	if boss_id.ends_with("_boss"):
+		boss_id = boss_id.substr(0, boss_id.length() - len("_boss"))
+	var boss: BossBase = _pack.get_boss(boss_id)
+	if boss == null:
+		return
+	if boss.requires_topic_coverage.is_empty():
+		return
+	_selector.set_required_coverage(boss.requires_topic_coverage)
+
+
+func set_selector(selector: ChallengeSelector) -> void:
+	_selector = selector
+
+func set_combo_system(combo: ComboSystem) -> void:
+	_combo = combo
+
+
+## 启动战斗：洗牌、抽 5 张、填满棋盘。
+func start_battle() -> void:
 	if state != State.IDLE:
 		return
+	deck.shuffle()
+	_draw_to_full_hand()
+	refill_board()
+	# 默认选中第 0 道题（玩家可手动切）
+	if not available_challenges.is_empty():
+		selected_challenge_index = 0
 	state = State.PLAYER_TURN
+	battle_started.emit()
+	hand_changed.emit(hand.duplicate())
+	board_changed.emit()
+	if selected_challenge_index >= 0:
+		challenge_advanced.emit(current_template)
+	# B6 日志
+	var enemy_name: String = (_enemy.enemy_name if _enemy != null and _enemy.enemy_name != "" else "?")
+	_log("[color=#ffd86b]进入战斗：%s[/color]" % enemy_name)
 
-func select_attack(attack_type_id: String) -> void:
-	if state != State.PLAYER_TURN:
-		return
-	current_attack_type = attack_type_id
-	state = State.QUESTION
-	var question: Dictionary = _pack.get_question(attack_type_id, 1, [])
-	if _question_controller:
-		_question_controller.load_question(question)
-		_question_ui.visible = true
-	attack_selected.emit(attack_type_id, question)
 
-func on_question_answered(correct: bool, question_id: String) -> void:
-	if state != State.QUESTION:
+## 选中棋盘上的某道题（之后的 try_place_card 都填到这里）。
+func set_selected_challenge_index(index: int) -> void:
+	if index < 0 or index >= available_challenges.size():
 		return
-	state = State.RESOLVING
-	GameState.srs_system.record_answer(question_id, correct)
-	if GameState.expedition_active:
-		GameState.expedition_tracker.record_answer(question_id, current_attack_type, correct)
-	if correct:
-		_apply_player_attack()
+	# 失败的题不能被选中作答
+	if index in _failed_challenge_indices:
+		return
+	if selected_challenge_index == index:
+		return
+	selected_challenge_index = index
+	board_changed.emit()
+	challenge_advanced.emit(current_template)
+
+
+## 把一张卡放进【当前 selected 题】的指定槽。返回 true 表示放置成功。
+##
+## 重载形式：
+##   try_place_card(card, slot_index)                 → 放入 selected 题
+##   try_place_card(card, slot_index, challenge_idx)  → 放入指定题（同时切换 selected）
+##
+## 一锤定音（2026-05-04 教育反馈改造）：
+##   放进的卡如果不通过 CardValidator → 整道题立即失败：
+##     - 标记 challenge index 为 failed
+##     - 不应用任何效果（无伤害 / 无回血 / 无加题）
+##     - combo 重置
+##     - 发 challenge_failed 信号给 UI 弹"正确答案 + 中文释义"模态
+func try_place_card(card: Card, slot_index: int, challenge_index: int = -1) -> bool:
+	if state != State.PLAYER_TURN and state != State.CARD_VALIDATION:
+		return false
+	if card == null:
+		return false
+	if challenge_index >= 0:
+		if challenge_index >= available_challenges.size():
+			return false
+		selected_challenge_index = challenge_index
+	if selected_challenge_index < 0 or selected_challenge_index >= available_challenges.size():
+		return false
+	# 已失败的题不能再操作
+	if selected_challenge_index in _failed_challenge_indices:
+		return false
+	var tmpl: ChallengeTemplate = available_challenges[selected_challenge_index]
+	if tmpl == null:
+		return false
+	if slot_index < 0 or slot_index >= tmpl.slots.size():
+		return false
+	if not (card in hand):
+		return false
+	var slots: Array = available_filled_slots[selected_challenge_index]
+	if slots[slot_index] != null:
+		return false
+	state = State.CARD_VALIDATION
+	var slot: ChallengeSlot = tmpl.slots[slot_index]
+	var ok: bool = CardValidator.can_place(card, slot)
+	if _srs != null and card.id != "":
+		_srs.record_answer(card.id, ok)
+	if not ok:
+		# 一锤定音：放错 → 整题失败
+		_combo.reset()
+		_mark_challenge_failed(selected_challenge_index, tmpl)
+		state = State.PLAYER_TURN
+		return false
+	hand.erase(card)
+	# 卡用掉后清除保留标记（避免幽灵 id 留在 _retained_card_ids）
+	if card.id in _retained_card_ids:
+		_retained_card_ids.erase(card.id)
+	slots[slot_index] = card
+	if not (card.id in _used_card_ids_this_battle):
+		_used_card_ids_this_battle.append(card.id)
+	cards_played_this_turn += 1
+	_maybe_draw_bonus_card()
+	card_played.emit(card, slot_index)
+	hand_changed.emit(hand.duplicate())
+	if _all_slots_filled_for(selected_challenge_index):
+		submit_challenge()
 	else:
-		_apply_enemy_attack()
+		state = State.PLAYER_TURN
+	return true
 
-func _apply_player_attack() -> void:
-	var pre_state: Dictionary = _build_battle_state()
-	_call_skill_hooks_pre_attack(pre_state)
-	var extra_multiplier: float = pre_state.get("damage_multiplier", 1.0)
-	var multiplier: float = _enemy.get_damage_multiplier(current_attack_type)
-	var is_weakness: bool = multiplier > 1.0
-	var skill_bonus: int = _get_skill_attack_bonus()
-	var damage: int = int((base_player_damage + skill_bonus) * multiplier * extra_multiplier)
-	enemy_hp = max(0, enemy_hp - damage)
-	damage_dealt.emit(damage, is_weakness)
-	GameState.increment_combo()
-	_call_skill_hooks_on_correct()
-	if enemy_hp == 0:
-		state = State.END
-		battle_ended.emit(true)
+
+## 该 index 的题是否已经失败（玩家放错过卡）。
+func is_failed(challenge_index: int) -> bool:
+	return challenge_index in _failed_challenge_indices
+
+
+## 若棋盘上所有题都已失败 —— UI 可据此提示玩家"过牌"。
+func has_solvable_challenges() -> bool:
+	if available_challenges.is_empty():
+		return false
+	for i in available_challenges.size():
+		if not (i in _failed_challenge_indices):
+			return true
+	return false
+
+
+## 标记一道题为失败：把已放在槽里的卡退回弃牌堆，发信号给 UI。
+func _mark_challenge_failed(idx: int, tmpl: ChallengeTemplate) -> void:
+	if idx < 0 or idx >= available_challenges.size():
 		return
-	state = State.IDLE
-
-func _apply_enemy_attack() -> void:
-	_call_skill_hooks_on_wrong()
-	var damage: int = _enemy.base_attack
-	damage_received.emit(damage)
-	GameState.take_damage(damage)
-	if GameState.player_hp == 0:
-		state = State.END
-		battle_ended.emit(false)
+	if idx in _failed_challenge_indices:
 		return
-	state = State.IDLE
+	# 失败题里残留的已放卡（多槽题前面槽放对了，本次放错的那张不入槽）→ 退弃牌堆
+	if idx < available_filled_slots.size():
+		var slots: Array = available_filled_slots[idx]
+		for j in slots.size():
+			var c = slots[j]
+			if c is Card:
+				discard.append(c)
+			slots[j] = null
+	_failed_challenge_indices.append(idx)
+	# 失败题不再保留为"留下"
+	if tmpl != null and tmpl.template_id in kept_template_ids:
+		kept_template_ids.erase(tmpl.template_id)
+	var correct_card_id: String = ""
+	if tmpl != null and not tmpl.perfect_match_card_ids.is_empty():
+		correct_card_id = tmpl.perfect_match_card_ids[0]
+	# B6 日志：错答记录正确答案，便于回顾
+	var correct_disp: String = correct_card_id if correct_card_id != "" else "?"
+	_log("[color=#ff7777]你: 答错 [%s] 正确答案: %s[/color]" % [
+		_short_dialogue(tmpl), correct_disp])
+	board_changed.emit()
+	challenge_failed.emit(idx, correct_card_id)
 
-func _get_skill_attack_bonus() -> int:
-	return 0
 
-func _call_skill_hooks_pre_attack(battle_state: Dictionary) -> void:
-	for skill in _get_active_skill_instances():
-		skill.on_correct(battle_state)
+## 撤回 selected 题的某槽中已放的卡。
+func remove_card_from_slot(slot_index: int) -> void:
+	if state != State.PLAYER_TURN and state != State.CARD_VALIDATION:
+		return
+	if selected_challenge_index < 0 or selected_challenge_index >= available_challenges.size():
+		return
+	var slots: Array = available_filled_slots[selected_challenge_index]
+	if slot_index < 0 or slot_index >= slots.size():
+		return
+	var card = slots[slot_index]
+	if card == null:
+		return
+	slots[slot_index] = null
+	hand.append(card)
+	card_returned.emit(card, slot_index)
+	hand_changed.emit(hand.duplicate())
 
-func _call_skill_hooks_on_correct() -> void:
-	var battle_state: Dictionary = _build_battle_state()
-	for skill in _get_active_skill_instances():
-		skill.on_correct(battle_state)
-	_apply_battle_state_effects(battle_state)
 
-func _call_skill_hooks_on_wrong() -> void:
-	var battle_state: Dictionary = _build_battle_state()
-	for skill in _get_active_skill_instances():
-		skill.on_wrong(battle_state)
+## 切换"留下"该题（回合末不会刷掉）。返回切换后的状态（true = 已留）。
+##
+## 受 question_keep_max 限制：达到上限时再点新题会被静默拒绝（返回 false）。
+## 已留下的题取消保留不受上限限制。
+func toggle_keep(challenge_index: int) -> bool:
+	if challenge_index < 0 or challenge_index >= available_challenges.size():
+		return false
+	# 失败的题不能留下
+	if challenge_index in _failed_challenge_indices:
+		return false
+	var tmpl: ChallengeTemplate = available_challenges[challenge_index]
+	if tmpl == null or tmpl.template_id == "":
+		return false
+	var tid: String = tmpl.template_id
+	if tid in kept_template_ids:
+		kept_template_ids.erase(tid)
+		board_changed.emit()
+		return false
+	# 超过上限——静默拒绝（UI 应据此显示提示）
+	if kept_template_ids.size() >= question_keep_max:
+		return false
+	kept_template_ids.append(tid)
+	board_changed.emit()
+	return true
 
-func _build_battle_state() -> Dictionary:
+
+## 当前 challenge_index 是否处于"留下"状态。
+func is_kept(challenge_index: int) -> bool:
+	if challenge_index < 0 or challenge_index >= available_challenges.size():
+		return false
+	var tmpl: ChallengeTemplate = available_challenges[challenge_index]
+	if tmpl == null or tmpl.template_id == "":
+		return false
+	return tmpl.template_id in kept_template_ids
+
+
+## 当前已"留下"的题数量。
+func get_kept_count() -> int:
+	return kept_template_ids.size()
+
+
+## 切换某张手牌的"保留"状态。回合末标记保留的卡不会进弃牌堆，
+## 只补抽差额（默认 hand_retain_max=3，技能 / 物品可提升）。
+##
+## 返回 true 表示状态发生变化；false 表示触达上限静默拒绝（UI 应给提示）。
+func toggle_hand_retain(card_id: String) -> bool:
+	if card_id == "":
+		return false
+	if card_id in _retained_card_ids:
+		_retained_card_ids.erase(card_id)
+		hand_changed.emit(hand.duplicate())
+		return true
+	if _retained_card_ids.size() >= hand_retain_max:
+		return false
+	# 仅允许保留当前在手牌中的卡（防止外部脏 id）
+	var in_hand: bool = false
+	for c in hand:
+		if c != null and c.id == card_id:
+			in_hand = true
+			break
+	if not in_hand:
+		return false
+	_retained_card_ids.append(card_id)
+	hand_changed.emit(hand.duplicate())
+	return true
+
+
+## 该卡 id 当前是否被标记为"保留"。
+func is_hand_retained(card_id: String) -> bool:
+	return card_id in _retained_card_ids
+
+
+## 当前已被标记保留的手牌数量。
+func get_retained_count() -> int:
+	return _retained_card_ids.size()
+
+
+# ═══════════════════════════════════════════════════════════════════
+# AP 队列（Phase 3）
+# ═══════════════════════════════════════════════════════════════════
+
+## 把一张手牌追加到 AP 队列尾部，绑定到 challenge_index 的 slot_index 槽。
+## 返回 true 表示加入成功；满（>= ap_max + ap_bonus_next_turn）或卡不在手牌中返回 false。
+func add_to_ap_queue(card: Card, challenge_index: int, slot_index: int) -> bool:
+	if ap_queue.size() >= ap_max + ap_bonus_next_turn:
+		return false
+	# 卡从 hand 移出
+	if not (card in hand):
+		return false
+	hand.erase(card)
+	var conn := APConnection.new()
+	conn.slot_index = ap_queue.size()
+	conn.card = card
+	conn.challenge_index = challenge_index
+	conn.question_slot_index = slot_index
+	conn.preview = _compute_preview(card, challenge_index, slot_index)
+	ap_queue.append(conn)
+	if has_signal("hand_changed"):
+		hand_changed.emit(hand.duplicate())
+	if has_signal("board_changed"):
+		board_changed.emit()
+	return true
+
+
+## 把指定 slot_index 的连线移出 AP 队列，卡退回手牌；其它连线 slot_index 重新编号。
+func remove_from_ap_queue(slot_index: int) -> bool:
+	if slot_index < 0 or slot_index >= ap_queue.size():
+		return false
+	var conn = ap_queue[slot_index]
+	if conn != null and conn.card != null:
+		hand.append(conn.card)
+	ap_queue.remove_at(slot_index)
+	# 重新编号
+	for i in ap_queue.size():
+		ap_queue[i].slot_index = i
+	if has_signal("hand_changed"):
+		hand_changed.emit(hand.duplicate())
+	if has_signal("board_changed"):
+		board_changed.emit()
+	return true
+
+
+## 调整 AP 队列内连线顺序：把 from_idx 的连线移到 to_idx 位置，重新编号。
+func reorder_ap_queue(from_idx: int, to_idx: int) -> bool:
+	if from_idx < 0 or from_idx >= ap_queue.size():
+		return false
+	if to_idx < 0 or to_idx >= ap_queue.size():
+		return false
+	var conn = ap_queue[from_idx]
+	ap_queue.remove_at(from_idx)
+	ap_queue.insert(to_idx, conn)
+	for i in ap_queue.size():
+		ap_queue[i].slot_index = i
+	if has_signal("board_changed"):
+		board_changed.emit()
+	return true
+
+
+## 计算 AP 槽内单条连线的伤害预览，供 UI 显示，不应用任何状态变更。
+func _compute_preview(card: Card, ch_idx: int, slot_idx: int) -> Dictionary:
+	if ch_idx < 0 or ch_idx >= available_challenges.size():
+		return {}
+	var ch = available_challenges[ch_idx]
+	if ch == null:
+		return {}
+	var base: int = card.base_damage
+	var template_id: String = ""
+	if ch is ChallengeTemplate:
+		template_id = ch.template_id
 	return {
-		"player_hp": GameState.player_hp,
-		"enemy_hp": enemy_hp,
-		"combo": GameState.combo_count,
-		"round": 0,
-		"sealed_types": [],
-		"time_limit_bonus": 0.0,
-		"ember_stacks": 0,
-		"ember_damage": 0,
-		"super_combo_triggered": false,
-		"super_combo_damage": 0,
-		"damage_multiplier": 1.0,
+		"damage": base,
+		"card_id": card.id,
+		"template_id": template_id,
+		"slot_index": slot_idx,
 	}
 
-func _get_active_skill_instances() -> Array[SkillBase]:
-	return []
 
-func _apply_battle_state_effects(battle_state: Dictionary) -> void:
-	if battle_state.get("super_combo_triggered", false):
-		var extra: int = battle_state.get("super_combo_damage", 0)
-		enemy_hp = max(0, enemy_hp - extra)
-	if battle_state.get("ember_damage", 0) > 0:
-		enemy_hp = max(0, enemy_hp - battle_state["ember_damage"])
+## 给棋盘加一道题（draw_question 效果用）。返回是否成功。
+func add_to_board(template: ChallengeTemplate) -> bool:
+	if template == null:
+		return false
+	available_challenges.append(template)
+	var slots: Array = []
+	for _i in template.slots.size():
+		slots.append(null)
+	available_filled_slots.append(slots)
+	if not (template.template_id in _seen_template_ids):
+		_seen_template_ids.append(template.template_id)
+	board_changed.emit()
+	return true
 
-func setup_scene_nodes(
-		p_enemy_name: Label,
-		p_enemy_hp: ProgressBar,
-		p_weakness: Label,
-		p_player_hp: ProgressBar,
-		p_combo: Label,
-		p_attack_buttons: HBoxContainer,
-		p_question_ui: Control) -> void:
-	enemy_name_label = p_enemy_name
-	enemy_hp_bar = p_enemy_hp
-	weakness_label = p_weakness
-	player_hp_bar = p_player_hp
-	combo_label = p_combo
-	attack_buttons_container = p_attack_buttons
-	question_ui_node = p_question_ui
-	GameState.hp_changed.connect(_on_player_hp_changed)
-	GameState.combo_changed.connect(_on_combo_changed)
 
-func refresh_enemy_ui() -> void:
-	if enemy_name_label:
-		enemy_name_label.text = _enemy.enemy_name
-	if enemy_hp_bar:
-		enemy_hp_bar.max_value = _enemy.max_hp
-		enemy_hp_bar.value = enemy_hp
-	if weakness_label and _pack:
-		var types: Array[Dictionary] = _pack.get_attack_types()
-		var weak_names: Array[String] = []
-		for t in types:
-			if t["id"] in _enemy.weaknesses:
-				weak_names.append(t["name"])
-		weakness_label.text = "弱点: " + ", ".join(weak_names)
+## 刷新棋盘：保留 kept 的题；其它清掉；从池里抽新题填满到 board_size + 排队的加题。
+##
+## B4：如果上回合卡牌 draw_question 能力累积了 _queued_for_next_turn，下回合
+## 多补 N 题（target = board_size + queued）。补完后清零。
+##
+## B5（手牌感知）：刷盘时只挑选"当前手牌可解"的题——避免卡手。如果池里没有
+## 任何可解题，棋盘可以留空（玩家过牌抽新卡后下回合再补）。
+func refill_board() -> void:
+	# 1. 留 kept 的题 + 它们的填槽（回合末玩家可能没填完）。失败的题永远不留。
+	var new_chals: Array[ChallengeTemplate] = []
+	var new_slots: Array = []
+	for i in available_challenges.size():
+		var tmpl: ChallengeTemplate = available_challenges[i]
+		if i in _failed_challenge_indices:
+			continue
+		if tmpl != null and tmpl.template_id in kept_template_ids:
+			new_chals.append(tmpl)
+			# kept 题的填槽清空——玩家下回合重新填
+			var fresh_slots: Array = []
+			for _j in tmpl.slots.size():
+				fresh_slots.append(null)
+			new_slots.append(fresh_slots)
+	available_challenges = new_chals
+	available_filled_slots = new_slots
+	# 失败标记是按 index 的——刷盘后旧 index 失效，全清
+	_failed_challenge_indices.clear()
+	# 2. 计算目标数量（board_size + 卡牌 draw_question 累计加题）
+	var target_size: int = board_size + max(0, _queued_for_next_turn)
+	_queued_for_next_turn = 0
+	# 3. 抽新题填到 target_size。先尽量去重（dedup pass），失败则强制填到目标数量。
+	#    B5：每次抽到的题都要 _can_solve_with_hand(tmpl, hand) — 否则跳过。
+	var dedup_attempts: int = 0
+	while available_challenges.size() < target_size and dedup_attempts < 30:
+		dedup_attempts += 1
+		var picked: ChallengeTemplate = _pick_next_template()
+		if picked == null:
+			break
+		var dup: bool = false
+		for c in available_challenges:
+			if c != null and c.template_id == picked.template_id:
+				dup = true
+				break
+		if dup:
+			continue
+		if not _can_solve_with_hand(picked, hand):
+			continue
+		add_to_board(picked)
+	# 兜底：dedup pass 没补够（小池子）—— 允许重复 template_id，但仍要可解。
+	var force_attempts: int = 0
+	while available_challenges.size() < target_size and force_attempts < 20:
+		force_attempts += 1
+		var picked2: ChallengeTemplate = _pick_next_template()
+		if picked2 == null:
+			break
+		if not _can_solve_with_hand(picked2, hand):
+			continue
+		add_to_board(picked2)
+	# 4. 修正 selected_challenge_index
+	if selected_challenge_index >= available_challenges.size():
+		selected_challenge_index = -1
+	if selected_challenge_index < 0 and not available_challenges.is_empty():
+		selected_challenge_index = 0
+	board_changed.emit()
 
-func build_attack_buttons() -> void:
-	if not attack_buttons_container or not _pack:
+
+## 判断 hand 中的卡是否能填满 template 的所有槽（贪心匹配，每张卡仅占一槽）。
+## 简单 1-2 槽场景下贪心结果正确；更复杂的多槽组合可能漏判（比如槽1=A|B、槽2=B
+## 时贪心给槽1放 A 后槽2无解），但 MVP 题库基本是 1-2 槽，足够用。
+##
+## 边界：
+##   - template == null → 视为可解（兼容空 selector 路径）
+##   - template.slots 为空 → 视为可解（无需填卡）
+##   - hand 为空且 slots 非空 → false
+func _can_solve_with_hand(template: ChallengeTemplate, hand_cards: Array[Card]) -> bool:
+	if template == null:
+		return true
+	var slots: Array = template.slots
+	if slots.is_empty():
+		return true
+	var used_indices: Array[int] = []
+	for slot in slots:
+		var found_index: int = -1
+		for i in hand_cards.size():
+			if i in used_indices:
+				continue
+			var c: Card = hand_cards[i]
+			if c == null:
+				continue
+			if CardValidator.can_place(c, slot):
+				found_index = i
+				break
+		if found_index == -1:
+			return false
+		used_indices.append(found_index)
+	return true
+
+
+## 测试辅助：直接覆盖 hand。仅供测试用，生产代码请走 deck/draw 路径。
+func set_hand_for_test(new_hand: Array[Card]) -> void:
+	hand.clear()
+	for c in new_hand:
+		hand.append(c)
+	hand_changed.emit(hand.duplicate())
+
+
+## 在所有槽都填满时由 try_place_card 自动调用；
+## 也支持手动指定 challenge_index 提交（默认 = selected）。
+##
+## B4 改造：
+## 1) 应用 CardAbilities.apply_pre_submit 拿到卡牌能力修饰
+## 2) 应用 ChallengeEffects.apply 拿到题目效果
+## 3) 把卡牌能力的 modifier（damage / heal / shield 倍率）作用到题目效果上
+## 4) 加上卡牌专属字段：extra_heal、extra_draw、queue_questions、combo_extra
+## 5) 不再自动补题——回合末才 refill_board()
+func submit_challenge(challenge_index: int = -1) -> void:
+	var idx: int = challenge_index if challenge_index >= 0 else selected_challenge_index
+	if idx < 0 or idx >= available_challenges.size():
 		return
-	for child in attack_buttons_container.get_children():
-		child.queue_free()
-	for attack_type in _pack.get_attack_types():
-		var btn: Button = Button.new()
-		btn.text = attack_type.get("icon", "") + " " + attack_type.get("name", "")
-		var type_id: String = attack_type["id"]
-		btn.pressed.connect(func(): select_attack(type_id))
-		attack_buttons_container.add_child(btn)
-
-func _on_player_hp_changed(new_hp: int, max_hp: int) -> void:
-	if player_hp_bar:
-		player_hp_bar.max_value = max_hp
-		player_hp_bar.value = new_hp
-
-func _on_combo_changed(count: int) -> void:
-	if combo_label:
-		combo_label.text = "连击: " + str(count)
-
-func _setup_question_ui() -> void:
-	var scene: PackedScene = load("res://src/battle/question_ui.tscn")
-	_question_ui = scene.instantiate()
-	_question_ui.visible = false
-	add_child(_question_ui)
-	_question_controller = _question_ui as QuestionController
-	if not _question_controller:
-		push_error("BattleController: question_ui.tscn root is not a QuestionController")
+	if not _all_slots_filled_for(idx):
 		return
-	_question_controller.answered.connect(func(correct: bool, qid: String):
-		_question_ui.visible = false
-		on_question_answered(correct, qid))
+	state = State.RESOLUTION
+
+	var tmpl: ChallengeTemplate = available_challenges[idx]
+	var slots: Array = available_filled_slots[idx]
+	var combo_count: int = _combo.count
+	var base_damage: int = DamageCalculator.calculate(
+		slots, tmpl, _enemy, combo_count, _srs)
+	# 应用待生效的 modifier（譬如 combo_boost 上一题留下的 next_x2）
+	if pending_damage_modifier == "next_x2":
+		base_damage = base_damage * 2
+		pending_damage_modifier = ""
+
+	# === B4: 应用卡牌能力前置（伤害倍率 / 抽牌 / 加题 / 回血等）===
+	var card_result: Dictionary = CardAbilities.apply_pre_submit(self, slots, base_damage)
+	var dmg_mod: float = float(card_result.get("damage_modifier", 1.0))
+	var heal_mod: float = float(card_result.get("heal_modifier", 1.0))
+	var shield_mod: float = float(card_result.get("shield_modifier", 1.0))
+	base_damage = int(round(float(base_damage) * dmg_mod))
+
+	var crit: bool = DamageCalculator.is_crit(slots, tmpl)
+	var weak: bool = DamageCalculator.is_weakness(slots, _enemy)
+
+	# 走 ChallengeEffects 把 effect_type 翻译成具体结果
+	var effects: Dictionary = ChallengeEffects.apply(self, tmpl, base_damage)
+
+	# 应用伤害（先扣敌人护盾，再扣 HP；可触发反伤 / hp_threshold 能力）
+	var dmg: int = int(effects.get("damage_to_enemy", 0))
+	if dmg > 0:
+		var absorbed_by_enemy: int = min(enemy_shield, dmg)
+		enemy_shield -= absorbed_by_enemy
+		var actual_to_enemy: int = dmg - absorbed_by_enemy
+		if actual_to_enemy > 0:
+			enemy_hp = max(0, enemy_hp - actual_to_enemy)
+		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
+		damage_dealt.emit(dmg, crit, weak)
+		# 反伤能力（reflect_25 等）—— 用原伤害 dmg（含被盾抵的）按百分比反弹给玩家
+		_apply_enemy_reflect(dmg)
+		# HP 阈值能力（shield_at_50 等）
+		_apply_enemy_abilities("on_hp_threshold")
+		# on_damage_taken 触发（如有）
+		_apply_enemy_abilities("on_damage_taken")
+	# 回血（卡牌 heal_on_use 叠加 + double_effect 倍率）
+	var heal_base: int = int(effects.get("heal_player", 0))
+	var heal: int = int(round(float(heal_base) * heal_mod)) + int(card_result.get("extra_heal", 0))
+	if heal > 0:
+		var actual: int = min(heal, player_max_hp - player_hp)
+		player_hp += actual
+		if _has_game_state():
+			GameState.player_hp = player_hp
+		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
+		healed.emit(actual)
+	# 护盾（double_effect 倍率）
+	var shield_base: int = int(effects.get("shield_added", 0))
+	var shield: int = int(round(float(shield_base) * shield_mod))
+	if shield > 0:
+		player_shield += shield
+		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
+		shielded.emit(shield)
+	# 抽牌（题目 draw_card 效果 + 卡牌 draw_card 能力叠加）
+	var to_draw: int = int(effects.get("cards_drawn", 0)) + int(card_result.get("extra_draw", 0))
+	if to_draw > 0:
+		var n: int = draw_cards(to_draw)
+		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
+		if n > 0:
+			cards_drawn.emit(n)
+			hand_changed.emit(hand.duplicate())
+	# 加题（题目 draw_question 效果立即生效 / 卡牌 draw_question 能力排队下回合）
+	var to_add: int = int(effects.get("questions_drawn", 0))
+	if to_add > 0:
+		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
+		var added: int = 0
+		for _i in to_add:
+			var t: ChallengeTemplate = _pick_next_template()
+			if t == null:
+				break
+			# 不去重——加题就是要"多选项"
+			available_challenges.append(t)
+			var fresh: Array = []
+			for _j in t.slots.size():
+				fresh.append(null)
+			available_filled_slots.append(fresh)
+			if not (t.template_id in _seen_template_ids):
+				_seen_template_ids.append(t.template_id)
+			added += 1
+		if added > 0:
+			questions_added.emit(added)
+	# 卡牌 draw_question 排队到下回合（refill 时多补 N 道）
+	var queue_q: int = int(card_result.get("queue_questions", 0))
+	if queue_q > 0:
+		_queued_for_next_turn += queue_q
+	# 修饰符（combo_boost）
+	var mod: String = str(effects.get("modifier", ""))
+	if mod != "":
+		pending_damage_modifier = mod
+		combo_boost_armed.emit()
+
+	# B6 日志：成功解题摘要
+	var summary_parts: Array[String] = []
+	if dmg > 0:
+		summary_parts.append("[color=#ffd066]%d 伤害[/color]" % dmg)
+	if heal > 0:
+		summary_parts.append("[color=#7fe88f]+%d HP[/color]" % heal)
+	if shield > 0:
+		summary_parts.append("[color=#7ad6ff]+%d 🛡[/color]" % shield)
+	if to_draw > 0:
+		summary_parts.append("抽 %d 牌" % to_draw)
+	if to_add > 0:
+		summary_parts.append("加 %d 题" % to_add)
+	if mod == "next_x2":
+		summary_parts.append("[color=#fff066]✨下击×2[/color]")
+	var summary_text: String = " · ".join(summary_parts) if not summary_parts.is_empty() else "无效果"
+	_log("你: 用 %s 解决 [%s] → %s" % [
+		_format_cards_for_log(slots), _short_dialogue(tmpl), summary_text])
+
+	# 槽中的卡进入弃牌堆
+	for c in slots:
+		if c is Card:
+			discard.append(c)
+	# 把这道题从棋盘移除（无论是否 kept——已解决就解了）
+	# kept 仅影响"回合末刷不刷"，已解的题不应该再保留。
+	var solved_template_id: String = tmpl.template_id
+	if solved_template_id in kept_template_ids:
+		kept_template_ids.erase(solved_template_id)
+	available_challenges.remove_at(idx)
+	available_filled_slots.remove_at(idx)
+	# 修正失败索引：被移走的 idx 后面的位移 -1，等于的不可能（idx 解了不可能 failed）
+	var shifted: Array[int] = []
+	for fi in _failed_challenge_indices:
+		if fi == idx:
+			continue  # 不可能但兜底
+		if fi > idx:
+			shifted.append(fi - 1)
+		else:
+			shifted.append(fi)
+	_failed_challenge_indices = shifted
+	# 修正 selected：跳过失败题
+	if selected_challenge_index >= available_challenges.size():
+		selected_challenge_index = max(-1, available_challenges.size() - 1)
+	if selected_challenge_index < 0 and not available_challenges.is_empty():
+		selected_challenge_index = 0
+	# 如果 selected 落到 failed 题上，找下一个可解的
+	if selected_challenge_index in _failed_challenge_indices:
+		var found: int = -1
+		for i in available_challenges.size():
+			if not (i in _failed_challenge_indices):
+				found = i
+				break
+		selected_challenge_index = found
+	board_changed.emit()
+
+	challenges_solved_this_turn += 1
+	if challenges_solved_this_turn >= 2:
+		turn_combo_advanced.emit(challenges_solved_this_turn)
+
+	if enemy_hp <= 0:
+		_on_enemy_dead()
+		return
+
+	# B4：不再回合内自动补题。如果玩家解光所有题——只能过牌或留下 kept 继续。
+	# 棋盘补满发生在 end_player_turn → _run_enemy_turn → refill_board()。
+	if selected_challenge_index >= 0:
+		challenge_advanced.emit(current_template)
+	state = State.PLAYER_TURN
+
+
+## combo +1 默认；combo_charge 卡可让一次 +N（额外加 extra）。
+func _combo_increment_with_extra(extra: int) -> void:
+	_combo.increment()
+	for _i in max(0, extra):
+		_combo.increment()
+
+
+## 玩家点"过牌"。
+##
+## 手牌不再全弃——玩家可以通过 toggle_hand_retain() 标记保留的卡，
+## 回合末仅丢弃未标记的卡，下回合补抽到 HAND_SIZE。保留标记在回合末清空。
+func end_player_turn() -> void:
+	if state != State.PLAYER_TURN and state != State.CARD_VALIDATION:
+		return
+	# 1. 拆分手牌：保留 vs 入弃牌堆
+	var keepers: Array[Card] = []
+	for c in hand:
+		if c != null and c.id in _retained_card_ids:
+			keepers.append(c)
+		else:
+			if c != null:
+				discard.append(c)
+	hand.clear()
+	for k in keepers:
+		hand.append(k)
+	# 退所有题里已放的卡进弃牌堆并清空槽（kept 也要退卡——下回合从空槽重填）
+	for i in available_filled_slots.size():
+		var slots: Array = available_filled_slots[i]
+		for j in slots.size():
+			var c = slots[j]
+			if c is Card:
+				discard.append(c)
+			slots[j] = null
+	# 2. 重置保留标记（下回合重新选）
+	_retained_card_ids.clear()
+	cards_played_this_turn = 0
+	challenges_solved_this_turn = 0
+	turn_ended.emit(true)
+	_run_enemy_turn()
+
+
+# ═══════════════════════════════════════════════════════════════════
+# 内部
+# ═══════════════════════════════════════════════════════════════════
+
+func _all_slots_filled_for(idx: int) -> bool:
+	if idx < 0 or idx >= available_challenges.size():
+		return false
+	var tmpl: ChallengeTemplate = available_challenges[idx]
+	if tmpl == null:
+		return false
+	var slots: Array = available_filled_slots[idx]
+	if slots.size() != tmpl.slots.size():
+		return false
+	for c in slots:
+		if c == null:
+			return false
+	return true
+
+
+## 从池里抽下一道题。优先用 selector；selector 给的题如果已在棋盘则跳过若干次。
+func _pick_next_template() -> ChallengeTemplate:
+	if _selector == null:
+		_selector = ChallengeSelector.new()
+	# 反复 ask selector 几次避免重复（最多 5 次）
+	for _i in 5:
+		var t: ChallengeTemplate = _selector.pick_challenge(_enemy, _pack, _srs)
+		if t == null:
+			return null
+		# 棋盘内重复检查
+		var on_board: bool = false
+		for c in available_challenges:
+			if c != null and c.template_id == t.template_id:
+				on_board = true
+				break
+		if not on_board:
+			return t
+	# 全是重复——退而求其次直接返回最后一次结果（哪怕重复）
+	return _selector.pick_challenge(_enemy, _pack, _srs)
+
+
+## 旧 API：让 selected 题前进到下一道（保留以兼容旧测试 / 旧 UI）。
+func _advance_to_next_challenge() -> void:
+	if available_challenges.is_empty():
+		refill_board()
+	if not available_challenges.is_empty() and selected_challenge_index < 0:
+		selected_challenge_index = 0
+	if selected_challenge_index >= 0:
+		challenge_advanced.emit(current_template)
+	board_changed.emit()
+
+
+func _draw_to_full_hand() -> void:
+	if hand.size() >= HAND_SIZE:
+		return
+	# 留题感知：先把"留下"题需要的答案卡牌预留到牌库顶（保证下回合发牌后手牌中
+	# 至少有一张能解 kept 题。否则玩家可能被卡死在自己留下的题上）。
+	_reserve_cards_for_kept_questions()
+	while hand.size() < HAND_SIZE:
+		if deck.is_empty():
+			if discard.is_empty():
+				break
+			for c in discard:
+				deck.append(c)
+			discard.clear()
+			deck.shuffle()
+		var c: Card = deck.pop_back()
+		hand.append(c)
+
+
+## 留题感知发牌的预留逻辑：扫描所有 kept 题的槽位，从牌库（必要时还有弃牌堆）中
+## 找出能填该槽的卡，搬到牌库顶（pop_back 优先发出）。每张卡只用一次；若实在
+## 没有任何可解卡，跳过——玩家下回合可能仍解不开 kept 题，但不会 crash。
+func _reserve_cards_for_kept_questions() -> void:
+	if kept_template_ids.is_empty():
+		return
+	var solving_cards: Array[Card] = []
+	for ch in available_challenges:
+		if ch == null:
+			continue
+		if not (ch.template_id in kept_template_ids):
+			continue
+		var slots: Array = ch.slots
+		for slot_idx in slots.size():
+			var slot: ChallengeSlot = slots[slot_idx]
+			if slot == null:
+				continue
+			# 1) 先在牌库找一张未占用的可解卡
+			var found_card: Card = null
+			for i in deck.size():
+				var c: Card = deck[i]
+				if c == null:
+					continue
+				if c in solving_cards:
+					continue
+				if CardValidator.can_place(c, slot):
+					found_card = c
+					break
+			# 2) 牌库没找到 → 再去弃牌堆找
+			if found_card == null:
+				for i in discard.size():
+					var c: Card = discard[i]
+					if c == null:
+						continue
+					if c in solving_cards:
+						continue
+					if CardValidator.can_place(c, slot):
+						found_card = c
+						break
+			if found_card != null:
+				solving_cards.append(found_card)
+	# 把预留的卡从原位置（deck 或 discard）搬到牌库顶（pop_back 端）
+	for c in solving_cards:
+		if c in discard:
+			discard.erase(c)
+		elif c in deck:
+			deck.erase(c)
+		# 牌库顶 = 数组末尾（_draw_to_full_hand 用 pop_back 抽牌）
+		deck.push_back(c)
+
+
+func draw_cards(count: int) -> int:
+	var drawn: int = 0
+	for _i in count:
+		if deck.is_empty():
+			if discard.is_empty():
+				break
+			for c in discard:
+				deck.append(c)
+			discard.clear()
+			deck.shuffle()
+		if deck.is_empty():
+			break
+		var c: Card = deck.pop_back()
+		hand.append(c)
+		drawn += 1
+	return drawn
+
+
+func _maybe_draw_bonus_card() -> void:
+	if DRAW_PER_N_CARDS <= 0:
+		return
+	if cards_played_this_turn <= 0:
+		return
+	if cards_played_this_turn % DRAW_PER_N_CARDS != 0:
+		return
+	var n: int = draw_cards(1)
+	if n > 0:
+		cards_drawn.emit(n)
+		hand_changed.emit(hand.duplicate())
+
+
+# ═══════════════════════════════════════════════════════════════════
+# 实体能力（敌人 / 玩家共享接口）
+# ═══════════════════════════════════════════════════════════════════
+
+## 在指定阶段（"turn_start" / "turn_end" / "on_hp_threshold" / "on_damage_taken" / "on_attack"）
+## 遍历敌人能力并应用结果。
+func _apply_enemy_abilities(phase: String) -> void:
+	if _enemy_abilities.is_empty():
+		return
+	var state_dict := {
+		"hp": enemy_hp,
+		"max_hp": _enemy.max_hp if _enemy != null else 1,
+	}
+	for a in _enemy_abilities:
+		if a == null or a.trigger != phase:
+			continue
+		if not a.should_trigger(state_dict):
+			continue
+		var result: Dictionary = a.apply(state_dict)
+		var healed_n: int = int(result.get("healed", 0))
+		var shielded_n: int = int(result.get("shielded", 0))
+		var extra_actions_n: int = int(result.get("extra_actions", 0))
+		# reflect 不在这里立即结算（需攻击者伤害值），由 _apply_enemy_reflect 统一处理。
+		if healed_n > 0 and _enemy != null:
+			var actual_heal: int = min(healed_n, _enemy.max_hp - enemy_hp)
+			if actual_heal > 0:
+				enemy_hp = min(_enemy.max_hp, enemy_hp + actual_heal)
+				_log("[color=#7fe88f]敌人能力: %s +%d HP[/color]" % [a.icon, actual_heal])
+				enemy_healed.emit(actual_heal)
+				enemy_ability_triggered.emit(a.icon, a.description_zh)
+		if shielded_n > 0:
+			enemy_shield += shielded_n
+			_log("[color=#7ad6ff]敌人能力: %s +%d 护盾[/color]" % [a.icon, shielded_n])
+			enemy_shielded.emit(shielded_n)
+			enemy_ability_triggered.emit(a.icon, a.description_zh)
+		if extra_actions_n > 0:
+			_pending_enemy_extra_actions += extra_actions_n
+			_log("[color=#ffaa55]敌人能力: %s 多 %d 次行动[/color]" % [a.icon, extra_actions_n])
+			enemy_ability_triggered.emit(a.icon, a.description_zh)
+		# 一次性触发标记
+		if a.trigger == "on_hp_threshold":
+			a.mark_triggered()
+		# state_dict 在循环中使用最新 hp / max_hp，刷新一下
+		state_dict["hp"] = enemy_hp
+
+
+## 处理 reflect 能力：玩家本次对敌人造成的伤害 incoming，按反伤百分比反弹给玩家。
+## incoming 是实际写入 enemy 的伤害（含被敌人盾抵掉的，按 spec "受到伤害时反弹"）。
+func _apply_enemy_reflect(incoming_damage: int) -> void:
+	if incoming_damage <= 0:
+		return
+	if _enemy_abilities.is_empty():
+		return
+	var state_dict := {
+		"hp": enemy_hp,
+		"max_hp": _enemy.max_hp if _enemy != null else 1,
+	}
+	for a in _enemy_abilities:
+		if a == null:
+			continue
+		if a.effect_type != "reflect":
+			continue
+		if a.trigger != "on_damage_taken":
+			continue
+		if not a.should_trigger(state_dict):
+			continue
+		var result: Dictionary = a.apply(state_dict)
+		var pct: int = int(result.get("reflected_damage", 0))
+		if pct <= 0:
+			continue
+		var refl: int = int(round(float(incoming_damage) * float(pct) / 100.0))
+		if refl <= 0:
+			continue
+		# 反伤直接扣玩家盾→HP
+		var absorbed: int = min(player_shield, refl)
+		player_shield -= absorbed
+		var actual_refl: int = refl - absorbed
+		if actual_refl > 0:
+			player_hp = max(0, player_hp - actual_refl)
+			if _has_game_state():
+				GameState.take_damage(actual_refl)
+			damage_received.emit(actual_refl)
+		_log("[color=#ff7777]敌人能力: %s 反弹 %d 伤害[/color]" % [a.icon, refl])
+		enemy_ability_triggered.emit(a.icon, a.description_zh)
+		if player_hp <= 0:
+			_on_player_dead()
+			return
+
+
+## 玩家能力 hook（当前为空 stub——后续装备 / 技能填充 _player_abilities 后此处统一处理）。
+func _apply_player_abilities(phase: String) -> void:
+	if _player_abilities.is_empty():
+		return
+	var state_dict := {
+		"hp": player_hp,
+		"max_hp": player_max_hp,
+	}
+	for a in _player_abilities:
+		if a == null or a.trigger != phase:
+			continue
+		if not a.should_trigger(state_dict):
+			continue
+		var result: Dictionary = a.apply(state_dict)
+		var healed_n: int = int(result.get("healed", 0))
+		var shielded_n: int = int(result.get("shielded", 0))
+		if healed_n > 0:
+			var actual_heal: int = min(healed_n, player_max_hp - player_hp)
+			if actual_heal > 0:
+				player_hp += actual_heal
+				if _has_game_state():
+					GameState.player_hp = player_hp
+				healed.emit(actual_heal)
+		if shielded_n > 0:
+			player_shield += shielded_n
+			shielded.emit(shielded_n)
+		if a.trigger == "on_hp_threshold":
+			a.mark_triggered()
+		state_dict["hp"] = player_hp
+
+
+## 玩家回合开始时调用。后续装备 / 技能填充 _player_abilities 后此处统一处理。
+## 当前为空 stub（兼容未来）。
+func apply_player_turn_start_abilities() -> void:
+	_apply_player_abilities("turn_start")
+
+
+func _run_enemy_turn() -> void:
+	state = State.ENEMY_TURN
+	# 敌人回合开始：触发 turn_start 能力（可能加盾、回血、累积额外行动）
+	_pending_enemy_extra_actions = 0
+	_apply_enemy_abilities("turn_start")
+	var attacks_this_turn: int = 1 + max(0, _pending_enemy_extra_actions)
+	_pending_enemy_extra_actions = 0
+	# 玩家回合 hook（敌人回合开始 = 玩家回合刚结束）：触发 turn_end
+	# （未来玩家能力的 on_turn_end）
+	_apply_player_abilities("turn_end")
+	for attack_i in attacks_this_turn:
+		var raw_dmg: int = _enemy.base_attack if _enemy != null else 0
+		if raw_dmg <= 0:
+			break
+		# 先抵护盾
+		var absorbed: int = min(player_shield, raw_dmg)
+		player_shield -= absorbed
+		var actual: int = raw_dmg - absorbed
+		if actual > 0:
+			player_hp = max(0, player_hp - actual)
+			if _has_game_state():
+				GameState.take_damage(actual)
+			damage_received.emit(actual)
+			# B6 日志
+			var prefix: String = ""
+			if attacks_this_turn > 1:
+				prefix = "[color=#ffaa55]⚡ 多动 %d/%d[/color] " % [attack_i + 1, attacks_this_turn]
+			if absorbed > 0:
+				_log("%s[color=#ff8a8a]敌人: 攻击你 (%d 伤害, 🛡 抵 %d)[/color]" % [prefix, actual, absorbed])
+			else:
+				_log("%s[color=#ff8a8a]敌人: 攻击你 (%d 伤害)[/color]" % [prefix, actual])
+		else:
+			# 全被护盾抵掉——通知 UI 但伤害=0
+			damage_received.emit(0)
+			if raw_dmg > 0:
+				_log("[color=#7ad6ff]敌人: 攻击 %d 伤害被🛡完全抵掉[/color]" % raw_dmg)
+		_combo.reset()
+		if player_hp <= 0:
+			_on_player_dead()
+			return
+	# 抽到满
+	_draw_to_full_hand()
+	# 刷新棋盘：保留 kept 题，其它换新
+	refill_board()
+	hand_changed.emit(hand.duplicate())
+	state = State.PLAYER_TURN
+	turn_ended.emit(false)
+
+
+func _on_enemy_dead() -> void:
+	state = State.END
+	var new_card_ids: Array[String] = []
+	if _has_run_state():
+		new_card_ids = RunState.record_cards_used(_used_card_ids_this_battle)
+		if not new_card_ids.is_empty():
+			RunState.add_crystals(5 * new_card_ids.size())
+			RunState.add_crystals(10)
+			new_cards_unlocked.emit(new_card_ids)
+	if _has_game_state() and GameState.save_system != null and _enemy != null:
+		GameState.save_system.record_enemy_defeated(_enemy.enemy_id)
+		GameState.save_system.add_crystals(10)
+		for cid in _used_card_ids_this_battle:
+			GameState.save_system.record_card_discovered(cid)
+	_log("[color=#ffd86b][b]胜利！敌人倒下了[/b][/color]")
+	battle_ended.emit(true)
+
+
+func _on_player_dead() -> void:
+	state = State.END
+	_log("[color=#ff7777][b]战败...守护者倒下了[/b][/color]")
+	battle_ended.emit(false)
+
+
+func _has_game_state() -> bool:
+	var ok := false
+	if Engine.get_main_loop() != null:
+		var root := Engine.get_main_loop()
+		if root is SceneTree:
+			var n := (root as SceneTree).root.get_node_or_null("GameState")
+			ok = n != null
+	return ok
+
+
+func _has_run_state() -> bool:
+	if Engine.get_main_loop() != null:
+		var root := Engine.get_main_loop()
+		if root is SceneTree:
+			return (root as SceneTree).root.get_node_or_null("RunState") != null
+	return false
+
+
+# ═══════════════════════════════════════════════════════════════════
+# 场景挂载支持
+# ═══════════════════════════════════════════════════════════════════
 
 func _ready() -> void:
-	# 连接节点引用（单元测试中无子节点，get_node_or_null 返回 null 则跳过）
-	var enemy_name_lbl := get_node_or_null("EnemyArea/EnemyNameLabel") as Label
-	var enemy_hp_bar_node := get_node_or_null("EnemyArea/EnemyHpBar") as ProgressBar
-	var weakness_lbl := get_node_or_null("EnemyArea/WeaknessLabel") as Label
-	var player_hp_bar_node := get_node_or_null("PlayerArea/PlayerHpBar") as ProgressBar
-	var combo_lbl := get_node_or_null("PlayerArea/ComboLabel") as Label
-	var attack_btns := get_node_or_null("AttackButtons") as HBoxContainer
-	var question_ui := get_node_or_null("QuestionUIInstance") as Control
-	if enemy_name_lbl:
-		setup_scene_nodes(enemy_name_lbl, enemy_hp_bar_node, weakness_lbl,
-			player_hp_bar_node, combo_lbl, attack_btns, null)
-		_setup_question_ui()
-	# 从 GameState 自动拾取待战敌人
-	if GameState.pending_enemy != null:
-		setup(GameState.pending_enemy, GameState.content_loader.get_active_pack())
-		refresh_enemy_ui()
-		build_attack_buttons()
-		start_player_turn()
-	battle_ended.connect(_on_battle_ended)
-
-func _on_battle_ended(victory: bool) -> void:
-	GameState.pending_enemy = null
-	var return_scene: String = GameState.expedition_return_scene
-	GameState.expedition_return_scene = ""
-	if return_scene.is_empty():
-		return  # 单元测试：不跳转
-	if victory:
-		get_tree().change_scene_to_file(return_scene)  # 胜利 → 继续探索
-	else:
-		# 失败：end_expedition 可能已经通过 take_damage→player_hp==0 触发
-		if GameState.expedition_active:
-			GameState.end_expedition(false)
-		get_tree().change_scene_to_file("res://src/ui/retreat_report_scene.tscn")
+	pass
