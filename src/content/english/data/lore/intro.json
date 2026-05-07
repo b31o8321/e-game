@@ -1,7 +1,7 @@
 [
   {
     "id": "intro_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/main_menu.png",
     "background_color": "#f5d27a",
     "bgm_path": "",
     "speaker_name": "",
@@ -13,11 +13,14 @@
     "advance_on": "click",
     "next_panel_id": "intro_2",
     "lore_codex_id": "lore_intro_1",
-    "tags": ["main_story", "intro"]
+    "tags": [
+      "main_story",
+      "intro"
+    ]
   },
   {
     "id": "intro_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/main_menu.png",
     "background_color": "#3a2a4a",
     "bgm_path": "",
     "speaker_name": "",
@@ -28,11 +31,14 @@
     "advance_on": "click",
     "next_panel_id": "intro_3",
     "lore_codex_id": "lore_intro_2",
-    "tags": ["main_story", "intro"]
+    "tags": [
+      "main_story",
+      "intro"
+    ]
   },
   {
     "id": "intro_3",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/main_menu.png",
     "background_color": "#1a1a2e",
     "bgm_path": "",
     "speaker_name": "",
@@ -43,11 +49,14 @@
     "advance_on": "click",
     "next_panel_id": "intro_4",
     "lore_codex_id": "lore_intro_3",
-    "tags": ["main_story", "intro"]
+    "tags": [
+      "main_story",
+      "intro"
+    ]
   },
   {
     "id": "intro_4",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/main_menu.png",
     "background_color": "#2a2a4e",
     "bgm_path": "",
     "speaker_name": "",
@@ -58,14 +67,17 @@
     "advance_on": "click",
     "next_panel_id": "intro_5",
     "lore_codex_id": "lore_intro_4",
-    "tags": ["main_story", "intro"]
+    "tags": [
+      "main_story",
+      "intro"
+    ]
   },
   {
     "id": "intro_5",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/main_menu.png",
     "background_color": "#1a3a3a",
     "bgm_path": "",
-    "portrait_left_path": "",
+    "portrait_left_path": "res://assets/visual/portraits/mentor_word.png",
     "portrait_left_emotion": "normal",
     "speaker_name": "词语之师",
     "speaker_position": "left",
@@ -76,6 +88,9 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_intro_5",
-    "tags": ["main_story", "intro"]
+    "tags": [
+      "main_story",
+      "intro"
+    ]
   }
 ]

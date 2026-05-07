@@ -1,9 +1,9 @@
 [
   {
     "id": "silent_sigher_pre_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#2a3a4a",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_silent_sigher.png",
     "portrait_right_emotion": "sad",
     "speaker_name": "静默叹息者",
     "speaker_position": "right",
@@ -13,13 +13,16 @@
     "advance_on": "click",
     "next_panel_id": "silent_sigher_pre_2",
     "lore_codex_id": "lore_silent_sigher_pre_1",
-    "tags": ["boss_dialogue", "1F"]
+    "tags": [
+      "boss_dialogue",
+      "1F"
+    ]
   },
   {
     "id": "silent_sigher_pre_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#2a3a4a",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_silent_sigher.png",
     "portrait_right_emotion": "sad",
     "speaker_name": "静默叹息者",
     "speaker_position": "right",
@@ -30,6 +33,9 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_silent_sigher_pre_2",
-    "tags": ["boss_dialogue", "1F"]
+    "tags": [
+      "boss_dialogue",
+      "1F"
+    ]
   }
 ]

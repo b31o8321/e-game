@@ -1,7 +1,7 @@
 [
   {
     "id": "ending_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/main_menu.png",
     "background_color": "#1a1a2e",
     "bgm_path": "",
     "speaker_name": "",
@@ -13,6 +13,9 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_ending_1",
-    "tags": ["main_story", "ending"]
+    "tags": [
+      "main_story",
+      "ending"
+    ]
   }
 ]

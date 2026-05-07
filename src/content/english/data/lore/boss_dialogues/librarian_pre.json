@@ -1,9 +1,9 @@
 [
   {
     "id": "librarian_pre_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#1e2a3e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_librarian.png",
     "portrait_right_emotion": "serious",
     "speaker_name": "图书管理员",
     "speaker_position": "right",
@@ -13,13 +13,17 @@
     "advance_on": "click",
     "next_panel_id": "librarian_pre_2",
     "lore_codex_id": "lore_librarian_pre_1",
-    "tags": ["boss_dialogue", "1F", "final_boss"]
+    "tags": [
+      "boss_dialogue",
+      "1F",
+      "final_boss"
+    ]
   },
   {
     "id": "librarian_pre_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#1e2a3e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_librarian.png",
     "portrait_right_emotion": "serious",
     "speaker_name": "图书管理员",
     "speaker_position": "right",
@@ -29,13 +33,17 @@
     "advance_on": "click",
     "next_panel_id": "librarian_pre_3",
     "lore_codex_id": "lore_librarian_pre_2",
-    "tags": ["boss_dialogue", "1F", "final_boss"]
+    "tags": [
+      "boss_dialogue",
+      "1F",
+      "final_boss"
+    ]
   },
   {
     "id": "librarian_pre_3",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#0e1a2e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_librarian.png",
     "portrait_right_emotion": "sad",
     "speaker_name": "图书管理员",
     "speaker_position": "right",
@@ -45,11 +53,16 @@
     "advance_on": "click",
     "next_panel_id": "librarian_pre_4",
     "lore_codex_id": "lore_librarian_pre_3",
-    "tags": ["boss_dialogue", "1F", "final_boss", "phase_2"]
+    "tags": [
+      "boss_dialogue",
+      "1F",
+      "final_boss",
+      "phase_2"
+    ]
   },
   {
     "id": "librarian_pre_4",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#0e1a2e",
     "speaker_name": "",
     "speaker_position": "center",
@@ -59,13 +72,18 @@
     "advance_on": "click",
     "next_panel_id": "librarian_pre_5",
     "lore_codex_id": "lore_librarian_pre_4",
-    "tags": ["boss_dialogue", "1F", "final_boss", "phase_2"]
+    "tags": [
+      "boss_dialogue",
+      "1F",
+      "final_boss",
+      "phase_2"
+    ]
   },
   {
     "id": "librarian_pre_5",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#1e2a3e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_librarian.png",
     "portrait_right_emotion": "serious",
     "speaker_name": "图书管理员",
     "speaker_position": "right",
@@ -76,6 +94,11 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_librarian_pre_5",
-    "tags": ["boss_dialogue", "1F", "final_boss", "phase_2"]
+    "tags": [
+      "boss_dialogue",
+      "1F",
+      "final_boss",
+      "phase_2"
+    ]
   }
 ]

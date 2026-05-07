@@ -585,9 +585,12 @@ func _update_board_label() -> void:
 
 func _make_challenge_card(idx: int, tmpl: ChallengeTemplate) -> PanelContainer:
 	var card := PanelContainer.new()
-	# 240×180 keeps 3 cards readable at 1280×720 while leaving room for header /
-	# inline-flow dialogue / footer without squashing text into vertical strips.
-	card.custom_minimum_size = Vector2(240, 180)
+	# 240×170 keeps 3 cards readable at 1280×720 within the ChallengeBoardPanel
+	# (≈210px tall after Wave 8 layout rebalance) while leaving room for
+	# header / inline-flow dialogue / footer without squashing text into
+	# vertical strips. clip_contents prevents any overflow leaking into
+	# PlayerStatus below.
+	card.custom_minimum_size = Vector2(240, 170)
 	card.set_meta("challenge_index", idx)
 	card.mouse_filter = Control.MOUSE_FILTER_STOP
 	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -1,9 +1,9 @@
 [
   {
     "id": "phonics_spirit_post_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#f5d27a",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_phonics_spirit.png",
     "portrait_right_emotion": "happy",
     "speaker_name": "发音之灵",
     "speaker_position": "right",
@@ -13,13 +13,16 @@
     "advance_on": "click",
     "next_panel_id": "phonics_spirit_post_2",
     "lore_codex_id": "lore_phonics_spirit_post_1",
-    "tags": ["boss_dialogue", "0F"]
+    "tags": [
+      "boss_dialogue",
+      "0F"
+    ]
   },
   {
     "id": "phonics_spirit_post_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#f5d27a",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_phonics_spirit.png",
     "portrait_right_emotion": "happy",
     "speaker_name": "发音之灵",
     "speaker_position": "right",
@@ -30,6 +33,9 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_phonics_spirit_post_2",
-    "tags": ["boss_dialogue", "0F"]
+    "tags": [
+      "boss_dialogue",
+      "0F"
+    ]
   }
 ]

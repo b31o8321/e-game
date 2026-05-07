@@ -1,9 +1,9 @@
 [
   {
     "id": "letter_chaos_pre_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#3a2a1a",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_letter_chaos.png",
     "portrait_right_emotion": "angry",
     "speaker_name": "字母混乱者",
     "speaker_position": "right",
@@ -13,13 +13,16 @@
     "advance_on": "click",
     "next_panel_id": "letter_chaos_pre_2",
     "lore_codex_id": "lore_letter_chaos_pre_1",
-    "tags": ["boss_dialogue", "0F"]
+    "tags": [
+      "boss_dialogue",
+      "0F"
+    ]
   },
   {
     "id": "letter_chaos_pre_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#3a2a1a",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_letter_chaos.png",
     "portrait_right_emotion": "angry",
     "speaker_name": "字母混乱者",
     "speaker_position": "right",
@@ -30,6 +33,9 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_letter_chaos_pre_2",
-    "tags": ["boss_dialogue", "0F"]
+    "tags": [
+      "boss_dialogue",
+      "0F"
+    ]
   }
 ]

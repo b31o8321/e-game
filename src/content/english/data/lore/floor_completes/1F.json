@@ -1,7 +1,7 @@
 [
   {
     "id": "1f_complete_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#3a4a6e",
     "bgm_path": "",
     "speaker_name": "",
@@ -12,11 +12,15 @@
     "advance_on": "click",
     "next_panel_id": "1f_complete_2",
     "lore_codex_id": "lore_1f_complete_1",
-    "tags": ["main_story", "floor_complete", "1F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "1F"
+    ]
   },
   {
     "id": "1f_complete_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#5a6a8e",
     "speaker_name": "",
     "speaker_position": "center",
@@ -26,13 +30,17 @@
     "advance_on": "click",
     "next_panel_id": "1f_complete_3",
     "lore_codex_id": "lore_1f_complete_2",
-    "tags": ["main_story", "floor_complete", "1F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "1F"
+    ]
   },
   {
     "id": "1f_complete_3",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#5a6a8e",
-    "portrait_left_path": "",
+    "portrait_left_path": "res://assets/visual/portraits/mentor_word.png",
     "portrait_left_emotion": "happy",
     "speaker_name": "词语之师",
     "speaker_position": "left",
@@ -42,13 +50,17 @@
     "advance_on": "click",
     "next_panel_id": "1f_complete_4",
     "lore_codex_id": "lore_1f_complete_3",
-    "tags": ["main_story", "floor_complete", "1F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "1F"
+    ]
   },
   {
     "id": "1f_complete_4",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#5a6a8e",
-    "portrait_left_path": "",
+    "portrait_left_path": "res://assets/visual/portraits/mentor_word.png",
     "portrait_left_emotion": "normal",
     "speaker_name": "词语之师",
     "speaker_position": "left",
@@ -59,6 +71,10 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_1f_complete_4",
-    "tags": ["main_story", "floor_complete", "1F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "1F"
+    ]
   }
 ]

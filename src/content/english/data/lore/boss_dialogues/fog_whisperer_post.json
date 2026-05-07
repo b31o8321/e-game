@@ -1,9 +1,9 @@
 [
   {
     "id": "fog_whisperer_post_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#5a6a8e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_fog_whisperer.png",
     "portrait_right_emotion": "happy",
     "speaker_name": "迷雾低吟者",
     "speaker_position": "right",
@@ -13,13 +13,16 @@
     "advance_on": "click",
     "next_panel_id": "fog_whisperer_post_2",
     "lore_codex_id": "lore_fog_whisperer_post_1",
-    "tags": ["boss_dialogue", "1F"]
+    "tags": [
+      "boss_dialogue",
+      "1F"
+    ]
   },
   {
     "id": "fog_whisperer_post_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_1F.png",
     "background_color": "#5a6a8e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_fog_whisperer.png",
     "portrait_right_emotion": "happy",
     "speaker_name": "迷雾低吟者",
     "speaker_position": "right",
@@ -30,6 +33,9 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_fog_whisperer_post_2",
-    "tags": ["boss_dialogue", "1F"]
+    "tags": [
+      "boss_dialogue",
+      "1F"
+    ]
   }
 ]

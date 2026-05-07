@@ -1,7 +1,7 @@
 [
   {
     "id": "0f_complete_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#ffe9a8",
     "bgm_path": "",
     "speaker_name": "",
@@ -12,13 +12,17 @@
     "advance_on": "click",
     "next_panel_id": "0f_complete_2",
     "lore_codex_id": "lore_0f_complete_1",
-    "tags": ["main_story", "floor_complete", "0F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "0F"
+    ]
   },
   {
     "id": "0f_complete_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#ffe9a8",
-    "portrait_left_path": "",
+    "portrait_left_path": "res://assets/visual/portraits/mentor_word.png",
     "portrait_left_emotion": "happy",
     "speaker_name": "词语之师",
     "speaker_position": "left",
@@ -28,13 +32,17 @@
     "advance_on": "click",
     "next_panel_id": "0f_complete_3",
     "lore_codex_id": "lore_0f_complete_2",
-    "tags": ["main_story", "floor_complete", "0F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "0F"
+    ]
   },
   {
     "id": "0f_complete_3",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#ffe9a8",
-    "portrait_left_path": "",
+    "portrait_left_path": "res://assets/visual/portraits/mentor_word.png",
     "portrait_left_emotion": "normal",
     "speaker_name": "词语之师",
     "speaker_position": "left",
@@ -45,6 +53,10 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_0f_complete_3",
-    "tags": ["main_story", "floor_complete", "0F"]
+    "tags": [
+      "main_story",
+      "floor_complete",
+      "0F"
+    ]
   }
 ]

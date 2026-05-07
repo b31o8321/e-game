@@ -1,9 +1,9 @@
 [
   {
     "id": "letter_warden_pre_1",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#2a1a0e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_letter_warden.png",
     "portrait_right_emotion": "serious",
     "speaker_name": "字母守关者",
     "speaker_position": "right",
@@ -13,13 +13,17 @@
     "advance_on": "click",
     "next_panel_id": "letter_warden_pre_2",
     "lore_codex_id": "lore_letter_warden_pre_1",
-    "tags": ["boss_dialogue", "0F", "final_boss"]
+    "tags": [
+      "boss_dialogue",
+      "0F",
+      "final_boss"
+    ]
   },
   {
     "id": "letter_warden_pre_2",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#2a1a0e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_letter_warden.png",
     "portrait_right_emotion": "serious",
     "speaker_name": "字母守关者",
     "speaker_position": "right",
@@ -29,13 +33,17 @@
     "advance_on": "click",
     "next_panel_id": "letter_warden_pre_3",
     "lore_codex_id": "lore_letter_warden_pre_2",
-    "tags": ["boss_dialogue", "0F", "final_boss"]
+    "tags": [
+      "boss_dialogue",
+      "0F",
+      "final_boss"
+    ]
   },
   {
     "id": "letter_warden_pre_3",
-    "background_image_path": "",
+    "background_image_path": "res://assets/visual/backgrounds/floor_0F.png",
     "background_color": "#3a2a1e",
-    "portrait_right_path": "",
+    "portrait_right_path": "res://assets/visual/portraits/boss_letter_warden.png",
     "portrait_right_emotion": "angry",
     "speaker_name": "字母守关者",
     "speaker_position": "right",
@@ -46,6 +54,11 @@
     "advance_on": "click",
     "next_panel_id": "",
     "lore_codex_id": "lore_letter_warden_pre_3",
-    "tags": ["boss_dialogue", "0F", "final_boss", "phase_2"]
+    "tags": [
+      "boss_dialogue",
+      "0F",
+      "final_boss",
+      "phase_2"
+    ]
   }
 ]
