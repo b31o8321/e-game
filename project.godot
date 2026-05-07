@@ -17,3 +17,27 @@ run/main_scene="res://src/ui/main_menu.tscn"
 [autoload]
 
 GameState="*res://src/core/autoloads/game_state.gd"
+RunState="*res://src/run/run_state.gd"
+CutscenePlayer="*res://src/cutscene/cutscene_player.gd"
+LoreCodexSystem="*res://src/cutscene/lore_codex_system.gd"
+DebugMode="*res://src/core/debug/debug_mode.gd"
+VoiceClient="*res://src/voice/voice_client.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/mode=2
+window/size/resizable=true
+window/dpi/allow_hidpi=true
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[gui]
+
+theme/custom="res://assets/fonts/default_theme.tres"
+theme/custom_font="res://assets/fonts/NotoSansSC-Regular.otf"
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
