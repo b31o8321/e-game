@@ -2,6 +2,7 @@
 extends PanelContainer
 
 signal reorder_requested(from_index: int, to_index: int)
+signal remove_requested(slot_index: int)
 
 var connection = null   # APConnection 类型
 
@@ -20,6 +21,19 @@ func render(c) -> void:
 		_preview_label.text = "⚔ %d" % c.preview.damage
 	else:
 		_preview_label.text = ""
+	mouse_filter = Control.MOUSE_FILTER_STOP
+
+
+# 右键 = 撤回（卡退回手牌，重新排序）。
+func _gui_input(event: InputEvent) -> void:
+	if connection == null:
+		return
+	if not (event is InputEventMouseButton):
+		return
+	var mb: InputEventMouseButton = event as InputEventMouseButton
+	if mb.pressed and mb.button_index == MOUSE_BUTTON_RIGHT:
+		emit_signal("remove_requested", connection.slot_index)
+		accept_event()
 
 
 # Drag-source: returns marker so target's _can_drop_data can check

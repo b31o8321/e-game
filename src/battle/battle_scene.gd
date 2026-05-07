@@ -1046,16 +1046,20 @@ func _on_slot_clicked(event: InputEvent, challenge_idx: int, slot_index: int, pa
 	var tmpl: ChallengeTemplate = _controller.available_challenges[challenge_idx]
 	if tmpl == null or slot_index >= tmpl.slots.size():
 		return
-	# 一锤定音：放卡 = 提交。validator 拒绝 → controller 会标 failed 并发 challenge_failed 信号
-	# （battle_scene 在 _on_challenge_failed 弹模态展示正确答案）。
-	var ok: bool = _controller.try_place_card(_selected_card, slot_index, challenge_idx)
+	# AP 队列模式：点击放卡 = 入队，不立即结算。提交结算只发生在 🎯 提交 按钮。
+	# add_to_ap_queue 处理：容量检查、从手牌移除、构建 APConnection、preview 计算。
+	# 验证（卡型/答案是否对）发生在 submit_all_ap → _resolve_connection。
+	var ok: bool = _controller.add_to_ap_queue(_selected_card, challenge_idx, slot_index)
 	if ok:
 		_selected_card = null
 		_set_status_hint("")
+		_render_hand()
+		_render_board()
+		_render_ap_row()
 	else:
-		# 失败路径 — 控制器已发 challenge_failed；这里只清状态
+		# 入队失败 = AP 槽满 或 卡不在手牌（不应发生）
+		_set_status_hint("AP 槽已满，请先点 🎯 提交结算 或 撤回一条")
 		_flash_slot_red(panel)
-		_selected_card = null
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -1993,6 +1997,8 @@ func _render_ap_row() -> void:
 		v.render(conn)
 		if v.has_signal("reorder_requested"):
 			v.reorder_requested.connect(_on_ap_reorder_requested)
+		if v.has_signal("remove_requested"):
+			v.remove_requested.connect(_on_ap_remove_requested)
 	# 空占位：补足 ap_max + ap_bonus_next_turn 个槽位
 	var total_slots: int = _controller.ap_max + _controller.ap_bonus_next_turn
 	for i in range(_controller.ap_queue.size(), total_slots):
@@ -2010,6 +2016,17 @@ func _on_ap_reorder_requested(from_idx: int, to_idx: int) -> void:
 		return
 	_controller.reorder_ap_queue(from_idx, to_idx)
 	_render_ap_row()
+
+
+## 右键 AP 块 → 卡退回手牌、AP 队列重排。
+func _on_ap_remove_requested(slot_index: int) -> void:
+	if _controller == null:
+		return
+	if _controller.remove_from_ap_queue(slot_index):
+		_set_status_hint("已撤回")
+		_render_hand()
+		_render_board()
+		_render_ap_row()
 
 
 func _on_submit_pressed() -> void:
