@@ -735,8 +735,11 @@ func add_to_board(template: ChallengeTemplate) -> bool:
 ## B4：如果上回合卡牌 draw_question 能力累积了 _queued_for_next_turn，下回合
 ## 多补 N 题（target = board_size + queued）。补完后清零。
 ##
-## B5（手牌感知）：刷盘时只挑选"当前手牌可解"的题——避免卡手。如果池里没有
-## 任何可解题，棋盘可以留空（玩家过牌抽新卡后下回合再补）。
+## B5（手牌感知）：刷盘时只挑选"当前手牌可解"的题——避免卡手。
+##
+## Task 13（降级填充）：如果可解题池榨干仍补不满 target_size，走 fallback
+## 直接从池里挑（不过滤），并把 is_warn = true，让 UI 可渲染 🟡 提示。
+## 这避免了"题板有时候没有问题"的体验黑洞——空板永远比警告板差。
 func refill_board() -> void:
 	# 1. 留 kept 的题 + 它们的填槽（回合末玩家可能没填完）。失败的题永远不留。
 	var new_chals: Array[ChallengeTemplate] = []
@@ -746,6 +749,8 @@ func refill_board() -> void:
 		if i in _failed_challenge_indices:
 			continue
 		if tmpl != null and tmpl.template_id in kept_template_ids:
+			# 保留下来的题手牌已经变了——重新评估 is_warn
+			tmpl.is_warn = not _can_solve_with_hand(tmpl, hand)
 			new_chals.append(tmpl)
 			# kept 题的填槽清空——玩家下回合重新填
 			var fresh_slots: Array = []
@@ -776,6 +781,7 @@ func refill_board() -> void:
 			continue
 		if not _can_solve_with_hand(picked, hand):
 			continue
+		picked.is_warn = false
 		add_to_board(picked)
 	# 兜底：dedup pass 没补够（小池子）—— 允许重复 template_id，但仍要可解。
 	var force_attempts: int = 0
@@ -786,7 +792,19 @@ func refill_board() -> void:
 			break
 		if not _can_solve_with_hand(picked2, hand):
 			continue
+		picked2.is_warn = false
 		add_to_board(picked2)
+	# Task 13: Fallback —— 可解池抽不够则放宽过滤，标 is_warn=true 让 UI 提示玩家
+	# 「这题手里没法解，建议过牌或重排手牌」。永远比留空板更友好。
+	var fallback_attempts: int = 0
+	while available_challenges.size() < target_size and fallback_attempts < 30:
+		fallback_attempts += 1
+		var picked3: ChallengeTemplate = _pick_next_template()
+		if picked3 == null:
+			break
+		# 不再过滤 _can_solve_with_hand —— 直接收
+		picked3.is_warn = true
+		add_to_board(picked3)
 	# 4. 修正 selected_challenge_index
 	if selected_challenge_index >= available_challenges.size():
 		selected_challenge_index = -1
