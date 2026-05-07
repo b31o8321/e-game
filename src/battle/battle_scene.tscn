@@ -1,52 +1,383 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://b2bsccene01"]
 
-[ext_resource type="Script" path="res://src/battle/battle_controller.gd" id="1_bc"]
-[ext_resource type="PackedScene" path="res://src/battle/question_ui.tscn" id="2_qui"]
+[ext_resource type="Script" path="res://src/battle/battle_scene.gd" id="1_bs"]
 
 [node name="BattleScene" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource("1_bc")
+script = ExtResource("1_bs")
 
-[node name="EnemyArea" type="VBoxContainer" parent="."]
-layout_mode = 1
-offset_left = 300.0
-offset_top = 80.0
-offset_right = 600.0
-offset_bottom = 250.0
-
-[node name="EnemyNameLabel" type="Label" parent="EnemyArea"]
-text = "敌人名称"
-
-[node name="EnemyHpBar" type="ProgressBar" parent="EnemyArea"]
-
-[node name="WeaknessLabel" type="Label" parent="EnemyArea"]
-text = ""
-
-[node name="PlayerArea" type="VBoxContainer" parent="."]
-layout_mode = 1
-offset_left = 50.0
-offset_top = 80.0
-offset_right = 250.0
-offset_bottom = 250.0
-
-[node name="PlayerHpBar" type="ProgressBar" parent="PlayerArea"]
-
-[node name="ComboLabel" type="Label" parent="PlayerArea"]
-text = "连击: 0"
-
-[node name="AttackButtons" type="HBoxContainer" parent="."]
-layout_mode = 1
-offset_left = 50.0
-offset_top = 300.0
-offset_right = 700.0
-offset_bottom = 400.0
-
-[node name="QuestionUIInstance" type="Control" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+color = Color(0.071, 0.094, 0.137, 1)
+
+; ─── TopBar ───────────────────────────────────────────────
+[node name="TopBar" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_right = 1.0
+offset_top = 0.0
+offset_bottom = 44.0
+
+[node name="TopRow" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+
+[node name="FloorLabel" type="Label" parent="TopBar/TopRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "楼层 - · Act - · 战斗 -/-"
+horizontal_alignment = 0
+vertical_alignment = 1
+
+[node name="LogToggleButton" type="Button" parent="TopBar/TopRow"]
+layout_mode = 2
+text = "📜 战斗日志"
+tooltip_text = "查看 / 关闭最近的战斗动作记录"
+
+[node name="RetreatButton" type="Button" parent="TopBar/TopRow"]
+layout_mode = 2
+text = "⏸ 撤退"
+
+; ─── EnemyArea (center-top, compact) ──────────────────────
+[node name="EnemyArea" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.18
+anchor_right = 0.82
+anchor_top = 0.06
+anchor_bottom = 0.18
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+clip_contents = true
+
+[node name="EnemyHeader" type="HBoxContainer" parent="EnemyArea"]
+layout_mode = 2
+alignment = 1
+
+[node name="EnemyPortrait" type="ColorRect" parent="EnemyArea/EnemyHeader"]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+color = Color(0.35, 0.27, 0.2, 1)
+
+[node name="EnemyInfo" type="VBoxContainer" parent="EnemyArea/EnemyHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EnemyNameLabel" type="Label" parent="EnemyArea/EnemyHeader/EnemyInfo"]
+layout_mode = 2
+text = "敌人"
+horizontal_alignment = 0
+
+[node name="WeaknessLabel" type="Label" parent="EnemyArea/EnemyHeader/EnemyInfo"]
+layout_mode = 2
+text = "弱点：-"
+modulate = Color(1, 0.8, 0.45, 1)
+
+[node name="EnemyHpRow" type="HBoxContainer" parent="EnemyArea/EnemyHeader/EnemyInfo"]
+layout_mode = 2
+
+[node name="EnemyHpBar" type="ProgressBar" parent="EnemyArea/EnemyHeader/EnemyInfo/EnemyHpRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 18)
+
+[node name="EnemyHpLabel" type="Label" parent="EnemyArea/EnemyHeader/EnemyInfo/EnemyHpRow"]
+layout_mode = 2
+text = "0/0"
+
+; ─── ApRow (AP block queue + Submit button) ───────────────
+[node name="ApRow" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.04
+anchor_right = 0.96
+anchor_top = 0.20
+anchor_bottom = 0.32
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="Margin" type="MarginContainer" parent="ApRow"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="HBox" type="HBoxContainer" parent="ApRow/Margin"]
+layout_mode = 2
+
+[node name="Blocks" type="HBoxContainer" parent="ApRow/Margin/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SubmitButton" type="Button" parent="ApRow/Margin/HBox"]
+layout_mode = 2
+text = "🎯 提交结算"
+
+; ─── ChallengeBoardPanel (multi-challenge board) ─────────
+[node name="ChallengeBoardPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.02
+anchor_right = 0.98
+anchor_top = 0.34
+anchor_bottom = 0.58
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+clip_contents = true
+mouse_filter = 0
+
+[node name="ChallengeContent" type="VBoxContainer" parent="ChallengeBoardPanel"]
+layout_mode = 2
+
+[node name="BoardLabel" type="Label" parent="ChallengeBoardPanel/ChallengeContent"]
+layout_mode = 2
+text = "题板：选一道题作答（点📌留卡）"
+modulate = Color(0.85, 0.85, 0.95, 1)
+horizontal_alignment = 1
+
+[node name="BoardRow" type="HBoxContainer" parent="ChallengeBoardPanel/ChallengeContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="HelperLabel" type="Label" parent="ChallengeBoardPanel/ChallengeContent"]
+layout_mode = 2
+text = ""
+modulate = Color(0.7, 0.95, 0.7, 1)
+horizontal_alignment = 1
+
+; Hidden legacy node kept so old code paths / tests that reference DialogueRow
+; through string paths don't crash. New rendering goes through BoardRow.
+[node name="DialogueRow" type="HBoxContainer" parent="ChallengeBoardPanel/ChallengeContent"]
+layout_mode = 2
 visible = false
+
+; ─── PlayerStatus ─────────────────────────────────────────
+[node name="PlayerStatus" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.04
+anchor_right = 0.96
+anchor_top = 0.59
+anchor_bottom = 0.65
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="PlayerLabel" type="Label" parent="PlayerStatus"]
+layout_mode = 2
+text = "🧙 守护者"
+
+[node name="PlayerHpBar" type="ProgressBar" parent="PlayerStatus"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(180, 20)
+
+[node name="PlayerHpLabel" type="Label" parent="PlayerStatus"]
+layout_mode = 2
+text = "100/100"
+
+[node name="ShieldLabel" type="Label" parent="PlayerStatus"]
+layout_mode = 2
+text = ""
+modulate = Color(0.55, 0.85, 1, 1)
+
+[node name="ComboLabel" type="Label" parent="PlayerStatus"]
+layout_mode = 2
+text = "连击 0🔥"
+modulate = Color(1, 0.7, 0.4, 1)
+
+[node name="CrystalLabel" type="Label" parent="PlayerStatus"]
+layout_mode = 2
+text = "词晶 0🔮"
+modulate = Color(0.6, 0.85, 1, 1)
+
+; ─── HintLabel (helper hint band between PlayerStatus and Hand) ───
+[node name="HandLabel" type="Label" parent="."]
+layout_mode = 1
+anchor_left = 0.04
+anchor_right = 0.96
+anchor_top = 0.66
+anchor_bottom = 0.69
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+text = "手牌："
+modulate = Color(0.85, 0.85, 0.95, 1)
+vertical_alignment = 1
+
+; ─── Hand (bottom card row) ───────────────────────────────
+[node name="HandRow" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.02
+anchor_right = 0.98
+anchor_top = 0.70
+anchor_bottom = 0.95
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+alignment = 1
+clip_contents = true
+
+; ─── BottomBar (action buttons / status hint) ─────────────
+[node name="ActionRow" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.04
+anchor_right = 0.96
+anchor_top = 0.96
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+alignment = 2
+
+[node name="StatusHint" type="Label" parent="ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+modulate = Color(0.8, 0.8, 0.6, 1)
+vertical_alignment = 1
+
+[node name="EndTurnButton" type="Button" parent="ActionRow"]
+layout_mode = 2
+text = "过牌 / 弃手重抽"
+
+; ─── BattleLog (collapsible right-side log panel) ────────
+[node name="LogPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.74
+anchor_right = 1.0
+anchor_top = 0.06
+anchor_bottom = 0.95
+offset_left = 0.0
+offset_top = 0.0
+offset_right = -4.0
+offset_bottom = 0.0
+visible = false
+mouse_filter = 0
+
+[node name="LogMargin" type="MarginContainer" parent="LogPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="LogColumn" type="VBoxContainer" parent="LogPanel/LogMargin"]
+layout_mode = 2
+
+[node name="LogTitle" type="Label" parent="LogPanel/LogMargin/LogColumn"]
+layout_mode = 2
+text = "📜 战斗日志"
+horizontal_alignment = 1
+modulate = Color(0.95, 0.92, 0.7, 1)
+
+[node name="LogText" type="RichTextLabel" parent="LogPanel/LogMargin/LogColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+bbcode_enabled = true
+scroll_following = true
+fit_content = false
+custom_minimum_size = Vector2(220, 360)
+text = ""
+
+; ─── FX overlay (damage popups, flashes) ──────────────────
+[node name="FxLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+; ─── BattleEnd overlay ───────────────────────────────────
+[node name="EndOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+visible = false
+mouse_filter = 0
+
+[node name="EndContent" type="VBoxContainer" parent="EndOverlay"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -80.0
+offset_right = 160.0
+offset_bottom = 80.0
+alignment = 1
+
+[node name="EndTitleLabel" type="Label" parent="EndOverlay/EndContent"]
+layout_mode = 2
+text = "胜利!"
+horizontal_alignment = 1
+modulate = Color(1, 0.95, 0.5, 1)
+
+[node name="EndSubLabel" type="Label" parent="EndOverlay/EndContent"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+modulate = Color(0.85, 0.85, 0.95, 1)
+
+[node name="EndButton" type="Button" parent="EndOverlay/EndContent"]
+layout_mode = 2
+text = "继续"
+
+; ─── Tutorial overlay (first battle) ─────────────────────
+[node name="TutorialOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.65)
+visible = false
+mouse_filter = 0
+
+[node name="TutorialContent" type="PanelContainer" parent="TutorialOverlay"]
+layout_mode = 1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -140.0
+offset_right = 260.0
+offset_bottom = 140.0
+
+[node name="TutorialBox" type="VBoxContainer" parent="TutorialOverlay/TutorialContent"]
+layout_mode = 2
+
+[node name="TutorialTitle" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
+layout_mode = 2
+text = "玩法提示"
+horizontal_alignment = 1
+
+[node name="TutorialBody" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
+layout_mode = 2
+text = "题板有多道题，每道效果不同（⚔伤害 / 💚回血 / 🛡护盾 / 🎴抽牌 / 📚加题）。\n点一道题选中 → 选手牌 → 点空格放入。\n点📌留下可保留某题到下回合，类似留卡。"
+autowrap_mode = 2
+horizontal_alignment = 1
+
+[node name="TutorialFooter" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
+layout_mode = 2
+text = "（点击任意处或按 ESC 关闭）"
+modulate = Color(0.7, 0.7, 0.8, 1)
+horizontal_alignment = 1

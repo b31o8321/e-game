@@ -187,6 +187,10 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _log_toggle_button: Button = get_node_or_null("TopBar/TopRow/LogToggleButton")
 @onready var _log_panel: PanelContainer = get_node_or_null("LogPanel")
 @onready var _log_text: RichTextLabel = get_node_or_null("LogPanel/LogMargin/LogColumn/LogText")
+@onready var _ap_blocks_container: HBoxContainer = get_node_or_null("ApRow/Margin/HBox/Blocks")
+@onready var _submit_button: Button = get_node_or_null("ApRow/Margin/HBox/SubmitButton")
+
+const APBlockViewScene = preload("res://src/battle/ap_block_view.tscn")
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -204,6 +208,9 @@ func _ready() -> void:
 	_controller.start_battle()
 	_render_board()
 	_render_hand()
+	_render_ap_row()
+	if _submit_button != null:
+		_submit_button.pressed.connect(_on_submit_pressed)
 	_maybe_show_tutorial()
 	_setup_debug_overlay()
 
@@ -1827,3 +1834,53 @@ func _debug_force_defeat() -> void:
 ## 旧 API 兼容：测试 / 调试覆盖层调用 _render_challenge() 触发重渲染。
 func _render_challenge() -> void:
 	_render_board()
+
+
+# ═══════════════════════════════════════════════════════════════════
+# AP Row (T15)
+# ═══════════════════════════════════════════════════════════════════
+
+## 渲染 AP 行：把 controller.ap_queue 里每条连线展示为 APBlockView，
+## 后面用空 placeholder 补到 ap_max + ap_bonus_next_turn 个槽位。
+func _render_ap_row() -> void:
+	if _ap_blocks_container == null:
+		return
+	for child in _ap_blocks_container.get_children():
+		child.queue_free()
+	if _controller == null:
+		return
+	for conn in _controller.ap_queue:
+		var v = APBlockViewScene.instantiate()
+		_ap_blocks_container.add_child(v)
+		v.render(conn)
+		if v.has_signal("reorder_requested"):
+			v.reorder_requested.connect(_on_ap_reorder_requested)
+	# 空占位：补足 ap_max + ap_bonus_next_turn 个槽位
+	var total_slots: int = _controller.ap_max + _controller.ap_bonus_next_turn
+	for i in range(_controller.ap_queue.size(), total_slots):
+		var placeholder := PanelContainer.new()
+		placeholder.custom_minimum_size = Vector2(120, 96)
+		var lbl := Label.new()
+		lbl.text = "[%d]\n空" % (i + 1)
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		placeholder.add_child(lbl)
+		_ap_blocks_container.add_child(placeholder)
+
+
+func _on_ap_reorder_requested(from_idx: int, to_idx: int) -> void:
+	if _controller == null:
+		return
+	_controller.reorder_ap_queue(from_idx, to_idx)
+	_render_ap_row()
+
+
+func _on_submit_pressed() -> void:
+	if _controller == null or _controller.ap_queue.is_empty():
+		return
+	_controller.submit_all_ap()
+	# 触发整体重绘（沿用现有渲染分发）
+	_render_board()
+	_render_hand()
+	_render_player_status()
+	_render_enemy()
+	_render_ap_row()
