@@ -193,6 +193,10 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 const APBlockViewScene = preload("res://src/battle/ap_block_view.tscn")
 const SlotDropZone = preload("res://src/battle/slot_drop_zone.gd")
 
+const ANIM_PER_AP_BLOCK_S: float = 0.4
+
+var _is_resolving: bool = false
+
 
 # ═══════════════════════════════════════════════════════════════════
 # Lifecycle
@@ -1906,10 +1910,42 @@ func _on_ap_reorder_requested(from_idx: int, to_idx: int) -> void:
 func _on_submit_pressed() -> void:
 	if _controller == null or _controller.ap_queue.is_empty():
 		return
+	if _is_resolving:
+		return
+	_is_resolving = true
+	if _submit_button != null:
+		_submit_button.disabled = true
+	# 序列动画：逐个高亮 AP 块
+	var queue_size: int = _controller.ap_queue.size()
+	for i in queue_size:
+		_highlight_ap_block(i)
+		await get_tree().create_timer(ANIM_PER_AP_BLOCK_S).timeout
+	# 真正提交（同步结算）
 	_controller.submit_all_ap()
+	# 完美连击通知
+	if _controller.ap_bonus_next_turn > 0:
+		_set_status_hint("✨ 完美连击！下回合 +1 AP")
 	# 触发整体重绘（沿用现有渲染分发）
 	_render_board()
 	_render_hand()
 	_render_player_status()
 	_render_enemy()
 	_render_ap_row()
+	_is_resolving = false
+	if _submit_button != null:
+		_submit_button.disabled = false
+
+
+## 高亮指定索引的 AP 块（用于 submit 时的逐块结算动画）。
+## 简单做法：对该块做一次 modulate flash（亮黄 → 白）。
+func _highlight_ap_block(index: int) -> void:
+	if _ap_blocks_container == null:
+		return
+	var children := _ap_blocks_container.get_children()
+	if index < 0 or index >= children.size():
+		return
+	var node = children[index]
+	if node is Control:
+		var tween := create_tween()
+		tween.tween_property(node, "modulate", Color(1.4, 1.4, 0.6), 0.1)
+		tween.tween_property(node, "modulate", Color.WHITE, 0.3)
