@@ -600,6 +600,21 @@ func reorder_ap_queue(from_idx: int, to_idx: int) -> bool:
 	return true
 
 
+## 在新回合开始时调用：清掉上回合留下的 ap_bonus_next_turn。
+##
+## 说明：完美连击的奖励语义是"作用于紧接的下一回合"。submit_all_ap 在回合末
+## 把 bonus 写为 1（perfect）或 0（imperfect）。下一回合 add_to_ap_queue 用
+## ap_max + ap_bonus_next_turn 作为容量上限，所以 bonus 自然在下一回合生效。
+##
+## 当下一回合的 submit_all_ap 再次执行时它会覆写 bonus，因此理论上不需要显式
+## 重置。但 UI 在 turn_start 调一次本方法可以保证：即使玩家整回合不提交
+## （例如全部从 AP 队列撤回），bonus 也不会跨多个回合"残留"——只生效一次。
+##
+## UI 应在新回合 _on_turn_start 时调用此方法。
+func consume_ap_bonus_for_turn() -> void:
+	ap_bonus_next_turn = 0
+
+
 ## 按 AP 顺序逐条结算所有连线。
 ## 每条连线独立验证：
 ##   - 对 → 填槽；若该题全填且全对，应用题效果；卡入弃牌堆
