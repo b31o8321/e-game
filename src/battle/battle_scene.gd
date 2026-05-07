@@ -191,6 +191,7 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _submit_button: Button = get_node_or_null("ApRow/Margin/HBox/SubmitButton")
 
 const APBlockViewScene = preload("res://src/battle/ap_block_view.tscn")
+const SlotDropZone = preload("res://src/battle/slot_drop_zone.gd")
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -745,7 +746,10 @@ func _apply_keep_button_style(btn: Button, kept: bool) -> void:
 
 
 func _make_slot_node(challenge_idx: int, slot_index: int) -> PanelContainer:
-	var panel := PanelContainer.new()
+	# T16: use SlotDropZone (PanelContainer subclass) so the slot can receive
+	# native Godot 4 drag-drop from CardView. Click handler is preserved for
+	# the legacy "select-card-then-click-slot" flow.
+	var panel: PanelContainer = SlotDropZone.new()
 	# 70×28 inline-friendly：与 16pt 文本同高，不再像之前 96×36 把对话挤变形。
 	panel.custom_minimum_size = Vector2(70, 28)
 	panel.set_meta("slot_index", slot_index)
@@ -764,8 +768,33 @@ func _make_slot_node(challenge_idx: int, slot_index: int) -> PanelContainer:
 	panel.mouse_entered.connect(_on_slot_hovered.bind(challenge_idx, slot_index))
 	panel.mouse_exited.connect(_on_slot_unhovered.bind(challenge_idx, slot_index))
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	# T16: drag-drop → AP queue
+	if panel.has_signal("card_dropped"):
+		panel.card_dropped.connect(_on_card_dropped_to_slot.bind(challenge_idx, slot_index))
 	_apply_slot_style(panel, false, false)
 	return panel
+
+
+## T16: A CardView was dropped onto this slot. Route to BattleController and
+## refresh the affected views. add_to_ap_queue handles bookkeeping (cap check,
+## hand removal, APConnection construction).
+func _on_card_dropped_to_slot(card, challenge_idx: int, slot_index: int) -> void:
+	if _controller == null or card == null:
+		return
+	_idle_seconds_since_action = 0.0
+	# 失败的题不能再操作（一锤定音）
+	if _controller.is_failed(challenge_idx):
+		_set_status_hint("这题已失败 — 选其它题作答")
+		return
+	var ok: bool = _controller.add_to_ap_queue(card, challenge_idx, slot_index)
+	if ok:
+		_selected_card = null
+		_set_status_hint("")
+		_render_hand()
+		_render_board()
+		_render_ap_row()
+	else:
+		_set_status_hint("AP 队列已满 — 先 Submit 或撤回再放卡")
 
 
 func _on_slot_hovered(challenge_idx: int, slot_index: int) -> void:
