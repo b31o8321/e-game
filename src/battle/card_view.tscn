@@ -1,0 +1,120 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2cardview01"]
+
+[ext_resource type="Script" path="res://src/battle/card_view.gd" id="1_cv"]
+
+[node name="CardView" type="PanelContainer"]
+custom_minimum_size = Vector2(200, 280)
+script = ExtResource("1_cv")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="HeaderRow" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="MasteryLabel" type="Label" parent="Layout/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🌱"
+
+[node name="RarityLabel" type="Label" parent="Layout/HeaderRow"]
+layout_mode = 2
+text = "C"
+
+[node name="DamageBigLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "⚔ 0"
+theme_override_font_sizes/font_size = 32
+
+[node name="TextLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+text = "card"
+theme_override_font_sizes/font_size = 16
+
+[node name="PosLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""
+theme_override_font_sizes/font_size = 12
+modulate = Color(0.85, 0.85, 0.95, 1)
+
+[node name="PhoneticLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""
+visible = false
+theme_override_font_sizes/font_size = 14
+modulate = Color(0.85, 0.85, 0.95, 1)
+
+[node name="MeaningLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+text = ""
+visible = false
+theme_override_font_sizes/font_size = 16
+
+[node name="ExampleEnLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+text = ""
+visible = false
+theme_override_font_sizes/font_size = 11
+modulate = Color(0.78, 0.85, 0.95, 1)
+
+[node name="ExampleZhLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+text = ""
+visible = false
+theme_override_font_sizes/font_size = 11
+modulate = Color(0.78, 0.85, 0.95, 1)
+
+[node name="Spacer" type="Control" parent="Layout"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MetaRow" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="TypeLabel" type="Label" parent="Layout/MetaRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+visible = false
+theme_override_font_sizes/font_size = 11
+
+[node name="PosLabelLegacy" type="Label" parent="Layout/MetaRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+visible = false
+theme_override_font_sizes/font_size = 11
+
+[node name="DamageLabel" type="Label" parent="Layout/MetaRow"]
+layout_mode = 2
+text = "0"
+visible = false
+theme_override_font_sizes/font_size = 14
+
+[node name="AbilityBadge" type="Label" parent="Layout/MetaRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 14
+modulate = Color(1, 0.92, 0.6, 1)
+
+[node name="AudioButton" type="Button" parent="Layout/MetaRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(36, 28)
+focus_mode = 0
+text = "🔊"
+flat = true

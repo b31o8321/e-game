@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/content/english/spices/dictation_ui.gd" id="1_dui"]
+
+[node name="DictationUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 0
+script = ExtResource("1_dui")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.65)
+
+[node name="CenterCard" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -320.0
+offset_top = -220.0
+offset_right = 320.0
+offset_bottom = 220.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterCard"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="CenterCard/VBox"]
+layout_mode = 2
+text = "🎵 听写法术"
+horizontal_alignment = 1
+
+[node name="PromptLabel" type="Label" parent="CenterCard/VBox"]
+layout_mode = 2
+text = "听音拼写"
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="CenterCard/VBox"]
+layout_mode = 2
+text = "▶ 重新播放"
+
+[node name="InputField" type="LineEdit" parent="CenterCard/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+placeholder_text = "在此拼写单词..."
+
+[node name="StatusLabel" type="Label" parent="CenterCard/VBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+
+[node name="CorrectLabel" type="Label" parent="CenterCard/VBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="CenterCard/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubmitButton" type="Button" parent="CenterCard/VBox/HBox"]
+layout_mode = 2
+text = "提交"
+
+[node name="CloseButton" type="Button" parent="CenterCard/VBox/HBox"]
+layout_mode = 2
+text = "关闭"

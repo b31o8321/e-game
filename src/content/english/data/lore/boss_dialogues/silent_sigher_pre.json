@@ -1,0 +1,35 @@
+[
+  {
+    "id": "silent_sigher_pre_1",
+    "background_image_path": "",
+    "background_color": "#2a3a4a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "sad",
+    "speaker_name": "静默叹息者",
+    "speaker_position": "right",
+    "text": "我已经……忘记了……该怎么形容自己……张嘴只剩下一声叹息……",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "silent_sigher_pre_2",
+    "lore_codex_id": "lore_silent_sigher_pre_1",
+    "tags": ["boss_dialogue", "1F"]
+  },
+  {
+    "id": "silent_sigher_pre_2",
+    "background_image_path": "",
+    "background_color": "#2a3a4a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "sad",
+    "speaker_name": "静默叹息者",
+    "speaker_position": "right",
+    "text": "你来告诉我吧……我安静吗？我寂寞吗？我究竟是哪一种？",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_silent_sigher_pre_2",
+    "tags": ["boss_dialogue", "1F"]
+  }
+]

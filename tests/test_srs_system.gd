@@ -37,4 +37,10 @@ func test_save_and_load():
 	var srs2 = SRSSystem.new()
 	add_child_autofree(srs2)
 	srs2.deserialize(data)
-	assert_eq(srs2.get_priority("q_001"), srs.get_priority("q_001"))
+	# Tolerance: get_priority() factors in (now - last_wrong_time); the two
+	# calls happen microseconds apart so values differ slightly.
+	assert_almost_eq(
+		srs2.get_priority("q_001"),
+		srs.get_priority("q_001"),
+		0.001,
+	)

@@ -31,7 +31,9 @@ var expedition_loot: Dictionary = {}
 var pending_enemy: EnemyData = null
 ## 战斗结束后返回的场景路径；空字符串 = 不跳转（单元测试场景）
 var expedition_return_scene: String = ""
-var expedition_tracker: ExpeditionTracker
+# TODO Phase 2: re-evaluate — ExpeditionTracker removed in Phase 1 cleanup;
+# tracking semantics will be redesigned for the Run/card-battle system.
+# var expedition_tracker: ExpeditionTracker
 ## 上次远征完整统计报告，供 RetreatReportController 读取
 var last_expedition_report: Dictionary = {}
 ## 专项练习指定题目 ID 列表；空 = 自动从 SRS 选取
@@ -56,16 +58,18 @@ signal expedition_ended(report: Dictionary)
 func _ready() -> void:
 	content_loader = ContentLoader.new()
 	add_child(content_loader)
-	var english_pack := EnglishContentPack.new()
-	add_child(english_pack)
-	content_loader.register_pack(english_pack)
+	# ContentLoader._ready() 已自动扫描 src/content/*/ 注册所有包；
+	# 此处只需选择激活的 pack。Phase 2 会改为读 SaveSystem 中持久化的 active_pack_id。
 	content_loader.set_active_pack("english_grade46")
 	srs_system = SRSSystem.new()
 	add_child(srs_system)
-	expedition_tracker = ExpeditionTracker.new()
-	add_child(expedition_tracker)
+	# TODO Phase 2: re-evaluate — ExpeditionTracker removed in Phase 1 cleanup
+	# expedition_tracker = ExpeditionTracker.new()
+	# add_child(expedition_tracker)
 	save_system = SaveSystem.new()
 	add_child(save_system)
+	# 同步 active pack 到 SaveSystem，确保读写到对应学科存档
+	save_system.set_active_pack_id(content_loader.get_active_pack_id())
 	save_system.load_game_state()
 
 func reset_expedition() -> void:
@@ -88,8 +92,9 @@ func take_damage(amount: int) -> void:
 func increment_combo() -> void:
 	combo_count += 1
 	combo_changed.emit(combo_count)
-	if expedition_tracker:
-		expedition_tracker.update_peak_combo(combo_count)
+	# TODO Phase 2: re-evaluate — ExpeditionTracker removed in Phase 1 cleanup
+	# if expedition_tracker:
+	# 	expedition_tracker.update_peak_combo(combo_count)
 
 ## 开始新远征：重置状态并启动追踪器
 func start_expedition() -> void:
@@ -97,8 +102,9 @@ func start_expedition() -> void:
 	combo_count = 0
 	player_hp = player_max_hp
 	active_bd_skills.clear()
-	if expedition_tracker:
-		expedition_tracker.reset()
+	# TODO Phase 2: re-evaluate — ExpeditionTracker removed in Phase 1 cleanup
+	# if expedition_tracker:
+	# 	expedition_tracker.reset()
 	expedition_active = true
 
 ## 进入大关：存储配置、预设波数、重置状态
@@ -131,7 +137,8 @@ func complete_gate() -> void:
 func end_expedition(victory: bool) -> void:
 	if not expedition_active:
 		return
-	var tracker_report: Dictionary = expedition_tracker.build_report() if expedition_tracker else {}
+	# TODO Phase 2: re-evaluate — ExpeditionTracker removed in Phase 1 cleanup
+	var tracker_report: Dictionary = {}
 	last_expedition_report = {
 		"victory": victory,
 		"loot": expedition_loot.duplicate(),

@@ -1,0 +1,135 @@
+{
+	"enemies": [
+		{
+			"id": "letter_wisp",
+			"display_name": "字母游魂",
+			"max_hp": 30,
+			"base_attack": 5,
+			"topic_id": "0F_alphabet",
+			"weak_axes": ["letter"],
+			"challenge_template_ids": ["0F_alphabet_next", "0F_alphabet_before_h", "0F_alphabet_after_n", "0F_alphabet_listen_b"],
+			"portrait_path": "res://assets/visual/portraits/letter_wisp.png"
+		},
+		{
+			"id": "phonics_phantom",
+			"display_name": "音节幻影",
+			"max_hp": 40,
+			"base_attack": 7,
+			"topic_id": "0F_phonics",
+			"weak_axes": ["syllable", "phonics"],
+			"challenge_template_ids": ["0F_phonics_cat", "0F_phonics_pig", "0F_phonics_run"],
+			"portrait_path": "res://assets/visual/portraits/phonics_phantom.png"
+		},
+		{
+			"id": "library_dust",
+			"display_name": "书页尘灵",
+			"max_hp": 35,
+			"base_attack": 6,
+			"topic_id": "1F_emotion",
+			"weak_axes": ["emotion", "positive_emotion"],
+			"challenge_template_ids": ["1F_emotion_blank", "1F_emotion_positive", "1F_emotion_tired", "1F_emotion_listen"],
+			"portrait_path": "res://assets/visual/portraits/library_dust.png"
+		},
+		{
+			"id": "wandering_word",
+			"display_name": "游荡词魂",
+			"max_hp": 50,
+			"base_attack": 8,
+			"topic_id": "1F_personality",
+			"weak_axes": ["personality"],
+			"challenge_template_ids": ["1F_personality_blank", "1F_personality_he_brave", "1F_personality_quiet", "1F_personality_lazy_correct"],
+			"portrait_path": "res://assets/visual/portraits/wandering_word.png"
+		},
+		{
+			"id": "bookworm",
+			"display_name": "书虫",
+			"max_hp": 60,
+			"base_attack": 10,
+			"topic_id": "1F_grammar",
+			"weak_axes": ["sentence_pattern", "be_verb"],
+			"challenge_template_ids": ["1F_be_correct", "1F_be_we_are", "1F_grammar_size", "1F_grammar_pattern_iam"],
+			"portrait_path": "res://assets/visual/portraits/bookworm.png"
+		},
+		{
+			"id": "home_haunter",
+			"display_name": "家屋萦绕者",
+			"max_hp": 45,
+			"base_attack": 7,
+			"topic_id": "2F_family",
+			"weak_axes": ["family"],
+			"challenge_template_ids": ["2F_family_blank", "2F_family_grandma", "2F_family_listen", "2F_family_baby_correct"],
+			"portrait_path": "res://assets/visual/portraits/home_haunter.png"
+		},
+		{
+			"id": "body_blur",
+			"display_name": "形影模糊",
+			"max_hp": 55,
+			"base_attack": 9,
+			"topic_id": "2F_body",
+			"weak_axes": ["body"],
+			"challenge_template_ids": ["2F_body_blank", "2F_body_head", "2F_body_listen"],
+			"portrait_path": "res://assets/visual/portraits/body_blur.png"
+		},
+		{
+			"id": "pronoun_pest",
+			"display_name": "代词捣蛋鬼",
+			"max_hp": 70,
+			"base_attack": 11,
+			"topic_id": "2F_pronoun",
+			"weak_axes": ["pronoun", "subject_form", "object_form"],
+			"challenge_template_ids": ["2F_pronoun_correct", "2F_pronoun_she", "2F_pronoun_we", "2F_this_that", "2F_pronoun_object_me"],
+			"portrait_path": "res://assets/visual/portraits/pronoun_pest.png"
+		},
+		{
+			"id": "elite_letter_master",
+			"display_name": "[精英] 字母守护者",
+			"max_hp": 60,
+			"base_attack": 8,
+			"topic_id": "0F_alphabet",
+			"weak_axes": ["letter", "syllable"],
+			"challenge_template_ids": [
+				"0F_elite_phonics_cat_full",
+				"0F_elite_phonics_dog_full",
+				"0F_elite_alphabet_seq",
+				"0F_alphabet_listen_b",
+				"0F_phonics_cat"
+			],
+			"ability_ids": ["regen_2", "shield_at_50"],
+			"portrait_path": ""
+		},
+		{
+			"id": "elite_book_keeper",
+			"display_name": "[精英] 图书守护者",
+			"max_hp": 90,
+			"base_attack": 11,
+			"topic_id": "1F_emotion",
+			"weak_axes": ["adjective", "personality", "positive_emotion"],
+			"challenge_template_ids": [
+				"1F_elite_personality_pair",
+				"1F_elite_be_pattern_pair",
+				"1F_elite_emotion_listen",
+				"1F_emotion_blank",
+				"1F_personality_blank"
+			],
+			"ability_ids": ["multi_action_2", "regen_2"],
+			"portrait_path": ""
+		},
+		{
+			"id": "elite_family_keeper",
+			"display_name": "[精英] 家族守护者",
+			"max_hp": 100,
+			"base_attack": 13,
+			"topic_id": "2F_family",
+			"weak_axes": ["noun", "family", "pronoun"],
+			"challenge_template_ids": [
+				"2F_elite_family_body",
+				"2F_elite_pronoun_be",
+				"2F_elite_pronoun_object",
+				"2F_family_blank",
+				"2F_family_grandma"
+			],
+			"ability_ids": ["shield_each_turn_5", "shield_at_50"],
+			"portrait_path": ""
+		}
+	]
+}

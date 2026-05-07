@@ -1,0 +1,50 @@
+[
+  {
+    "id": "2f_complete_1",
+    "background_image_path": "",
+    "background_color": "#6a4a3a",
+    "bgm_path": "",
+    "speaker_name": "",
+    "speaker_position": "center",
+    "text": "壁炉重新燃起了暖橙色的火。家庭厅里，那张长长的餐桌上，慢慢浮现出一家人围坐的影子。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "2f_complete_2",
+    "lore_codex_id": "lore_2f_complete_1",
+    "tags": ["main_story", "floor_complete", "2F"]
+  },
+  {
+    "id": "2f_complete_2",
+    "background_image_path": "",
+    "background_color": "#6a4a3a",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "happy",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "听到了吗？mother 在叫人吃饭，brother 在偷偷笑。每一个名字归位，这个家就又活过来了一点点。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "advance_on": "click",
+    "next_panel_id": "2f_complete_3",
+    "lore_codex_id": "lore_2f_complete_2",
+    "tags": ["main_story", "floor_complete", "2F"]
+  },
+  {
+    "id": "2f_complete_3",
+    "background_image_path": "",
+    "background_color": "#6a4a3a",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "再往上，会更难一些。但你已经走过最初的三层——你已经不再是当初那个只会仰头看塔的孩子了。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_2f_complete_3",
+    "tags": ["main_story", "floor_complete", "2F"]
+  }
+]

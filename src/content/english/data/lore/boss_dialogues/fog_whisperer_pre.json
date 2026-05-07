@@ -1,0 +1,35 @@
+[
+  {
+    "id": "fog_whisperer_pre_1",
+    "background_image_path": "",
+    "background_color": "#2a3a4a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "sad",
+    "speaker_name": "迷雾低吟者",
+    "speaker_position": "right",
+    "text": "I……am……very……啊……我是什么……我自己是什么……",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "fog_whisperer_pre_2",
+    "lore_codex_id": "lore_fog_whisperer_pre_1",
+    "tags": ["boss_dialogue", "1F"]
+  },
+  {
+    "id": "fog_whisperer_pre_2",
+    "background_image_path": "",
+    "background_color": "#2a3a4a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "angry",
+    "speaker_name": "迷雾低吟者",
+    "speaker_position": "right",
+    "text": "雾……雾要把我的名字也吃掉了……来人……谁来告诉我，我到底是谁……",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_fog_whisperer_pre_2",
+    "tags": ["boss_dialogue", "1F"]
+  }
+]

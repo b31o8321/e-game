@@ -1,0 +1,1478 @@
+{
+  "challenges": [
+    {
+      "template_id": "0F_alphabet_next",
+      "kind": "fill_in_blank",
+      "dialogue": "A, B, C, ___, E",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_d"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_d"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_alphabet_before_h",
+      "kind": "fill_in_blank",
+      "dialogue": "E, F, ___, H",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_g"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_g"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_alphabet_after_n",
+      "kind": "fill_in_blank",
+      "dialogue": "L, M, N, ___",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_o"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_o"
+      ],
+      "audio_path": "",
+      "effect_type": "draw_card",
+      "effect_magnitude": 1
+    },
+    {
+      "template_id": "0F_alphabet_listen_b",
+      "kind": "listening_fill",
+      "dialogue": "Listen and pick the letter.",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_b"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_b"
+      ],
+      "audio_path": "res://src/content/english/audio/letters/b.mp3",
+      "effect_type": "heal",
+      "effect_magnitude": 15
+    },
+    {
+      "template_id": "0F_phonics_cat",
+      "kind": "listening_fill",
+      "dialogue": "Listen: c-_-t. Spell it.",
+      "topic_id": "0F_phonics",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_a"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_syllable_at"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_c",
+        "card_syllable_at"
+      ],
+      "audio_path": "res://src/content/english/audio/words/cat.mp3",
+      "topic_hint": "首字母 + 音节",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_alphabet_next_b",
+      "kind": "fill_in_blank",
+      "dialogue": "字母 [B] 后面是?  ___",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_c"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_c"
+      ],
+      "audio_path": "",
+      "topic_hint": "B 之后的字母",
+      "effect_type": "shield",
+      "effect_magnitude": 10
+    },
+    {
+      "template_id": "0F_phonics_dog_multi",
+      "kind": "listening_fill",
+      "dialogue": "Listen: ___-o-___. (dog)",
+      "topic_id": "0F_phonics",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_d"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_g"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_d",
+        "card_letter_g"
+      ],
+      "audio_path": "res://src/content/english/audio/words/dog.mp3",
+      "topic_hint": "首尾两个字母（小狗）",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_phonics_pig",
+      "kind": "listening_fill",
+      "dialogue": "Listen: p-_-g.",
+      "topic_id": "0F_phonics",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_i"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_syllable_ig"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_p",
+        "card_syllable_ig"
+      ],
+      "audio_path": "res://src/content/english/audio/words/pig.mp3",
+      "effect_type": "draw_question",
+      "effect_magnitude": 1
+    },
+    {
+      "template_id": "0F_phonics_run",
+      "kind": "fill_in_blank",
+      "dialogue": "r + ___ = run",
+      "topic_id": "0F_phonics",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_syllable_un"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_syllable_un"
+      ],
+      "audio_path": "",
+      "effect_type": "combo_boost",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_sight_iam",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ a boy.",
+      "topic_id": "0F_sight_words",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_word_am",
+            "card_be_am"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_word_am"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_sight_thisis",
+      "kind": "fill_in_blank",
+      "dialogue": "___ is my pen.",
+      "topic_id": "0F_sight_words",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_word_this",
+            "card_word_that"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_word_this",
+        "card_word_that"
+      ],
+      "audio_path": "",
+      "effect_type": "weakness_strike",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_sight_he_is",
+      "kind": "error_correct",
+      "dialogue": "He [are] my friend.",
+      "topic_id": "0F_sight_words",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_word_is",
+            "card_be_is"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_word_is"
+      ],
+      "audio_path": "",
+      "effect_type": "heal",
+      "effect_magnitude": 15
+    },
+    {
+      "template_id": "1F_emotion_blank",
+      "kind": "fill_in_blank",
+      "dialogue": "I am very ___.",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_happy",
+            "card_sad",
+            "card_angry",
+            "card_tired",
+            "card_excited"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_happy",
+        "card_sad",
+        "card_angry"
+      ],
+      "audio_path": "",
+      "topic_hint": "情绪形容词",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_emotion_positive",
+      "kind": "fill_in_blank",
+      "dialogue": "Today I feel so ___!",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": [
+            "positive_emotion"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_happy",
+        "card_excited"
+      ],
+      "audio_path": "",
+      "topic_hint": "积极情绪",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_emotion_contrast",
+      "kind": "fill_in_blank",
+      "dialogue": "I am very ___ but my friend is ___.",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": [
+            "positive_emotion"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        },
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": [
+            "negative_emotion"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_happy",
+        "card_sad"
+      ],
+      "audio_path": "",
+      "topic_hint": "积极 → 消极对比",
+      "effect_type": "draw_card",
+      "effect_magnitude": 2
+    },
+    {
+      "template_id": "1F_personality_three",
+      "kind": "fill_in_blank",
+      "dialogue": "She is ___, ___, and ___.",
+      "topic_id": "1F_personality",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_brave",
+            "card_kind",
+            "card_smart",
+            "card_quiet"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_brave",
+            "card_kind",
+            "card_smart",
+            "card_quiet"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_brave",
+            "card_kind",
+            "card_smart",
+            "card_quiet"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_kind",
+        "card_smart",
+        "card_brave"
+      ],
+      "audio_path": "",
+      "topic_hint": "三个不同的性格词",
+      "effect_type": "weakness_strike",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_emotion_tired",
+      "kind": "fill_in_blank",
+      "dialogue": "After class I am too ___.",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_tired"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_tired"
+      ],
+      "audio_path": "",
+      "effect_type": "heal",
+      "effect_magnitude": 20
+    },
+    {
+      "template_id": "1F_emotion_listen",
+      "kind": "listening_fill",
+      "dialogue": "Listen and pick the emotion word.",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_excited"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_excited"
+      ],
+      "audio_path": "res://src/content/english/audio/words/excited.mp3",
+      "effect_type": "shield",
+      "effect_magnitude": 15
+    },
+    {
+      "template_id": "1F_personality_blank",
+      "kind": "fill_in_blank",
+      "dialogue": "She is so ___.",
+      "topic_id": "1F_personality",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": [
+            "positive_personality"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_kind",
+        "card_brave",
+        "card_smart"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_personality_he_brave",
+      "kind": "fill_in_blank",
+      "dialogue": "He is very ___.",
+      "topic_id": "1F_personality",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": [
+            "positive_personality"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_brave",
+        "card_smart"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_personality_lazy_correct",
+      "kind": "error_correct",
+      "dialogue": "He [are] very lazy.",
+      "topic_id": "1F_personality",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_be_is"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_be_is"
+      ],
+      "audio_path": "",
+      "effect_type": "combo_boost",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_personality_quiet",
+      "kind": "fill_in_blank",
+      "dialogue": "My sister is ___.",
+      "topic_id": "1F_personality",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_quiet",
+            "card_kind",
+            "card_smart"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_quiet",
+        "card_kind"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_be_correct",
+      "kind": "error_correct",
+      "dialogue": "He [are] happy.",
+      "topic_id": "1F_grammar",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_be_is"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_be_is"
+      ],
+      "audio_path": "",
+      "effect_type": "draw_question",
+      "effect_magnitude": 1
+    },
+    {
+      "template_id": "1F_be_we_are",
+      "kind": "error_correct",
+      "dialogue": "We [is] strong.",
+      "topic_id": "1F_grammar",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_be_are"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_be_are"
+      ],
+      "audio_path": "",
+      "effect_type": "heal",
+      "effect_magnitude": 18
+    },
+    {
+      "template_id": "1F_grammar_size",
+      "kind": "fill_in_blank",
+      "dialogue": "The cat is ___.",
+      "topic_id": "1F_grammar",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": [
+            "size"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_big",
+        "card_small"
+      ],
+      "audio_path": "",
+      "topic_hint": "形容大小",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_grammar_pattern_iam",
+      "kind": "sentence_build",
+      "dialogue": "Build: __pattern__ + __adj__",
+      "topic_id": "1F_grammar",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_pattern_i_am_blank"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_happy",
+            "card_brave",
+            "card_kind",
+            "card_smart",
+            "card_excited",
+            "card_strong"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pattern_i_am_blank",
+        "card_brave"
+      ],
+      "audio_path": "",
+      "effect_type": "shield",
+      "effect_magnitude": 12
+    },
+    {
+      "template_id": "2F_family_blank",
+      "kind": "fill_in_blank",
+      "dialogue": "My ___ is kind.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "family"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_mother",
+        "card_noun_father",
+        "card_noun_sister",
+        "card_noun_brother"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_family_grandma",
+      "kind": "fill_in_blank",
+      "dialogue": "My ___ is so old.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "grandparent"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_grandma",
+        "card_noun_grandpa"
+      ],
+      "audio_path": "",
+      "effect_type": "heal",
+      "effect_magnitude": 25
+    },
+    {
+      "template_id": "2F_family_listen",
+      "kind": "listening_fill",
+      "dialogue": "Listen and pick the family word.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_noun_family"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_family"
+      ],
+      "audio_path": "res://src/content/english/audio/words/family.mp3",
+      "effect_type": "shield",
+      "effect_magnitude": 18
+    },
+    {
+      "template_id": "2F_family_baby_correct",
+      "kind": "error_correct",
+      "dialogue": "The [baby] are cute.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_be_is"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_be_is"
+      ],
+      "audio_path": "",
+      "effect_type": "draw_card",
+      "effect_magnitude": 2
+    },
+    {
+      "template_id": "2F_body_blank",
+      "kind": "fill_in_blank",
+      "dialogue": "I have two ___.",
+      "topic_id": "2F_body",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "body",
+            "paired_appendage"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_eye",
+        "card_noun_hand",
+        "card_noun_foot",
+        "card_noun_ear"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_body_head",
+      "kind": "fill_in_blank",
+      "dialogue": "My ___ hurts.",
+      "topic_id": "2F_body",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_noun_head"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_head"
+      ],
+      "audio_path": "",
+      "effect_type": "weakness_strike",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_body_listen",
+      "kind": "listening_fill",
+      "dialogue": "Listen and pick the body part.",
+      "topic_id": "2F_body",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_noun_nose"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_nose"
+      ],
+      "audio_path": "res://src/content/english/audio/words/nose.mp3",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_pronoun_correct",
+      "kind": "error_correct",
+      "dialogue": "[Him] is my brother.",
+      "topic_id": "2F_pronoun",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_pronoun_he"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pronoun_he"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_pronoun_she",
+      "kind": "fill_in_blank",
+      "dialogue": "___ is my mother.",
+      "topic_id": "2F_pronoun",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_pronoun_she"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pronoun_she"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_pronoun_we",
+      "kind": "fill_in_blank",
+      "dialogue": "___ are happy.",
+      "topic_id": "2F_pronoun",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_pronoun_we",
+            "card_pronoun_they"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pronoun_we",
+        "card_pronoun_they"
+      ],
+      "audio_path": "",
+      "effect_type": "draw_question",
+      "effect_magnitude": 1
+    },
+    {
+      "template_id": "2F_this_that",
+      "kind": "fill_in_blank",
+      "dialogue": "___ is my book.",
+      "topic_id": "2F_pronoun",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_word_this",
+            "card_word_that"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_word_this",
+        "card_word_that"
+      ],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_pronoun_object_me",
+      "kind": "fill_in_blank",
+      "dialogue": "She likes ___.",
+      "topic_id": "2F_pronoun",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_pronoun_me"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pronoun_me"
+      ],
+      "audio_path": "",
+      "topic_hint": "宾格代词",
+      "effect_type": "combo_boost",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_family_describe",
+      "kind": "fill_in_blank",
+      "dialogue": "My ___ is so ___.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "family"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_happy",
+            "card_kind",
+            "card_brave",
+            "card_smart",
+            "card_beautiful",
+            "card_strong",
+            "card_quiet"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_mother",
+        "card_kind"
+      ],
+      "audio_path": "",
+      "topic_hint": "家人 + 形容词",
+      "effect_type": "weakness_strike",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_body_pronoun_combo",
+      "kind": "fill_in_blank",
+      "dialogue": "___ has two ___.",
+      "topic_id": "2F_body",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_pronoun_he",
+            "card_pronoun_she",
+            "card_pronoun_it"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "body",
+            "paired_appendage"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pronoun_he",
+        "card_noun_eye"
+      ],
+      "audio_path": "",
+      "topic_hint": "三人称代词 + 身体部位",
+      "effect_type": "heal",
+      "effect_magnitude": 20
+    },
+    {
+      "template_id": "2F_family_body_full",
+      "kind": "fill_in_blank",
+      "dialogue": "My ___ has ___ ___.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "family"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_big",
+            "card_small",
+            "card_beautiful",
+            "card_strong",
+            "card_fast"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": [
+            "body"
+          ],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_sister",
+        "card_kind",
+        "card_noun_eye"
+      ],
+      "audio_path": "",
+      "topic_hint": "家人 + 形容 + 身体",
+      "effect_type": "shield",
+      "effect_magnitude": 20
+    },
+    {
+      "template_id": "0F_elite_phonics_cat_full",
+      "kind": "listening_fill",
+      "dialogue": "Listen: c-_-_. (cat)",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_a"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_t"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_a",
+        "card_letter_t"
+      ],
+      "audio_path": "res://src/content/english/audio/words/cat.mp3",
+      "topic_hint": "精英：拼出 cat 的中间和末尾字母",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_elite_phonics_dog_full",
+      "kind": "listening_fill",
+      "dialogue": "Listen: _-o-_. (dog)",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_d"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_g"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_d",
+        "card_letter_g"
+      ],
+      "audio_path": "res://src/content/english/audio/words/dog.mp3",
+      "topic_hint": "精英：拼出 dog 的首尾字母",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "0F_elite_alphabet_seq",
+      "kind": "fill_in_blank",
+      "dialogue": "F, ___, H, ___, J",
+      "topic_id": "0F_alphabet",
+      "slots": [
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_g"
+          ],
+          "tag_match_mode": "any"
+        },
+        {
+          "required_type": "",
+          "required_pos": "",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "accept_card_ids": [
+            "card_letter_i"
+          ],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_letter_g",
+        "card_letter_i"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：连续两个字母位",
+      "effect_type": "weakness_strike",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_elite_personality_pair",
+      "kind": "fill_in_blank",
+      "dialogue": "She is ___ and he is ___.",
+      "topic_id": "1F_personality",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["personality"],
+          "forbidden_tags": ["negative_personality"],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        },
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["personality"],
+          "forbidden_tags": ["positive_personality"],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_kind",
+        "card_lazy"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：先正面再非正面性格",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "1F_elite_be_pattern_pair",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ ___, you are happy.",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb_be",
+          "required_tags": ["be_verb"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": ["card_be_am"]
+        },
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["personality"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_be_am",
+        "card_brave"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：be 动词 + 性格形容词",
+      "effect_type": "shield",
+      "effect_magnitude": 15
+    },
+    {
+      "template_id": "1F_elite_emotion_listen",
+      "kind": "listening_fill",
+      "dialogue": "Listen — She is ___ but he is ___.",
+      "topic_id": "1F_emotion",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["positive_emotion"],
+          "forbidden_tags": ["negative_emotion"],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        },
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["personality"],
+          "forbidden_tags": ["positive_personality"],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_happy",
+        "card_lazy"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：积极情绪 + 非正面性格",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_elite_family_body",
+      "kind": "fill_in_blank",
+      "dialogue": "My ___ has my ___.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["family"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        },
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["body"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_noun_mother",
+        "card_noun_eye"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：家人 + 身体部位",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_elite_pronoun_be",
+      "kind": "fill_in_blank",
+      "dialogue": "She and he ___ my ___.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb_be",
+          "required_tags": ["be_verb"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": ["card_be_are"]
+        },
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["family"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_be_are",
+        "card_noun_family"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：复数 be + 家人名词",
+      "effect_type": "weakness_strike",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "2F_elite_pronoun_object",
+      "kind": "fill_in_blank",
+      "dialogue": "I see ___ and ___.",
+      "topic_id": "2F_family",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "pronoun",
+          "required_tags": [],
+          "forbidden_tags": [],
+          "tag_match_mode": "any",
+          "accept_card_ids": ["card_pronoun_he", "card_pronoun_she", "card_pronoun_we", "card_pronoun_me"]
+        },
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["family"],
+          "forbidden_tags": [],
+          "tag_match_mode": "all",
+          "accept_card_ids": []
+        }
+      ],
+      "perfect_match_card_ids": [
+        "card_pronoun_he",
+        "card_noun_sister"
+      ],
+      "audio_path": "",
+      "topic_hint": "精英：代词 + 家人",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    }
+  ]
+}

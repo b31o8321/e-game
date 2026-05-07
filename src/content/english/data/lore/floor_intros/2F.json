@@ -1,0 +1,51 @@
+[
+  {
+    "id": "2f_intro_1",
+    "background_image_path": "",
+    "background_color": "#4a3a2e",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "走上第二层吧。这里是家庭厅——温暖的壁炉、一张大餐桌，还有那些最早教会我们说话的人。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "2f_intro_2",
+    "lore_codex_id": "lore_2f_intro_1",
+    "tags": ["main_story", "floor_intro", "2F"]
+  },
+  {
+    "id": "2f_intro_2",
+    "background_image_path": "",
+    "background_color": "#4a3a2e",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "mother、father、brother，还有 I、you、he、she——名词与代词在这里曾经热热闹闹地说话。可如今，他们连彼此都认不清了。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "advance_on": "click",
+    "next_panel_id": "2f_intro_3",
+    "lore_codex_id": "lore_2f_intro_2",
+    "tags": ["main_story", "floor_intro", "2F"]
+  },
+  {
+    "id": "2f_intro_3",
+    "background_image_path": "",
+    "background_color": "#4a3a2e",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "happy",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "把每个名字、每个代词都还给他们。让这间屋子，重新有家的样子。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_2f_intro_3",
+    "tags": ["main_story", "floor_intro", "2F"]
+  }
+]

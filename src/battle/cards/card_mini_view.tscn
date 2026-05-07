@@ -1,0 +1,90 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2cardminiview01"]
+
+[ext_resource type="Script" path="res://src/battle/cards/card_mini_view.gd" id="1_cmv"]
+
+[node name="CardMiniView" type="Button"]
+custom_minimum_size = Vector2(120, 140)
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_cmv")
+
+[node name="Layout" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 2.0
+offset_right = -4.0
+offset_bottom = -2.0
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="MasteryLabel" type="Label" parent="Layout/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🌱"
+
+[node name="RarityLabel" type="Label" parent="Layout/HeaderRow"]
+layout_mode = 2
+text = "C"
+
+[node name="DamageBigLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "⚔ 0"
+clip_text = false
+theme_override_font_sizes/font_size = 24
+
+[node name="TextLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "card"
+clip_text = false
+theme_override_font_sizes/font_size = 14
+
+[node name="PhoneticLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""
+visible = false
+clip_text = false
+theme_override_font_sizes/font_size = 11
+modulate = Color(0.85, 0.85, 0.95, 1)
+
+[node name="MeaningLabel" type="Label" parent="Layout"]
+layout_mode = 2
+horizontal_alignment = 1
+text = ""
+visible = false
+clip_text = false
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 13
+
+[node name="MetaRow" type="HBoxContainer" parent="Layout"]
+layout_mode = 2
+
+[node name="MetaLabel" type="Label" parent="Layout/MetaRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = ""
+clip_text = false
+theme_override_font_sizes/font_size = 11
+
+[node name="AbilityBadge" type="Label" parent="Layout/MetaRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+horizontal_alignment = 2
+text = ""
+clip_text = false
+theme_override_font_sizes/font_size = 12
+modulate = Color(1, 0.92, 0.6, 1)
+
+[node name="AudioButton" type="Button" parent="Layout/MetaRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(28, 22)
+focus_mode = 0
+text = "🔊"
+flat = true

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "0f_intro_1",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "bgm_path": "",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "欢迎来到字母厅，孩子。这里是神塔最底的一层，也是所有英语的起点。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "0f_intro_2",
+    "lore_codex_id": "lore_0f_intro_1",
+    "tags": ["main_story", "floor_intro", "0F"]
+  },
+  {
+    "id": "0f_intro_2",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "二十六个字母、自然拼读、还有最常见的高频词，都住在这一层。它们曾经活泼极了，可惜如今都被混沌遮住了眼睛。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "advance_on": "click",
+    "next_panel_id": "0f_intro_3",
+    "lore_codex_id": "lore_0f_intro_2",
+    "tags": ["main_story", "floor_intro", "0F"]
+  },
+  {
+    "id": "0f_intro_3",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "happy",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "去吧，去把它们一个一个唤醒。记住——你不是在打败它们，你是在帮它们想起自己。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_0f_intro_3",
+    "tags": ["main_story", "floor_intro", "0F"]
+  }
+]

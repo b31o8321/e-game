@@ -1,0 +1,61 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2cardpicker01"]
+
+[ext_resource type="Script" path="res://src/city/buildings/card_picker_modal.gd" id="1_cpm"]
+
+[node name="CardPickerModal" type="Window"]
+title = "选择一张卡片"
+initial_position = 2
+size = Vector2i(720, 480)
+visible = false
+script = ExtResource("1_cpm")
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="HeaderRow" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="HeaderLabel" type="Label" parent="Margin/VBox/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "添加卡片到当前卡组"
+
+[node name="FilterLabel" type="Label" parent="Margin/VBox/HeaderRow"]
+layout_mode = 2
+text = "类型："
+
+[node name="FilterOption" type="OptionButton" parent="Margin/VBox/HeaderRow"]
+layout_mode = 2
+
+[node name="Scroll" type="ScrollContainer" parent="Margin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Grid" type="GridContainer" parent="Margin/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 6
+
+[node name="EmptyLabel" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+text = "（无可用卡片）"
+visible = false
+
+[node name="Footer" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="CloseButton" type="Button" parent="Margin/VBox/Footer"]
+layout_mode = 2
+text = "关闭"

@@ -1,0 +1,26 @@
+# Godot build artifacts
+.godot/
+builds/mac/
+builds/win/
+builds/android/*.apk
+builds/android/*.aab
+
+# Voice deps (Piper / whisper.cpp binaries + ML models, ~90MB)
+# Downloaded by scripts/download_voice_deps.sh; not committed
+builds/voice/
+
+# Sensitive files - keep keystore local only
+builds/android/*.keystore
+
+# Superpowers skill caches (brainstorm session HTML, scratch state)
+.superpowers/
+
+# Test / TTS cache
+user-data/
+*.import.tmp
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db

@@ -60,4 +60,6 @@ func _on_return_pressed() -> void:
 	get_tree().change_scene_to_file("res://src/city/city_scene.tscn")
 
 func _on_retry_pressed() -> void:
-	get_tree().change_scene_to_file("res://src/battle/expedition_setup.tscn")
+	# TODO Phase 4: rebuild — expedition_setup removed; new pre-run setup will replace this
+	# get_tree().change_scene_to_file("res://src/battle/expedition_setup.tscn")
+	pass

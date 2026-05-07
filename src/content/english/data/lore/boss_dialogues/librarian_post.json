@@ -1,0 +1,51 @@
+[
+  {
+    "id": "librarian_post_1",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "图书管理员",
+    "speaker_position": "right",
+    "text": "谢谢你……终于有人能继承这里了。我守了这么久，原来等的是你。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "librarian_post_2",
+    "lore_codex_id": "lore_librarian_post_1",
+    "tags": ["boss_dialogue", "1F", "final_boss"]
+  },
+  {
+    "id": "librarian_post_2",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "图书管理员",
+    "speaker_position": "right",
+    "text": "把这本书带上吧——《沉默之书》。它会在你最想说却不知道怎么说的时候，替你开口一次。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "advance_on": "click",
+    "next_panel_id": "librarian_post_3",
+    "lore_codex_id": "lore_librarian_post_2",
+    "tags": ["boss_dialogue", "1F", "final_boss"]
+  },
+  {
+    "id": "librarian_post_3",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "normal",
+    "speaker_name": "图书管理员",
+    "speaker_position": "right",
+    "text": "再上一层，就是家庭厅了。那里的故事更暖一些……去吧，别让他们等你。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_librarian_post_3",
+    "tags": ["boss_dialogue", "1F", "final_boss"]
+  }
+]

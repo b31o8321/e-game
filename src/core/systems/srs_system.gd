@@ -38,6 +38,42 @@ func pick_question(candidate_ids: Array[String]) -> String:
 			best_id = id
 	return best_id
 
+## 该 ID 答对次数（无记录返回 0）
+func get_correct_count(question_id: String) -> int:
+	if not _records.has(question_id):
+		return 0
+	return int(_records[question_id].get("correct", 0))
+
+## 该 ID 答错次数（无记录返回 0）
+func get_wrong_count(question_id: String) -> int:
+	if not _records.has(question_id):
+		return 0
+	return int(_records[question_id].get("wrong", 0))
+
+## 是否存在弱点（任意题目错过且优先级 > 0）
+func has_weak_questions() -> bool:
+	for id in _records.keys():
+		if get_priority(id) > 0.0:
+			return true
+	return false
+
+## 取优先级最高（最弱）的若干题目 ID（按 priority 降序）
+func get_weakest_card_ids(count: int) -> Array[String]:
+	var ids: Array[String] = []
+	for id in _records.keys():
+		ids.append(str(id))
+	ids.sort_custom(func(a: String, b: String) -> bool:
+		return get_priority(a) > get_priority(b))
+	# 仅保留 priority > 0 的
+	var filtered: Array[String] = []
+	for id in ids:
+		if get_priority(id) <= 0.0:
+			continue
+		filtered.append(id)
+		if filtered.size() >= count:
+			break
+	return filtered
+
 func serialize() -> Dictionary:
 	return _records.duplicate(true)
 

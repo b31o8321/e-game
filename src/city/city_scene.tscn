@@ -1,49 +1,343 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://city_scene_v2"]
 
-[ext_resource type="Script" path="res://src/city/city_scene_controller.gd" id="1_csc"]
+[ext_resource type="Script" path="res://src/city/city_controller.gd" id="1_city_ctrl"]
 
 [node name="CityScene" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource("1_csc")
+script = ExtResource("1_city_ctrl")
 
-[node name="TitleLabel" type="Label" parent="."]
+[node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 300.0
-offset_bottom = 40.0
-text = "知识神塔 · 城市"
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.149, 0.176, 0.235, 1)
 
-[node name="ResourceBar" type="Label" parent="."]
+[node name="BackgroundTexture" type="TextureRect" parent="."]
 layout_mode = 1
-offset_left = 10.0
-offset_top = 45.0
-offset_right = 700.0
-offset_bottom = 75.0
-text = "背包: 空"
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1
+stretch_mode = 6
+visible = false
 
-[node name="BuildingContainer" type="VBoxContainer" parent="."]
+[node name="TopBar" type="Control" parent="."]
 layout_mode = 1
-offset_left = 50.0
-offset_top = 90.0
-offset_right = 500.0
-offset_bottom = 500.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
 
-[node name="StartExpeditionButton" type="Button" parent="."]
+[node name="PlayerInfoLabel" type="Label" parent="TopBar"]
 layout_mode = 1
-offset_left = 50.0
-offset_top = 520.0
-offset_right = 280.0
-offset_bottom = 560.0
-text = "出发探索"
+offset_left = 20.0
+offset_top = 12.0
+offset_right = 400.0
+offset_bottom = 42.0
+text = "Lv 1 守护者"
 
-[node name="BackToMenuButton" type="Button" parent="."]
+[node name="SettingsButton" type="Button" parent="TopBar"]
 layout_mode = 1
-offset_left = 300.0
-offset_top = 520.0
-offset_right = 500.0
-offset_bottom = 560.0
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 42.0
+text = "⚙"
+
+[node name="TitleLabel" type="Label" parent="TopBar"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -120.0
+offset_top = 12.0
+offset_right = 120.0
+offset_bottom = 42.0
+text = "知 识 城"
+horizontal_alignment = 1
+
+[node name="BuildingLayer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="TowerGate" type="Control" parent="BuildingLayer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -110.0
+offset_top = 80.0
+offset_right = 110.0
+offset_bottom = 220.0
+
+[node name="Sprite" type="ColorRect" parent="BuildingLayer/TowerGate"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -30.0
+color = Color(0.388, 0.337, 0.612, 1)
+
+[node name="Label" type="Label" parent="BuildingLayer/TowerGate"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -28.0
+offset_right = 100.0
+offset_bottom = 0.0
+text = "🏛 神塔之门"
+horizontal_alignment = 1
+
+[node name="Hover" type="Button" parent="BuildingLayer/TowerGate"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="TrainingGround" type="Control" parent="BuildingLayer"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -240.0
+offset_top = 80.0
+offset_right = -40.0
+offset_bottom = 220.0
+
+[node name="Sprite" type="ColorRect" parent="BuildingLayer/TrainingGround"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -30.0
+color = Color(0.78, 0.404, 0.231, 1)
+
+[node name="Label" type="Label" parent="BuildingLayer/TrainingGround"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -28.0
+offset_right = 100.0
+offset_bottom = 0.0
+text = "⚔ 训练场"
+horizontal_alignment = 1
+
+[node name="Hover" type="Button" parent="BuildingLayer/TrainingGround"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="CodexHall" type="Control" parent="BuildingLayer"]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -70.0
+offset_right = 240.0
+offset_bottom = 70.0
+
+[node name="Sprite" type="ColorRect" parent="BuildingLayer/CodexHall"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -30.0
+color = Color(0.314, 0.498, 0.42, 1)
+
+[node name="Label" type="Label" parent="BuildingLayer/CodexHall"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -28.0
+offset_right = 100.0
+offset_bottom = 0.0
+text = "📚 图鉴馆"
+horizontal_alignment = 1
+
+[node name="Hover" type="Button" parent="BuildingLayer/CodexHall"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="CrystalMarket" type="Control" parent="BuildingLayer"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -70.0
+offset_right = 100.0
+offset_bottom = 70.0
+
+[node name="Sprite" type="ColorRect" parent="BuildingLayer/CrystalMarket"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -30.0
+color = Color(0.341, 0.6, 0.78, 1)
+
+[node name="Label" type="Label" parent="BuildingLayer/CrystalMarket"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -28.0
+offset_right = 100.0
+offset_bottom = 0.0
+text = "🔮 水晶集市"
+horizontal_alignment = 1
+
+[node name="Hover" type="Button" parent="BuildingLayer/CrystalMarket"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="BlueprintWorkshop" type="Control" parent="BuildingLayer"]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -70.0
+offset_right = -40.0
+offset_bottom = 70.0
+
+[node name="Sprite" type="ColorRect" parent="BuildingLayer/BlueprintWorkshop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -30.0
+color = Color(0.706, 0.557, 0.227, 1)
+
+[node name="Label" type="Label" parent="BuildingLayer/BlueprintWorkshop"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -28.0
+offset_right = 100.0
+offset_bottom = 0.0
+text = "🧩 蓝图工坊"
+horizontal_alignment = 1
+
+[node name="Hover" type="Button" parent="BuildingLayer/BlueprintWorkshop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="GuardiansQuarters" type="Control" parent="BuildingLayer"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_top = -240.0
+offset_right = 110.0
+offset_bottom = -110.0
+
+[node name="Sprite" type="ColorRect" parent="BuildingLayer/GuardiansQuarters"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -30.0
+color = Color(0.659, 0.388, 0.494, 1)
+
+[node name="Label" type="Label" parent="BuildingLayer/GuardiansQuarters"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -28.0
+offset_right = 100.0
+offset_bottom = 0.0
+text = "🛏 守护者驻地"
+horizontal_alignment = 1
+
+[node name="Hover" type="Button" parent="BuildingLayer/GuardiansQuarters"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+
+[node name="BottomHud" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -50.0
+
+[node name="HudBackground" type="ColorRect" parent="BottomHud"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.078, 0.094, 0.137, 0.8)
+
+[node name="WalletLabel" type="Label" parent="BottomHud"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 12.0
+offset_right = 600.0
+offset_bottom = 42.0
+text = "🔮 词晶: 0    🧩 蓝图: 0"
+
+[node name="BackToMenuButton" type="Button" parent="BottomHud"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = 42.0
 text = "返回主菜单"

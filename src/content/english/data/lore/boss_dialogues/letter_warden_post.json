@@ -1,0 +1,35 @@
+[
+  {
+    "id": "letter_warden_post_1",
+    "background_image_path": "",
+    "background_color": "#ffe9a8",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "字母守关者",
+    "speaker_position": "right",
+    "text": "好极了……你通过了字母厅的考验。这一刻，我等了很久。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "letter_warden_post_2",
+    "lore_codex_id": "lore_letter_warden_post_1",
+    "tags": ["boss_dialogue", "0F", "final_boss"]
+  },
+  {
+    "id": "letter_warden_post_2",
+    "background_image_path": "",
+    "background_color": "#ffe9a8",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "字母守关者",
+    "speaker_position": "right",
+    "text": "字母厅的钥匙归你了——往上走的楼梯已经亮起。继续前进，别让你身后的孩子们再等下去。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_letter_warden_post_2",
+    "tags": ["boss_dialogue", "0F", "final_boss"]
+  }
+]

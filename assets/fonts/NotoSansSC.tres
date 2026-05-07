@@ -1,0 +1,20 @@
+[gd_resource type="FontFile" load_steps=1 format=3]
+
+[resource]
+resource_name = "NotoSansSC"
+data = {}
+font_name = "Noto Sans SC"
+font_style_name = "Regular"
+font_weight = 400
+subpixel_positioning = 1
+generate_mipmaps = false
+multichannel_signed_distance_field = false
+msdf_pixel_range = 8
+msdf_size = 48
+allow_system_fallback = true
+force_autohinter = false
+hinting = 1
+oversampling = 0.0
+fixed_size = 0
+opentype_feature_overrides = {}
+path = "res://assets/fonts/NotoSansSC-Regular.otf"

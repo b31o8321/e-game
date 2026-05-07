@@ -66,3 +66,64 @@ func test_get_question_unknown_type_returns_empty() -> void:
 func test_get_question_by_id_missing_returns_empty() -> void:
 	var q: Dictionary = _pack.get_question_by_id("does_not_exist")
 	assert_true(q.is_empty(), "missing id should return empty dict")
+
+
+# ─── 按楼层定制起手卡组（解决"题目和手卡对不上"）─────────────────
+
+func test_get_starting_deck_for_floor_0F_letters_heavy() -> void:
+	var ids: Array[String] = _pack.get_starting_deck_for_floor("0F")
+	assert_gt(ids.size(), 0, "0F starting deck should be non-empty")
+	# 0F 必须以字母 / 高频词 / 音节为主
+	var letter_count: int = 0
+	var sight_word_count: int = 0
+	var syllable_count: int = 0
+	for cid in ids:
+		var card: Card = _pack.get_card(cid)
+		assert_not_null(card, "card %s should exist" % cid)
+		if card == null:
+			continue
+		match card.pos:
+			"letter": letter_count += 1
+			"sight_word": sight_word_count += 1
+			"syllable": syllable_count += 1
+	assert_gt(letter_count, 0, "0F deck should include letter cards")
+	assert_gt(sight_word_count, 0, "0F deck should include sight word cards")
+	# 至少应该没有形容词卡（因为 0F 与 1F 主题不重合）
+	for cid in ids:
+		var card: Card = _pack.get_card(cid)
+		if card == null:
+			continue
+		assert_ne(card.pos, "adjective",
+			"0F deck must NOT contain adjective cards: %s" % cid)
+
+
+func test_get_starting_deck_for_floor_2F_nouns_pronouns() -> void:
+	var ids: Array[String] = _pack.get_starting_deck_for_floor("2F")
+	assert_gt(ids.size(), 0, "2F starting deck should be non-empty")
+	var noun_count: int = 0
+	var pronoun_count: int = 0
+	for cid in ids:
+		var card: Card = _pack.get_card(cid)
+		if card == null:
+			continue
+		if card.pos == "noun":
+			noun_count += 1
+		elif card.pos == "pronoun":
+			pronoun_count += 1
+	assert_gt(noun_count, 0, "2F deck should include noun cards (family/body)")
+	assert_gt(pronoun_count, 0, "2F deck should include pronoun cards")
+
+
+func test_get_starting_deck_for_floor_1F_falls_back_to_default() -> void:
+	# 1F 复用通用 starting deck（形容词为主）
+	var floor_ids: Array[String] = _pack.get_starting_deck_for_floor("1F")
+	var default_ids: Array[String] = _pack.get_starting_deck_card_ids()
+	assert_eq(floor_ids.size(), default_ids.size(), "1F deck size matches default")
+	for cid in floor_ids:
+		assert_true(cid in default_ids, "1F deck %s should be in default" % cid)
+
+
+func test_get_starting_deck_for_floor_unknown_falls_back() -> void:
+	var ids: Array[String] = _pack.get_starting_deck_for_floor("999F_unknown")
+	var default_ids: Array[String] = _pack.get_starting_deck_card_ids()
+	assert_eq(ids, default_ids, "unknown floor falls back to default starting deck")

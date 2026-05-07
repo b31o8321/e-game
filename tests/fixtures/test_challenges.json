@@ -1,0 +1,21 @@
+{
+  "challenges": [
+    {
+      "template_id": "fill_in_blank_v1",
+      "kind": "fill_in_blank",
+      "dialogue": "I am very ___",
+      "topic_id": "adjectives_basic",
+      "perfect_match_card_ids": ["test_brave"],
+      "slots": [
+        {
+          "index": 0,
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["positive_emotion"],
+          "forbidden_tags": ["negation"],
+          "damage_multiplier": 1.0
+        }
+      ]
+    }
+  ]
+}

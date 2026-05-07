@@ -1,0 +1,51 @@
+[
+  {
+    "id": "letter_warden_pre_1",
+    "background_image_path": "",
+    "background_color": "#2a1a0e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "serious",
+    "speaker_name": "字母守关者",
+    "speaker_position": "right",
+    "text": "你刚来到神塔。我守在字母厅的尽头很久了——让我考考你，看你是不是真的认得这些孩子。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "letter_warden_pre_2",
+    "lore_codex_id": "lore_letter_warden_pre_1",
+    "tags": ["boss_dialogue", "0F", "final_boss"]
+  },
+  {
+    "id": "letter_warden_pre_2",
+    "background_image_path": "",
+    "background_color": "#2a1a0e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "serious",
+    "speaker_name": "字母守关者",
+    "speaker_position": "right",
+    "text": "拼读、字母、还有那些常常出现的小词……来吧，让我看看你的卡组够不够稳。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "advance_on": "click",
+    "next_panel_id": "letter_warden_pre_3",
+    "lore_codex_id": "lore_letter_warden_pre_2",
+    "tags": ["boss_dialogue", "0F", "final_boss"]
+  },
+  {
+    "id": "letter_warden_pre_3",
+    "background_image_path": "",
+    "background_color": "#3a2a1e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "angry",
+    "speaker_name": "字母守关者",
+    "speaker_position": "right",
+    "text": "不错。但还要再看看你能不能综合应对——准备好进入下一阶段了吗，孩子？",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_letter_warden_pre_3",
+    "tags": ["boss_dialogue", "0F", "final_boss", "phase_2"]
+  }
+]

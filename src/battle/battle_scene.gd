@@ -162,6 +162,8 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _retreat_button: Button = $TopBar/TopRow/RetreatButton
 @onready var _enemy_name_label: Label = $EnemyArea/EnemyHeader/EnemyInfo/EnemyNameLabel
 @onready var _enemy_portrait: ColorRect = $EnemyArea/EnemyHeader/EnemyPortrait
+@onready var _enemy_portrait_image: TextureRect = get_node_or_null("EnemyArea/EnemyHeader/EnemyPortrait/PortraitImage")
+@onready var _bg_texture: TextureRect = get_node_or_null("BackgroundTexture")
 @onready var _enemy_hp_bar: ProgressBar = $EnemyArea/EnemyHeader/EnemyInfo/EnemyHpRow/EnemyHpBar
 @onready var _enemy_hp_label: Label = $EnemyArea/EnemyHeader/EnemyInfo/EnemyHpRow/EnemyHpLabel
 @onready var _weakness_label: Label = $EnemyArea/EnemyHeader/EnemyInfo/WeaknessLabel
@@ -208,6 +210,7 @@ func _ready() -> void:
 	add_child(_controller)
 	_connect_signals()
 	_setup_controller()
+	_apply_battle_background()
 	_render_top_bar()
 	_render_enemy()
 	_render_player_status()
@@ -219,6 +222,67 @@ func _ready() -> void:
 		_submit_button.pressed.connect(_on_submit_pressed)
 	_maybe_show_tutorial()
 	_setup_debug_overlay()
+	_play_battle_bgm()
+
+
+## 选择并应用战斗场景背景：Boss 战用专用图，普通战用楼层背景。
+## TextureRect 半透明叠在 ColorRect 之上，避免 UI 对比度受影响。
+func _apply_battle_background() -> void:
+	if _bg_texture == null:
+		return
+	var pack: ContentPackBase = null
+	if typeof(GameState) != TYPE_NIL and GameState != null and GameState.content_loader != null:
+		pack = GameState.content_loader.get_active_pack()
+	if pack == null:
+		return
+	var path: String = ""
+	var enemy: EnemyData = _controller._enemy if _controller != null else null
+	var is_boss: bool = enemy != null and enemy.enemy_id.ends_with("_boss")
+	if is_boss and pack.has_method("get_pack_meta_string"):
+		path = pack.get_pack_meta_string("boss_battle_bg_path")
+	if path == "":
+		var floor_id: String = ""
+		if typeof(RunState) != TYPE_NIL and RunState != null:
+			floor_id = RunState.current_floor_id
+		path = pack.get_floor_bg_path(floor_id)
+	if path == "" or not ResourceLoader.exists(path):
+		return
+	var tex: Texture2D = load(path) as Texture2D
+	if tex == null:
+		return
+	_bg_texture.texture = tex
+	_bg_texture.visible = true
+
+
+func _play_battle_bgm() -> void:
+	if typeof(AudioBus) == TYPE_NIL or AudioBus == null:
+		return
+	# 优先：内容包提供的楼层 / Boss BGM；缺失再退到旧默认。
+	var path: String = ""
+	var pack: ContentPackBase = null
+	if typeof(GameState) != TYPE_NIL and GameState != null and GameState.content_loader != null:
+		pack = GameState.content_loader.get_active_pack()
+	var enemy: EnemyData = _controller._enemy if _controller != null else null
+	var is_boss: bool = enemy != null and enemy.enemy_id.ends_with("_boss")
+	if pack != null:
+		if is_boss:
+			# pack_meta.json 里有 boss_battle_bgm_path 时走它
+			if pack.has_method("get_pack_meta_string"):
+				path = pack.get_pack_meta_string("boss_battle_bgm_path")
+		if path == "":
+			var floor_id: String = ""
+			if typeof(RunState) != TYPE_NIL and RunState != null:
+				floor_id = RunState.current_floor_id
+			path = pack.get_battle_bgm_path(floor_id)
+	# 兜底：旧路径（AudioBus 缺失会 silent 失败）
+	if path == "":
+		path = "res://assets/audio/bgm/boss.ogg" if is_boss else "res://assets/audio/bgm/battle.ogg"
+	AudioBus.play_bgm(path)
+
+
+func _sfx(name: String) -> void:
+	if typeof(AudioBus) != TYPE_NIL and AudioBus != null:
+		AudioBus.play_sfx(name)
 
 
 func _process(delta: float) -> void:
@@ -375,6 +439,16 @@ func _render_enemy() -> void:
 		var h: int = seed_str.hash() if seed_str != "" else 0
 		var hue: float = float(abs(h) % 360) / 360.0
 		_enemy_portrait.color = Color.from_hsv(hue, 0.4, 0.55)
+	# Try real portrait image when EnemyData.sprite_path is provided.
+	if _enemy_portrait_image != null:
+		_enemy_portrait_image.visible = false
+		_enemy_portrait_image.texture = null
+		var sp: String = enemy.sprite_path
+		if sp != "" and ResourceLoader.exists(sp):
+			var ptex: Texture2D = load(sp) as Texture2D
+			if ptex != null:
+				_enemy_portrait_image.texture = ptex
+				_enemy_portrait_image.visible = true
 	if _weakness_label != null:
 		if enemy.weak_axes.is_empty():
 			_weakness_label.text = "弱点：无"
@@ -1209,6 +1283,7 @@ func _on_card_button_pressed(card: Card, _btn: Button) -> void:
 		_selected_card = null
 	else:
 		_selected_card = card
+		_sfx("card_pickup")
 	_idle_seconds_since_action = 0.0
 	_refresh_card_button_styles()
 	_render_slots_filled()
@@ -1309,6 +1384,7 @@ func _on_hand_changed(_hand: Array) -> void:
 
 
 func _on_card_played(_card: Card, _slot_index: int) -> void:
+	_sfx("card_drop_success")
 	_render_slots_filled()
 	_update_helper_text()
 	_render_hand()
@@ -1337,6 +1413,7 @@ func _maybe_show_no_solvable_hint() -> void:
 
 
 func _on_damage_dealt(amount: int, crit: bool, weak: bool) -> void:
+	_sfx("damage_hit")
 	_update_enemy_hp()
 	_update_combo_label()
 	_animate_enemy_shake()
@@ -1393,18 +1470,25 @@ func _on_cards_drawn(count: int) -> void:
 func _on_turn_combo_advanced(challenges_solved: int) -> void:
 	_update_combo_label()
 	_animate_combo_glow()
+	# combo_3 sfx fires at solved>=3, combo_perfect on >=5 (perfect run)
+	if challenges_solved >= 5:
+		_sfx("combo_perfect")
+	elif challenges_solved >= 3:
+		_sfx("combo_3")
 	_spawn_floating_text("连过 %d 题!" % challenges_solved, Color(1, 0.92, 0.45, 1))
 
 
 func _on_healed(amount: int) -> void:
 	_render_player_status()
 	if amount > 0:
+		_sfx("heal")
 		_spawn_floating_text("+%d HP" % amount, Color(0.55, 1, 0.6, 1), true)
 
 
 func _on_shielded(amount: int) -> void:
 	_render_player_status()
 	if amount > 0:
+		_sfx("shield")
 		_spawn_floating_text("🛡 +%d" % amount, Color(0.55, 0.85, 1, 1), true)
 
 
@@ -1439,6 +1523,7 @@ func _on_combo_boost_armed() -> void:
 
 ## 一锤定音：玩家放错卡 → 弹模态展示正确答案 + 中文释义；关闭后视觉上灰掉这道题。
 func _on_challenge_failed(challenge_index: int, correct_card_id: String) -> void:
+	_sfx("card_drop_fail")
 	_selected_card = null
 	_update_combo_label()
 	_render_player_status()
@@ -1656,8 +1741,16 @@ func _on_end_turn_pressed() -> void:
 func _on_battle_ended(victory: bool) -> void:
 	_set_status_hint("")
 	if victory:
+		_sfx("enemy_defeated")
+		# Stop battle BGM and play victory fanfare; victory.ogg is short and non-looped
+		if typeof(AudioBus) != TYPE_NIL and AudioBus != null:
+			AudioBus.stop_bgm()
+			AudioBus.play_bgm("res://assets/audio/bgm/victory.ogg", false)
 		_show_victory_overlay()
 	else:
+		if typeof(AudioBus) != TYPE_NIL and AudioBus != null:
+			AudioBus.stop_bgm()
+			AudioBus.play_bgm("res://assets/audio/bgm/retreat.ogg", false)
 		_show_defeat_overlay()
 
 
@@ -1922,6 +2015,7 @@ func _on_submit_pressed() -> void:
 	if _is_resolving:
 		return
 	_is_resolving = true
+	_sfx("submit_swoosh")
 	if _submit_button != null:
 		_submit_button.disabled = true
 	# 序列动画：逐个高亮 AP 块

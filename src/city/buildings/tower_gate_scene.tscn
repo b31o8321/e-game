@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=3 uid="uid://tower_gate_scene"]
+
+[ext_resource type="Script" path="res://src/city/buildings/tower_gate_controller.gd" id="1_tower_gate"]
+
+[node name="TowerGateScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_tower_gate")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.137, 0.157, 0.227, 1)
+
+[node name="Header" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+
+[node name="TitleLabel" type="Label" parent="Header"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 600.0
+offset_bottom = 46.0
+text = "🏛 神塔之门 — 楼层选择"
+
+[node name="BackButton" type="Button" parent="Header"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 46.0
+text = "返回知识城"
+
+[node name="ContentArea" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = 80.0
+offset_right = -32.0
+offset_bottom = -80.0
+
+[node name="FloorListLabel" type="Label" parent="ContentArea"]
+layout_mode = 2
+text = "可挑战楼层："
+
+[node name="FloorList" type="VBoxContainer" parent="ContentArea"]
+layout_mode = 2
+
+[node name="DetailPanel" type="PanelContainer" parent="ContentArea"]
+layout_mode = 2
+visible = false
+
+[node name="DetailVBox" type="VBoxContainer" parent="ContentArea/DetailPanel"]
+layout_mode = 2
+
+[node name="DetailLabel" type="Label" parent="ContentArea/DetailPanel/DetailVBox"]
+layout_mode = 2
+text = ""
+
+[node name="DeckLabel" type="Label" parent="ContentArea/DetailPanel/DetailVBox"]
+layout_mode = 2
+text = "卡组（占位 · Phase 4 完整编辑）："
+
+[node name="DeckList" type="ItemList" parent="ContentArea/DetailPanel/DetailVBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="LaunchButton" type="Button" parent="ContentArea/DetailPanel/DetailVBox"]
+layout_mode = 2
+text = "[启程!]"
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -50.0
+offset_right = -20.0
+offset_bottom = -16.0
+text = ""

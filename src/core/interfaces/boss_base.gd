@@ -6,6 +6,10 @@ class_name BossBase extends Node
 @export var max_hp: int = 500
 ## 所属大关
 @export var gate_id: String = ""
+## 反舒适区：终局 Boss 必须覆盖的子主题 ID 列表（A + B + C）。
+## ChallengeSelector 在选 Boss Challenge 时会强制至少覆盖此处所有 sub_topic，
+## 漏一个 = 那道题没卡填 = 必受伤。
+@export var requires_topic_coverage: Array[String] = []
 
 # ── 通关流程钩子（引擎调用）────────────────────────────────────
 

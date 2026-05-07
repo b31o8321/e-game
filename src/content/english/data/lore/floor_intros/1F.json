@@ -1,0 +1,51 @@
+[
+  {
+    "id": "1f_intro_1",
+    "background_image_path": "",
+    "background_color": "#2a3a4e",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "这是神塔的第一层——古老的图书馆。书架很高，灯却暗了。这里藏着所有用来描述世界的形容词。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "1f_intro_2",
+    "lore_codex_id": "lore_1f_intro_1",
+    "tags": ["main_story", "floor_intro", "1F"]
+  },
+  {
+    "id": "1f_intro_2",
+    "background_image_path": "",
+    "background_color": "#2a3a4e",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "normal",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "happy、sad、brave、quiet……每一个词都曾经鲜活地住在某个孩子的心里。可现在，它们都迷路了。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "advance_on": "click",
+    "next_panel_id": "1f_intro_3",
+    "lore_codex_id": "lore_1f_intro_2",
+    "tags": ["main_story", "floor_intro", "1F"]
+  },
+  {
+    "id": "1f_intro_3",
+    "background_image_path": "",
+    "background_color": "#2a3a4e",
+    "portrait_left_path": "",
+    "portrait_left_emotion": "serious",
+    "speaker_name": "词语之师",
+    "speaker_position": "left",
+    "text": "守好你的卡组，认真看清每一个词的样子。学会形容，你才能真正理解眼前的世界。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_1f_intro_3",
+    "tags": ["main_story", "floor_intro", "1F"]
+  }
+]

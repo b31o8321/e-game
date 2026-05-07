@@ -1,0 +1,117 @@
+[gd_scene load_steps=2 format=3 uid="uid://cutscene_scene"]
+
+[ext_resource type="Script" path="res://src/cutscene/cutscene_scene.gd" id="1_cutscene_scene"]
+
+[node name="CutsceneScene" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_cutscene_scene")
+
+[node name="BackgroundLayer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="BackgroundColorRect" type="ColorRect" parent="BackgroundLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 1)
+mouse_filter = 2
+
+[node name="BackgroundImage" type="TextureRect" parent="BackgroundLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1
+stretch_mode = 6
+mouse_filter = 2
+
+[node name="PortraitLayer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="PortraitLeft" type="Sprite2D" parent="PortraitLayer"]
+position = Vector2(220, 480)
+visible = false
+
+[node name="PortraitRight" type="Sprite2D" parent="PortraitLayer"]
+position = Vector2(1060, 480)
+visible = false
+
+[node name="DialogueLayer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="DialoguePanel" type="PanelContainer" parent="DialogueLayer"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = -200.0
+offset_right = -80.0
+offset_bottom = -40.0
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="DialogueLayer/DialoguePanel"]
+layout_mode = 2
+
+[node name="SpeakerNameLabel" type="Label" parent="DialogueLayer/DialoguePanel/VBox"]
+layout_mode = 2
+text = ""
+
+[node name="TextLabel" type="RichTextLabel" parent="DialogueLayer/DialoguePanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+
+[node name="ContinueIndicator" type="Label" parent="DialogueLayer/DialoguePanel/VBox"]
+layout_mode = 2
+text = "▼"
+horizontal_alignment = 2
+visible = false
+
+[node name="ControlLayer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="BgClickArea" type="Button" parent="ControlLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+flat = true
+focus_mode = 0
+
+[node name="SkipButton" type="Button" parent="ControlLayer"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -140.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 60.0
+text = "跳过 ▶"
+
+[node name="AudioPlayers" type="Node" parent="."]
+
+[node name="BgmStream" type="AudioStreamPlayer" parent="AudioPlayers"]
+
+[node name="SfxStream" type="AudioStreamPlayer" parent="AudioPlayers"]

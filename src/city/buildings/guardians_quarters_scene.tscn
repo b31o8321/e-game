@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=3 uid="uid://guardians_quarters_scene"]
+
+[ext_resource type="Script" path="res://src/city/buildings/guardians_quarters_controller.gd" id="1_gq"]
+
+[node name="GuardiansQuartersScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_gq")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.165, 0.118, 0.137, 1)
+
+[node name="Header" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+
+[node name="TitleLabel" type="Label" parent="Header"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 600.0
+offset_bottom = 46.0
+text = "🛏 守护者驻地"
+
+[node name="BackButton" type="Button" parent="Header"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 12.0
+offset_right = -16.0
+offset_bottom = 46.0
+text = "返回知识城"
+
+[node name="Tabs" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 70.0
+offset_right = -20.0
+offset_bottom = -20.0
+
+[node name="角色" type="VBoxContainer" parent="Tabs"]
+layout_mode = 2
+
+[node name="ClassLabel" type="Label" parent="Tabs/角色"]
+layout_mode = 2
+text = "职业：守护者"
+
+[node name="StatsLabel" type="RichTextLabel" parent="Tabs/角色"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+fit_content = true
+text = "..."
+
+[node name="卡组库" type="VBoxContainer" parent="Tabs"]
+layout_mode = 2
+
+[node name="CardsHeader" type="Label" parent="Tabs/卡组库"]
+layout_mode = 2
+text = "已解锁卡片：0"
+
+[node name="FilterRow" type="HBoxContainer" parent="Tabs/卡组库"]
+layout_mode = 2
+
+[node name="FilterLabel" type="Label" parent="Tabs/卡组库/FilterRow"]
+layout_mode = 2
+text = "筛选："
+
+[node name="FilterOption" type="OptionButton" parent="Tabs/卡组库/FilterRow"]
+layout_mode = 2
+
+[node name="CardsList" type="ItemList" parent="Tabs/卡组库"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="三星挑战" type="ScrollContainer" parent="Tabs"]
+layout_mode = 2
+
+[node name="StarsContainer" type="VBoxContainer" parent="Tabs/三星挑战"]
+layout_mode = 2
+size_flags_horizontal = 3

@@ -1,0 +1,110 @@
+[gd_scene load_steps=2 format=3 uid="uid://camp_scene_v1"]
+
+[ext_resource type="Script" path="res://src/run/camp_scene.gd" id="1_camp"]
+
+[node name="CampScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_camp")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.094, 0.122, 0.165, 1)
+
+[node name="TitleLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 20.0
+offset_bottom = 60.0
+text = "中场营地 · Act X 完成"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LeftPanel" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 30.0
+offset_top = -180.0
+offset_right = 600.0
+offset_bottom = 200.0
+
+[node name="CardsHeader" type="Label" parent="LeftPanel"]
+layout_mode = 2
+text = "选 1 张新卡加入牌组"
+
+[node name="CardsRow" type="HBoxContainer" parent="LeftPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkipButton" type="Button" parent="LeftPanel"]
+layout_mode = 2
+text = "跳过 (+5 词晶)"
+
+[node name="RightPanel" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -430.0
+offset_top = -180.0
+offset_right = -30.0
+offset_bottom = 200.0
+
+[node name="ActionHeader" type="Label" parent="RightPanel"]
+layout_mode = 2
+text = "选 1 项营地行动"
+
+[node name="UpgradeButton" type="Button" parent="RightPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "🗡  升级一张已有卡（+2 伤害）"
+
+[node name="HealButton" type="Button" parent="RightPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "❤  回复 30% 最大 HP"
+
+[node name="ReviewButton" type="Button" parent="RightPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+text = "📚  复习本 Act 单词 (+5 词晶)"
+
+[node name="ActionStatusLabel" type="Label" parent="RightPanel"]
+layout_mode = 2
+text = ""
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = -100.0
+offset_right = -30.0
+offset_bottom = -70.0
+text = ""
+
+[node name="DepartButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -160.0
+offset_top = -60.0
+offset_right = 160.0
+offset_bottom = -20.0
+disabled = true
+text = "启程下一 Act（先做出选择）"

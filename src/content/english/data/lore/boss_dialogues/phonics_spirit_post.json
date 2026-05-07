@@ -1,0 +1,35 @@
+[
+  {
+    "id": "phonics_spirit_post_1",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "发音之灵",
+    "speaker_position": "right",
+    "text": "你能听懂我！谢谢你……每一个音节，又重新落回了我的嘴边。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "phonics_spirit_post_2",
+    "lore_codex_id": "lore_phonics_spirit_post_1",
+    "tags": ["boss_dialogue", "0F"]
+  },
+  {
+    "id": "phonics_spirit_post_2",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "发音之灵",
+    "speaker_position": "right",
+    "text": "记住——发音不是技巧，是和别人之间最温柔的桥。多听，多说，再难的词也敢张口。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_phonics_spirit_post_2",
+    "tags": ["boss_dialogue", "0F"]
+  }
+]

@@ -17,6 +17,7 @@ run/main_scene="res://src/ui/main_menu.tscn"
 [autoload]
 
 GameState="*res://src/core/autoloads/game_state.gd"
+AudioBus="*res://src/core/autoloads/audio_bus.gd"
 RunState="*res://src/run/run_state.gd"
 CutscenePlayer="*res://src/cutscene/cutscene_player.gd"
 LoreCodexSystem="*res://src/cutscene/lore_codex_system.gd"

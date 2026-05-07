@@ -1,0 +1,35 @@
+[
+  {
+    "id": "silent_sigher_post_1",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "静默叹息者",
+    "speaker_position": "right",
+    "text": "是的……我是 quiet。安静的 quiet。安静不是孤单，是给别人留出可以说话的空间。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "silent_sigher_post_2",
+    "lore_codex_id": "lore_silent_sigher_post_1",
+    "tags": ["boss_dialogue", "1F"]
+  },
+  {
+    "id": "silent_sigher_post_2",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "静默叹息者",
+    "speaker_position": "right",
+    "text": "现在我又能笑了。谢谢你，小守护者——愿你也有一个属于自己的、安静而踏实的夜晚。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_silent_sigher_post_2",
+    "tags": ["boss_dialogue", "1F"]
+  }
+]

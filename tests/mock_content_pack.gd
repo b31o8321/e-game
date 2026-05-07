@@ -6,6 +6,32 @@ func _init() -> void:
 	subject = "english"
 	grades = [4, 5, 6]
 
+# ─── 新接口最小实现（让 ContentLoader.validate 通过）────────────────
+func get_id() -> String:
+	return pack_id
+
+func get_display_name() -> String:
+	return pack_name
+
+func get_subject_category() -> String:
+	return subject
+
+func get_grade_range() -> Array[int]:
+	return grades
+
+func get_version() -> String:
+	return "0.0.1-mock"
+
+func get_card_types() -> Array[Dictionary]:
+	return [{"id": "word", "display": "词卡", "icon": ""}]
+
+func get_supported_challenge_kinds() -> Array[String]:
+	return ["fill_in_blank"]
+
+func validate() -> Array[String]:
+	return []
+
+# ─── 旧接口（@deprecated，保留供测试 BattleController 等）───────────
 func get_attack_types() -> Array[Dictionary]:
 	return [
 		{ "id": "vocabulary", "name": "词汇", "icon": "📚", "color": "#667eea", "element": "fire" },

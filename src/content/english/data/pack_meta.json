@@ -1,0 +1,24 @@
+{
+	"id": "english_grade46",
+	"display_name": "英语 4-6 年级",
+	"subject_category": "english",
+	"grade_range": [3, 4, 5, 6],
+	"version": "0.1.0",
+	"game_title": "知识神塔",
+	"game_subtitle": "Tower of Knowledge",
+	"theme_colors": {
+		"primary": "#3b82f6",
+		"accent": "#fbbf24",
+		"danger": "#ef4444"
+	},
+	"main_menu_bg_path": "res://assets/visual/backgrounds/main_menu.png",
+	"city_bg_path": "res://assets/visual/backgrounds/city.png",
+	"settlement_bg_path": "res://assets/visual/backgrounds/settlement.png",
+	"boss_battle_bg_path": "res://assets/visual/backgrounds/boss_battle.png",
+	"main_menu_bgm_path": "res://assets/audio/bgm/main_menu.ogg",
+	"city_bgm_path": "res://assets/audio/bgm/city.ogg",
+	"battle_bgm_path": "res://assets/audio/bgm/battle.ogg",
+	"boss_battle_bgm_path": "res://assets/audio/bgm/boss.ogg",
+	"victory_bgm_path": "res://assets/audio/bgm/victory.ogg",
+	"retreat_bgm_path": "res://assets/audio/bgm/retreat.ogg"
+}

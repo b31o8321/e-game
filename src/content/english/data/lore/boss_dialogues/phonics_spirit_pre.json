@@ -1,0 +1,35 @@
+[
+  {
+    "id": "phonics_spirit_pre_1",
+    "background_image_path": "",
+    "background_color": "#3a2a1a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "sad",
+    "speaker_name": "发音之灵",
+    "speaker_position": "right",
+    "text": "听……听……啊……我说不清楚……每个字都从我嘴里滑走了……",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "phonics_spirit_pre_2",
+    "lore_codex_id": "lore_phonics_spirit_pre_1",
+    "tags": ["boss_dialogue", "0F"]
+  },
+  {
+    "id": "phonics_spirit_pre_2",
+    "background_image_path": "",
+    "background_color": "#3a2a1a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "sad",
+    "speaker_name": "发音之灵",
+    "speaker_position": "right",
+    "text": "你能听懂我吗……求求你……让我重新听到自己的声音……",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_phonics_spirit_pre_2",
+    "tags": ["boss_dialogue", "0F"]
+  }
+]

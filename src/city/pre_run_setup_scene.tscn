@@ -1,0 +1,201 @@
+[gd_scene load_steps=2 format=3 uid="uid://pre_run_setup_scene"]
+
+[ext_resource type="Script" path="res://src/city/pre_run_setup_controller.gd" id="1_prs"]
+
+[node name="PreRunSetupScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_prs")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.118, 0.137, 0.196, 1)
+
+[node name="Header" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 72.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="HeaderLabel" type="Label" parent="Header"]
+layout_mode = 2
+text = "楼层 1F · 形容词初阶"
+theme_override_font_sizes/font_size = 22
+
+[node name="Body" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 88.0
+offset_right = -16.0
+offset_bottom = -72.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Sections" type="VBoxContainer" parent="Body"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ClassRow" type="HBoxContainer" parent="Body/Sections"]
+layout_mode = 2
+
+[node name="ClassLabel" type="Label" parent="Body/Sections/ClassRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "职业：守护者 ▾"
+
+[node name="UpgradesLabel" type="Label" parent="Body/Sections/ClassRow"]
+layout_mode = 2
+text = "HP 100  ·  起手抽 5  ·  词晶 +0"
+
+[node name="DeckSection" type="VBoxContainer" parent="Body/Sections"]
+layout_mode = 2
+
+[node name="DeckHeader" type="HBoxContainer" parent="Body/Sections/DeckSection"]
+layout_mode = 2
+
+[node name="DeckSizeLabel" type="Label" parent="Body/Sections/DeckSection/DeckHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "当前卡组（0/12）："
+
+[node name="DeckScroll" type="ScrollContainer" parent="Body/Sections/DeckSection"]
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="DeckGrid" type="GridContainer" parent="Body/Sections/DeckSection/DeckScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 6
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="DeckActionsRow" type="HBoxContainer" parent="Body/Sections/DeckSection"]
+layout_mode = 2
+
+[node name="AddCardButton" type="Button" parent="Body/Sections/DeckSection/DeckActionsRow"]
+layout_mode = 2
+text = "+ 添加卡"
+
+[node name="RemoveButton" type="Button" parent="Body/Sections/DeckSection/DeckActionsRow"]
+layout_mode = 2
+text = "- 移除"
+
+[node name="RecommendButton" type="Button" parent="Body/Sections/DeckSection/DeckActionsRow"]
+layout_mode = 2
+text = "💡 推荐补全"
+
+[node name="ClearButton" type="Button" parent="Body/Sections/DeckSection/DeckActionsRow"]
+layout_mode = 2
+text = "清空"
+
+[node name="AnalysisSection" type="VBoxContainer" parent="Body/Sections"]
+layout_mode = 2
+
+[node name="AnalysisHeader" type="Label" parent="Body/Sections/AnalysisSection"]
+layout_mode = 2
+text = "📊 卡组分析"
+
+[node name="AnalysisGrid" type="GridContainer" parent="Body/Sections/AnalysisSection"]
+layout_mode = 2
+columns = 2
+
+[node name="FreshLabel" type="Label" parent="Body/Sections/AnalysisSection/AnalysisGrid"]
+layout_mode = 2
+text = "🌱 新     0 张 (0%)"
+
+[node name="LearningLabel" type="Label" parent="Body/Sections/AnalysisSection/AnalysisGrid"]
+layout_mode = 2
+text = "🌿 学习中 0 张 (0%)"
+
+[node name="ProficientLabel" type="Label" parent="Body/Sections/AnalysisSection/AnalysisGrid"]
+layout_mode = 2
+text = "🌳 熟练   0 张 (0%)"
+
+[node name="MasteredLabel" type="Label" parent="Body/Sections/AnalysisSection/AnalysisGrid"]
+layout_mode = 2
+text = "⭐ 掌握   0 张 (0%)"
+
+[node name="RewardLabel" type="Label" parent="Body/Sections/AnalysisSection/AnalysisGrid"]
+layout_mode = 2
+text = "预估本局新卡奖励：+0 词晶"
+
+[node name="EquipmentRow" type="HBoxContainer" parent="Body/Sections"]
+layout_mode = 2
+
+[node name="EquipmentLabel" type="Label" parent="Body/Sections/EquipmentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "装备：⚔ 木剑 / 🛡 无 / 💍 无"
+
+[node name="SpiceLabel" type="Label" parent="Body/Sections/EquipmentRow"]
+layout_mode = 2
+text = "卷轴：📜 (Phase 4.3)"
+
+[node name="ReviewSection" type="VBoxContainer" parent="Body/Sections"]
+layout_mode = 2
+
+[node name="ReviewHeader" type="Label" parent="Body/Sections/ReviewSection"]
+layout_mode = 2
+text = "📚 复习卡片"
+
+[node name="ReviewActionsRow" type="HBoxContainer" parent="Body/Sections/ReviewSection"]
+layout_mode = 2
+
+[node name="ReviewButton" type="Button" parent="Body/Sections/ReviewSection/ReviewActionsRow"]
+layout_mode = 2
+text = "启动复习"
+
+[node name="SkipReviewButton" type="Button" parent="Body/Sections/ReviewSection/ReviewActionsRow"]
+layout_mode = 2
+text = "跳过"
+
+[node name="Footer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -64.0
+offset_right = -16.0
+offset_bottom = -16.0
+
+[node name="BackButton" type="Button" parent="Footer"]
+layout_mode = 2
+text = "← 返回"
+
+[node name="Spacer" type="Control" parent="Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LaunchButton" type="Button" parent="Footer"]
+layout_mode = 2
+text = "启程!"
+
+[node name="StatusLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -88.0
+offset_right = -16.0
+offset_bottom = -68.0
+text = ""

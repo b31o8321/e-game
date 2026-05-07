@@ -1,0 +1,35 @@
+[
+  {
+    "id": "letter_chaos_post_1",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "字母混乱者",
+    "speaker_position": "right",
+    "text": "啊……我想起来了。A、B、C、D……我教过孩子们 ABC 的，对，是我教的。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "letter_chaos_post_2",
+    "lore_codex_id": "lore_letter_chaos_post_1",
+    "tags": ["boss_dialogue", "0F"]
+  },
+  {
+    "id": "letter_chaos_post_2",
+    "background_image_path": "",
+    "background_color": "#f5d27a",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "字母混乱者",
+    "speaker_position": "right",
+    "text": "谢谢你，小守护者。你比我以前的学生还耐心。继续往上走，别像我一样把名字弄丢。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_letter_chaos_post_2",
+    "tags": ["boss_dialogue", "0F"]
+  }
+]

@@ -1,0 +1,53 @@
+{
+	"equipment": [
+		{
+			"id": "equip_starter_badge",
+			"display_name": "初学者徽章",
+			"slot": "accessory",
+			"effects": [
+				{"stat": "max_hp", "delta": 10}
+			],
+			"rarity": "common",
+			"icon_path": "res://src/content/english/assets/ui/equip_starter_badge.png",
+			"source_boss_id": "letter_warden",
+			"description": "起手 HP +10"
+		},
+		{
+			"id": "equip_silent_book",
+			"display_name": "沉默之书",
+			"slot": "accessory",
+			"effects": [
+				{"stat": "adjective_card_damage", "delta": 3}
+			],
+			"rarity": "rare",
+			"icon_path": "res://src/content/english/assets/ui/equip_silent_book.png",
+			"source_boss_id": "librarian",
+			"description": "形容词卡伤害 +3"
+		},
+		{
+			"id": "equip_blood_ring",
+			"display_name": "血缘之环",
+			"slot": "accessory",
+			"effects": [
+				{"stat": "noun_card_damage", "delta": 3},
+				{"stat": "pronoun_card_damage", "delta": 3}
+			],
+			"rarity": "rare",
+			"icon_path": "res://src/content/english/assets/ui/equip_blood_ring.png",
+			"source_boss_id": "family_guardian",
+			"description": "名词/代词卡伤害 +3"
+		},
+		{
+			"id": "equip_wood_sword",
+			"display_name": "木剑",
+			"slot": "weapon",
+			"effects": [
+				{"stat": "base_damage", "delta": 2}
+			],
+			"rarity": "common",
+			"icon_path": "res://src/content/english/assets/ui/equip_wood_sword.png",
+			"source_boss_id": "",
+			"description": "普通伤害 +2（起手装备）"
+		}
+	]
+}

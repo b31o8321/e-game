@@ -16,6 +16,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.071, 0.094, 0.137, 1)
 
+[node name="BackgroundTexture" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1
+stretch_mode = 6
+visible = false
+modulate = Color(1, 1, 1, 0.45)
+
 ; ─── TopBar ───────────────────────────────────────────────
 [node name="TopBar" type="PanelContainer" parent="."]
 layout_mode = 1
@@ -63,6 +73,16 @@ alignment = 1
 custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 color = Color(0.35, 0.27, 0.2, 1)
+
+[node name="PortraitImage" type="TextureRect" parent="EnemyArea/EnemyHeader/EnemyPortrait"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+expand_mode = 1
+stretch_mode = 6
+visible = false
+mouse_filter = 2
 
 [node name="EnemyInfo" type="VBoxContainer" parent="EnemyArea/EnemyHeader"]
 layout_mode = 2

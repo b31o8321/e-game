@@ -1,0 +1,35 @@
+[
+  {
+    "id": "fog_whisperer_post_1",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "迷雾低吟者",
+    "speaker_position": "right",
+    "text": "雾散了……谢谢你。我记起来了，我是 brave 词灵——勇敢的那个 brave。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "advance_on": "click",
+    "next_panel_id": "fog_whisperer_post_2",
+    "lore_codex_id": "lore_fog_whisperer_post_1",
+    "tags": ["boss_dialogue", "1F"]
+  },
+  {
+    "id": "fog_whisperer_post_2",
+    "background_image_path": "",
+    "background_color": "#5a6a8e",
+    "portrait_right_path": "",
+    "portrait_right_emotion": "happy",
+    "speaker_name": "迷雾低吟者",
+    "speaker_position": "right",
+    "text": "替我看一眼那些还在迷雾里的小词……你愿意吗？我相信你。",
+    "text_speed": 30.0,
+    "transition_in": "instant",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_fog_whisperer_post_2",
+    "tags": ["boss_dialogue", "1F"]
+  }
+]

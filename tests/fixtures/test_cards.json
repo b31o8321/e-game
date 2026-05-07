@@ -1,0 +1,24 @@
+{
+  "cards": [
+    {
+      "id": "test_brave",
+      "text": "brave",
+      "type": "word",
+      "pos": "adjective",
+      "tags": ["positive_emotion", "personality"],
+      "skill": "vocab",
+      "base_damage": 8,
+      "rarity": "common"
+    },
+    {
+      "id": "test_sound_brave",
+      "text": "brave",
+      "type": "sound",
+      "tags": ["pronunciation"],
+      "skill": "phonetics",
+      "base_damage": 0,
+      "rarity": "common",
+      "audio_path": "res://test/audio/brave.ogg"
+    }
+  ]
+}

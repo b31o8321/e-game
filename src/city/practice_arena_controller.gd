@@ -6,8 +6,10 @@ var _question_ids: Array[String] = []
 var _current_index: int = 0
 var _correct_count: int = 0
 var _pack: ContentPackBase = null
-var _question_controller: QuestionController = null
-var _question_ui: Control = null
+# TODO Phase 4: rebuild — QuestionController/question_ui removed in Phase 1 cleanup;
+# practice arena will be rewritten on top of the new card system in Phase 4.
+var _question_controller: Node = null
+var _question_ui: Node = null
 
 @onready var _progress_label: Label = $ProgressLabel
 @onready var _result_panel: Control = $ResultPanel
@@ -19,7 +21,8 @@ var _question_ui: Control = null
 func _ready() -> void:
 	_pack = GameState.content_loader.get_active_pack()
 	_build_question_list()
-	_setup_question_ui()
+	# TODO Phase 4: rebuild — _setup_question_ui disabled (question_ui removed in Phase 1)
+	# _setup_question_ui()
 	_next_button.pressed.connect(_on_next_pressed)
 	_finish_button.pressed.connect(_on_finish_pressed)
 	_back_button.pressed.connect(_on_back_pressed)
@@ -44,12 +47,8 @@ func _build_question_list() -> void:
 	_question_ids = candidates.slice(0, min(SESSION_SIZE, candidates.size()))
 
 func _setup_question_ui() -> void:
-	var scene: PackedScene = load("res://src/battle/question_ui.tscn")
-	_question_ui = scene.instantiate() as Control
-	_question_ui.visible = false
-	add_child(_question_ui)
-	_question_controller = _question_ui as QuestionController
-	_question_controller.answered.connect(_on_question_answered)
+	# TODO Phase 4: rebuild — question_ui.tscn / QuestionController removed in Phase 1 cleanup
+	pass
 
 func _show_next_question() -> void:
 	if _pack == null:
@@ -60,8 +59,9 @@ func _show_next_question() -> void:
 		var q: Dictionary = _pack.get_question_by_id(qid)
 		if not q.is_empty():
 			_progress_label.text = "第 %d / %d 题" % [_current_index + 1, _question_ids.size()]
-			_question_controller.load_question(q)
-			_question_ui.visible = true
+			# TODO Phase 4: rebuild — QuestionController/question_ui removed in Phase 1 cleanup
+			# _question_controller.load_question(q)
+			# _question_ui.visible = true
 			_next_button.visible = false
 			return
 		_current_index += 1
@@ -76,11 +76,13 @@ func _on_question_answered(correct: bool, question_id: String) -> void:
 
 func _on_next_pressed() -> void:
 	_next_button.visible = false
-	_question_ui.visible = false
+	# TODO Phase 4: rebuild — question_ui removed in Phase 1 cleanup
+	# _question_ui.visible = false
 	_show_next_question()
 
 func _show_results() -> void:
-	_question_ui.visible = false
+	# TODO Phase 4: rebuild — question_ui removed in Phase 1 cleanup
+	# _question_ui.visible = false
 	_progress_label.visible = false
 	_next_button.visible = false
 	var reward: int = _correct_count / 2

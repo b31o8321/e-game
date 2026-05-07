@@ -1,0 +1,58 @@
+{
+	"spices": [
+		{
+			"id": "voice_battle_cry",
+			"kind": "voice_scroll",
+			"display_name": "战吼卷轴",
+			"description": "喊 \"I'm strong\" → ATK +30% / 3 回合",
+			"target_phrase": "I am strong",
+			"buff_id": "atk_up",
+			"buff_value": 30,
+			"buff_duration": 3,
+			"source_boss_id": "letter_chaos"
+		},
+		{
+			"id": "voice_courage",
+			"kind": "voice_scroll",
+			"display_name": "勇气咒",
+			"description": "喊 \"I'm brave\" → 反伤 25",
+			"target_phrase": "I am brave",
+			"buff_id": "thorns",
+			"buff_value": 25,
+			"buff_duration": 3,
+			"source_boss_id": "fog_whisperer"
+		},
+		{
+			"id": "voice_family",
+			"kind": "voice_scroll",
+			"display_name": "家人守护",
+			"description": "喊 \"My family\" → 回 30 HP",
+			"target_phrase": "My family",
+			"buff_id": "heal",
+			"buff_value": 30,
+			"buff_duration": 1,
+			"source_boss_id": "family_scatter"
+		},
+		{
+			"id": "dictation_blade",
+			"kind": "dictation",
+			"display_name": "听写之刃",
+			"description": "听音写词 → 对应词卡造成暴击",
+			"target_word": "brave",
+			"counter_damage": 25,
+			"audio_path": "res://src/content/english/audio/words/brave.mp3",
+			"source_boss_id": "silent_sigher"
+		},
+		{
+			"id": "dictation_bell",
+			"kind": "dictation",
+			"display_name": "记忆之钟",
+			"description": "听音写词 → 抽 2 张卡",
+			"target_word": "family",
+			"counter_damage": 0,
+			"draw_cards": 2,
+			"audio_path": "res://src/content/english/audio/words/family.mp3",
+			"source_boss_id": "body_lost"
+		}
+	]
+}

@@ -1,7 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2tsmkc4yfncc"]
-
-[ext_resource type="Script" path="res://src/exploration/resource_node.gd" id="1_rn"]
-
-[node name="ResourceNode" type="Button"]
-script = ExtResource("1_rn")
-text = "💎 资源"

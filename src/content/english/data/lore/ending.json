@@ -1,0 +1,18 @@
+[
+  {
+    "id": "ending_1",
+    "background_image_path": "",
+    "background_color": "#1a1a2e",
+    "bgm_path": "",
+    "speaker_name": "",
+    "speaker_position": "center",
+    "text": "感谢游玩此 MVP！更多楼层敬请期待……知识神塔的故事，才刚刚开始。",
+    "text_speed": 30.0,
+    "transition_in": "fade",
+    "transition_out": "fade",
+    "advance_on": "click",
+    "next_panel_id": "",
+    "lore_codex_id": "lore_ending_1",
+    "tags": ["main_story", "ending"]
+  }
+]

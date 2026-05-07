@@ -1,0 +1,12 @@
+[
+  {
+    "id": "bare_card_1",
+    "text": "happy",
+    "type": "word",
+    "pos": "adjective",
+    "tags": ["positive_emotion"],
+    "skill": "vocab",
+    "base_damage": 6,
+    "rarity": "common"
+  }
+]
