@@ -22,6 +22,7 @@ CutscenePlayer="*res://src/cutscene/cutscene_player.gd"
 LoreCodexSystem="*res://src/cutscene/lore_codex_system.gd"
 DebugMode="*res://src/core/debug/debug_mode.gd"
 VoiceClient="*res://src/voice/voice_client.gd"
+FeedbackSystem="*res://src/feedback/feedback_system.gd"
 
 [display]
 
