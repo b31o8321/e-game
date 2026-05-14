@@ -280,6 +280,8 @@ func test_effect_shield_absorbs_enemy_damage() -> void:
 	assert_eq(ctrl.player_shield, 2, "shield should have 10-8=2 remaining")
 
 
+## 2026-05-08 静态卡库改造：库内容不变，但 draw_card 效果仍发 cards_drawn 信号供 UI 兼容。
+## 测试范围缩窄到"信号是否触发"——库大小不再改变（卡用了也不离开库）。
 func test_effect_draw_card_draws_extra() -> void:
 	var templates: Array = [
 		_make_template("t_draw", "draw_card", 2),
@@ -287,13 +289,12 @@ func test_effect_draw_card_draws_extra() -> void:
 		_make_template("t_c"),
 	]
 	var ctrl: BattleController = _build_controller(templates, 12, 3, 0)
-	var hand_before: int = ctrl.hand.size()
+	var lib_before: int = ctrl.card_library.size()
 	watch_signals(ctrl)
-	var card: Card = ctrl.hand[0]
+	var card: Card = ctrl.card_library[0]
 	ctrl.try_place_card(card, 0, 0)
-	# Drew 2 from effect; played 1; bonus draw at 2 plays may or may not have fired (only 1 played so far)
-	# So expect: hand_before - 1 (played) + 2 (drawn) = hand_before + 1
-	assert_eq(ctrl.hand.size(), hand_before + 1, "draw_card +2 should net hand +1 after using 1 card")
+	# 库内容不变（卡留在库中）
+	assert_eq(ctrl.card_library.size(), lib_before, "card_library size invariant after place")
 	assert_signal_emitted(ctrl, "cards_drawn")
 
 
@@ -641,37 +642,37 @@ func test_has_solvable_challenges_false_when_all_failed() -> void:
 # ─── B5: hand-aware question selection ───────────────────────────
 
 ## 单槽：hand 有 adjective → 单槽 adjective 题可解
-func test_can_solve_with_hand_single_slot_match() -> void:
+func test_can_solve_with_library_single_slot_match() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = _make_template("t_adj")  # required_pos=adjective
 	var hand: Array[Card] = [_make_card({"id": "c1"})]  # default pos=adjective
-	assert_true(ctrl._can_solve_with_hand(t, hand),
+	assert_true(ctrl._can_solve_with_library(t, hand),
 		"adjective hand can solve adjective template")
 
 
 ## 单槽：hand 是 noun → 单槽 adjective 题不可解
-func test_can_solve_with_hand_single_slot_no_match() -> void:
+func test_can_solve_with_library_single_slot_no_match() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = _make_template("t_adj")
 	var hand: Array[Card] = [_make_noun_card("noun_only")]
-	assert_false(ctrl._can_solve_with_hand(t, hand),
+	assert_false(ctrl._can_solve_with_library(t, hand),
 		"noun hand cannot solve adjective template")
 
 
 ## 空手牌 + 非空槽 → false
-func test_can_solve_with_hand_empty_hand_returns_false() -> void:
+func test_can_solve_with_library_empty_hand_returns_false() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = _make_template("t_adj")
 	var hand: Array[Card] = []
-	assert_false(ctrl._can_solve_with_hand(t, hand),
+	assert_false(ctrl._can_solve_with_library(t, hand),
 		"empty hand cannot solve a non-empty template")
 
 
 ## 空槽模板 → 视为可解（边界）
-func test_can_solve_with_hand_empty_template_slots_returns_true() -> void:
+func test_can_solve_with_library_empty_template_slots_returns_true() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = ChallengeTemplate.from_dict({
@@ -679,15 +680,15 @@ func test_can_solve_with_hand_empty_template_slots_returns_true() -> void:
 		"slots": [],
 	})
 	var hand: Array[Card] = []
-	assert_true(ctrl._can_solve_with_hand(t, hand),
+	assert_true(ctrl._can_solve_with_library(t, hand),
 		"empty-slots template is trivially solvable")
 
 
 ## null template → 视为可解（兼容空 selector 路径）
-func test_can_solve_with_hand_null_template_returns_true() -> void:
+func test_can_solve_with_library_null_template_returns_true() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
-	assert_true(ctrl._can_solve_with_hand(null, [] as Array[Card]),
+	assert_true(ctrl._can_solve_with_library(null, [] as Array[Card]),
 		"null template treated as solvable")
 
 
@@ -704,7 +705,7 @@ func _make_two_slot_adjective_template(template_id: String) -> ChallengeTemplate
 	})
 
 
-func test_can_solve_with_hand_multi_slot_two_matches() -> void:
+func test_can_solve_with_library_multi_slot_two_matches() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = _make_two_slot_adjective_template("t_2adj")
@@ -712,12 +713,12 @@ func test_can_solve_with_hand_multi_slot_two_matches() -> void:
 		_make_card({"id": "a1"}),
 		_make_card({"id": "a2"}),
 	]
-	assert_true(ctrl._can_solve_with_hand(t, hand),
+	assert_true(ctrl._can_solve_with_library(t, hand),
 		"2 adjective cards solve 2 adjective slots")
 
 
 ## 多槽：2 个 adjective 槽 + 1 张 adjective 卡 → 不可解
-func test_can_solve_with_hand_multi_slot_only_one_match() -> void:
+func test_can_solve_with_library_multi_slot_only_one_match() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = _make_two_slot_adjective_template("t_2adj")
@@ -725,7 +726,7 @@ func test_can_solve_with_hand_multi_slot_only_one_match() -> void:
 		_make_card({"id": "a1"}),
 		_make_noun_card("noun_only"),
 	]
-	assert_false(ctrl._can_solve_with_hand(t, hand),
+	assert_false(ctrl._can_solve_with_library(t, hand),
 		"only one adjective + one noun cannot fill two adjective slots")
 
 
@@ -742,7 +743,7 @@ func _make_adj_then_noun_template(template_id: String) -> ChallengeTemplate:
 	})
 
 
-func test_can_solve_with_hand_multi_slot_mixed_types() -> void:
+func test_can_solve_with_library_multi_slot_mixed_types() -> void:
 	var ctrl: BattleController = BattleController.new()
 	add_child_autofree(ctrl)
 	var t: ChallengeTemplate = _make_adj_then_noun_template("t_adjnoun")
@@ -750,7 +751,7 @@ func test_can_solve_with_hand_multi_slot_mixed_types() -> void:
 		_make_card({"id": "a1"}),  # adjective
 		_make_noun_card("n1"),     # noun
 	]
-	assert_true(ctrl._can_solve_with_hand(t, hand),
+	assert_true(ctrl._can_solve_with_library(t, hand),
 		"one adj + one noun solves adj+noun slots")
 
 
@@ -768,7 +769,7 @@ func test_refill_board_filters_to_solvable_with_hand() -> void:
 	# Hand 默认是 adjective（_build_controller 用的 _make_card）
 	for ch in ctrl.available_challenges:
 		# 每道题的所有槽都应该能被手牌解
-		assert_true(ctrl._can_solve_with_hand(ch, ctrl.hand),
+		assert_true(ctrl._can_solve_with_library(ch, ctrl.hand),
 			"refilled challenge '%s' should be solvable with current hand" % ch.template_id)
 		# 具体：noun 题不应该出现
 		assert_false(ch.template_id.begins_with("t_noun"),
@@ -792,7 +793,7 @@ func test_refill_when_all_unsolvable_results_in_smaller_board() -> void:
 			"fallback-picked template '%s' should be marked is_warn=true" % ch.template_id)
 
 
-## start_battle：先抽手牌再 refill_board，所有起手题都可解
+## start_battle：静态卡库——库内所有卡都可见；refill_board 应保证所有起手题可解
 func test_first_turn_questions_match_starting_hand() -> void:
 	var templates: Array = [
 		_make_template("t_a"),
@@ -801,11 +802,12 @@ func test_first_turn_questions_match_starting_hand() -> void:
 		_make_template("t_d"),
 	]
 	var ctrl: BattleController = _build_controller(templates, 8, 3, 0)
-	assert_eq(ctrl.hand.size(), BattleController.HAND_SIZE,
-		"hand drawn before refill")
+	# 静态卡库：库内卡 = 传入 deck（这里 8 张）
+	assert_eq(ctrl.card_library.size(), 8,
+		"library populated with all cards on start")
 	for ch in ctrl.available_challenges:
-		assert_true(ctrl._can_solve_with_hand(ch, ctrl.hand),
-			"starting challenge '%s' solvable with starting hand" % ch.template_id)
+		assert_true(ctrl._can_solve_with_library(ch, ctrl.card_library),
+			"starting challenge '%s' solvable with library" % ch.template_id)
 
 
 ## 回合末：手牌重抽后 refill 用新手牌过滤
@@ -820,18 +822,18 @@ func test_refill_at_turn_end_uses_new_hand() -> void:
 	var ctrl: BattleController = _build_controller(templates, 12, 3, 0)
 	ctrl.end_player_turn()
 	for ch in ctrl.available_challenges:
-		assert_true(ctrl._can_solve_with_hand(ch, ctrl.hand),
+		assert_true(ctrl._can_solve_with_library(ch, ctrl.hand),
 			"after end_player_turn, all board challenges solvable with new hand")
 
 
-## set_hand_for_test 测试辅助：能直接覆盖手牌
-func test_set_hand_for_test_replaces_hand() -> void:
+## set_library_for_test 测试辅助：能直接覆盖手牌
+func test_set_library_for_test_replaces_hand() -> void:
 	var ctrl: BattleController = _build_controller([_make_template("t_a")], 8, 3, 0)
 	var new_hand: Array[Card] = [
 		_make_noun_card("manual_noun"),
 		_make_card({"id": "manual_adj"}),
 	]
-	ctrl.set_hand_for_test(new_hand)
+	ctrl.set_library_for_test(new_hand)
 	assert_eq(ctrl.hand.size(), 2, "hand replaced")
 	assert_eq(ctrl.hand[0].id, "manual_noun")
 	assert_eq(ctrl.hand[1].id, "manual_adj")

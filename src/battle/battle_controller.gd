@@ -36,11 +36,8 @@ enum State { IDLE, PLAYER_TURN, CARD_VALIDATION, RESOLUTION, ENEMY_TURN, END }
 
 const APConnection = preload("res://src/battle/ap_connection.gd")
 
-const HAND_SIZE: int = 5
 ## 默认棋盘可见题数。可以由 setup() 通过 board_size 参数覆盖。
 const DEFAULT_BOARD_SIZE: int = 3
-## 玩家本回合最多保留 N 张手牌（待技能 / 物品修改）。
-const HAND_RETAIN_MAX_DEFAULT: int = 3
 ## 玩家最多"留下"几道题（待技能 / 物品修改）。
 const QUESTION_KEEP_MAX_DEFAULT: int = 1
 
@@ -55,10 +52,21 @@ var player_shield: int = 0
 ## 敌人临时护盾（来自 EntityAbility "shield" 效果，玩家攻击时先扣这里再扣敌人 HP）。
 var enemy_shield: int = 0
 
-# === 牌库 ===
-var deck: Array[Card] = []
-var hand: Array[Card] = []
-var discard: Array[Card] = []
+# === 卡库 ===
+## 静态卡牌库——本场战斗玩家可用的所有卡。不消耗、不弃、不抽。
+## （旧设计是 hand/deck/discard 循环；2026-05-08 改造为静态库。）
+var card_library: Array[Card] = []
+
+## 兼容代理：旧代码（UI / 测试）读 `controller.hand` 仍能拿到当前可见的卡集合。
+## 静态库改造后：hand ≡ card_library，无独立 hand 概念。
+## 写入会被转发到 card_library 替换（仅限测试便利路径；生产代码请用 card_library）。
+var hand: Array[Card]:
+	get:
+		return card_library
+	set(value):
+		card_library.clear()
+		for c in value:
+			card_library.append(c)
 
 # === 多题棋盘 ===
 ## 当前棋盘大小（一回合可见多少道题）
@@ -69,10 +77,6 @@ var available_challenges: Array[ChallengeTemplate] = []
 var available_filled_slots: Array = []
 ## 玩家"留下"的题的 template_id 集合（回合末刷棋盘时不丢）
 var kept_template_ids: Array[String] = []
-## 玩家本回合标记保留的卡 id（回合末不被丢入弃牌堆）。
-var _retained_card_ids: Array[String] = []
-## 手牌保留上限。可被技能 / 装备覆盖。
-var hand_retain_max: int = HAND_RETAIN_MAX_DEFAULT
 ## "留下"题数上限。可被技能 / 装备覆盖。
 var question_keep_max: int = QUESTION_KEEP_MAX_DEFAULT
 ## 已失败的题 index（一锤定音机制：放错卡 → 整题失败）。回合末 refill 时清空。
@@ -153,7 +157,9 @@ signal damage_received(amount: int)
 signal challenge_advanced(template: ChallengeTemplate)
 ## 棋盘整体变化（题被移除 / 加入 / kept 状态变 / selected 变化）。UI 通过此重渲染棋盘。
 signal board_changed()
-signal hand_changed(hand: Array)
+## 卡库内容变化（卡的可用 / 已用状态、库内卡集合改变）。
+## 旧名 hand_changed 保留，避免破坏现有 UI 监听器；payload 现在是 card_library。
+signal hand_changed(library: Array)
 signal turn_ended(was_player_turn: bool)
 signal battle_ended(victory: bool)
 signal new_cards_unlocked(card_ids: Array)
@@ -224,7 +230,7 @@ func _short_dialogue(tmpl: ChallengeTemplate) -> String:
 func setup(
 		enemy: EnemyData,
 		pack: ContentPackBase,
-		battle_deck: Array[Card],
+		library: Array[Card],
 		srs: SRSSystem = null,
 		board_size_override: int = -1) -> void:
 	_enemy = enemy
@@ -247,16 +253,12 @@ func setup(
 		_enemy_abilities = AbilitiesRegistry.make_many(raw_ids)
 	# 玩家能力 hook：当前留空，后续装备 / 技能填充
 	_player_abilities.clear()
-	deck.clear()
-	for c in battle_deck:
-		deck.append(c)
-	hand.clear()
-	discard.clear()
+	card_library.clear()
+	for c in library:
+		card_library.append(c)
 	available_challenges.clear()
 	available_filled_slots.clear()
 	kept_template_ids.clear()
-	_retained_card_ids.clear()
-	hand_retain_max = HAND_RETAIN_MAX_DEFAULT
 	question_keep_max = QUESTION_KEEP_MAX_DEFAULT
 	_failed_challenge_indices.clear()
 	selected_challenge_index = -1
@@ -277,6 +279,16 @@ func setup(
 		_combo = ComboSystem.new()
 	_apply_boss_topic_coverage()
 	state = State.IDLE
+
+
+## Alias for clarity in new code (T1 of card-library redesign).
+func setup_with_library(
+		enemy: EnemyData,
+		pack: ContentPackBase,
+		library: Array[Card],
+		srs: SRSSystem = null,
+		board_size_override: int = -1) -> void:
+	setup(enemy, pack, library, srs, board_size_override)
 
 
 func _apply_boss_topic_coverage() -> void:
@@ -300,19 +312,18 @@ func set_combo_system(combo: ComboSystem) -> void:
 	_combo = combo
 
 
-## 启动战斗：洗牌、抽 5 张、填满棋盘。
+## 启动战斗：填满棋盘，发出库内容信号。
+## 卡库是静态的（T1：旧版的洗牌 / 发牌 5 张已移除）。
 func start_battle() -> void:
 	if state != State.IDLE:
 		return
-	deck.shuffle()
-	_draw_to_full_hand()
 	refill_board()
 	# 默认选中第 0 道题（玩家可手动切）
 	if not available_challenges.is_empty():
 		selected_challenge_index = 0
 	state = State.PLAYER_TURN
 	battle_started.emit()
-	hand_changed.emit(hand.duplicate())
+	hand_changed.emit(card_library.duplicate())
 	board_changed.emit()
 	if selected_challenge_index >= 0:
 		challenge_advanced.emit(current_template)
@@ -366,7 +377,7 @@ func try_place_card(card: Card, slot_index: int, challenge_index: int = -1) -> b
 		return false
 	if slot_index < 0 or slot_index >= tmpl.slots.size():
 		return false
-	if not (card in hand):
+	if not (card in card_library):
 		return false
 	var slots: Array = available_filled_slots[selected_challenge_index]
 	if slots[slot_index] != null:
@@ -382,17 +393,13 @@ func try_place_card(card: Card, slot_index: int, challenge_index: int = -1) -> b
 		_mark_challenge_failed(selected_challenge_index, tmpl)
 		state = State.PLAYER_TURN
 		return false
-	hand.erase(card)
-	# 卡用掉后清除保留标记（避免幽灵 id 留在 _retained_card_ids）
-	if card.id in _retained_card_ids:
-		_retained_card_ids.erase(card.id)
+	# 静态卡库：不再从库中移除卡——卡只是被放入题槽。
 	slots[slot_index] = card
 	if not (card.id in _used_card_ids_this_battle):
 		_used_card_ids_this_battle.append(card.id)
 	cards_played_this_turn += 1
-	_maybe_draw_bonus_card()
 	card_played.emit(card, slot_index)
-	hand_changed.emit(hand.duplicate())
+	hand_changed.emit(card_library.duplicate())
 	if _all_slots_filled_for(selected_challenge_index):
 		submit_challenge()
 	else:
@@ -415,19 +422,16 @@ func has_solvable_challenges() -> bool:
 	return false
 
 
-## 标记一道题为失败：把已放在槽里的卡退回弃牌堆，发信号给 UI。
+## 标记一道题为失败：清空该题槽位（卡仍留在 card_library），发信号给 UI。
 func _mark_challenge_failed(idx: int, tmpl: ChallengeTemplate) -> void:
 	if idx < 0 or idx >= available_challenges.size():
 		return
 	if idx in _failed_challenge_indices:
 		return
-	# 失败题里残留的已放卡（多槽题前面槽放对了，本次放错的那张不入槽）→ 退弃牌堆
+	# 静态卡库：失败题里残留的已放卡不入弃牌堆；卡一直留在库里。仅清空槽。
 	if idx < available_filled_slots.size():
 		var slots: Array = available_filled_slots[idx]
 		for j in slots.size():
-			var c = slots[j]
-			if c is Card:
-				discard.append(c)
 			slots[j] = null
 	_failed_challenge_indices.append(idx)
 	# 失败题不再保留为"留下"
@@ -444,7 +448,7 @@ func _mark_challenge_failed(idx: int, tmpl: ChallengeTemplate) -> void:
 	challenge_failed.emit(idx, correct_card_id)
 
 
-## 撤回 selected 题的某槽中已放的卡。
+## 撤回 selected 题的某槽中已放的卡（卡一直在 card_library 中，仅清槽）。
 func remove_card_from_slot(slot_index: int) -> void:
 	if state != State.PLAYER_TURN and state != State.CARD_VALIDATION:
 		return
@@ -457,9 +461,8 @@ func remove_card_from_slot(slot_index: int) -> void:
 	if card == null:
 		return
 	slots[slot_index] = null
-	hand.append(card)
 	card_returned.emit(card, slot_index)
-	hand_changed.emit(hand.duplicate())
+	hand_changed.emit(card_library.duplicate())
 
 
 ## 切换"留下"该题（回合末不会刷掉）。返回切换后的状态（true = 已留）。
@@ -503,55 +506,20 @@ func get_kept_count() -> int:
 	return kept_template_ids.size()
 
 
-## 切换某张手牌的"保留"状态。回合末标记保留的卡不会进弃牌堆，
-## 只补抽差额（默认 hand_retain_max=3，技能 / 物品可提升）。
-##
-## 返回 true 表示状态发生变化；false 表示触达上限静默拒绝（UI 应给提示）。
-func toggle_hand_retain(card_id: String) -> bool:
-	if card_id == "":
-		return false
-	if card_id in _retained_card_ids:
-		_retained_card_ids.erase(card_id)
-		hand_changed.emit(hand.duplicate())
-		return true
-	if _retained_card_ids.size() >= hand_retain_max:
-		return false
-	# 仅允许保留当前在手牌中的卡（防止外部脏 id）
-	var in_hand: bool = false
-	for c in hand:
-		if c != null and c.id == card_id:
-			in_hand = true
-			break
-	if not in_hand:
-		return false
-	_retained_card_ids.append(card_id)
-	hand_changed.emit(hand.duplicate())
-	return true
-
-
-## 该卡 id 当前是否被标记为"保留"。
-func is_hand_retained(card_id: String) -> bool:
-	return card_id in _retained_card_ids
-
-
-## 当前已被标记保留的手牌数量。
-func get_retained_count() -> int:
-	return _retained_card_ids.size()
-
-
 # ═══════════════════════════════════════════════════════════════════
 # AP 队列（Phase 3）
 # ═══════════════════════════════════════════════════════════════════
 
-## 把一张手牌追加到 AP 队列尾部，绑定到 challenge_index 的 slot_index 槽。
-## 返回 true 表示加入成功；满（>= ap_max + ap_bonus_next_turn）或卡不在手牌中返回 false。
+## 把一张卡库中的卡追加到 AP 队列尾部，绑定到 challenge_index 的 slot_index 槽。
+## 返回 true 表示加入成功；满（>= ap_max + ap_bonus_next_turn）或卡不在库中返回 false。
+##
+## 静态卡库（T1）：卡 NOT 从 card_library 移除——库内卡始终可见；
+## UI 可读 ap_queue 来判断"已入队/已用"状态以渲染禁用样式。
 func add_to_ap_queue(card: Card, challenge_index: int, slot_index: int) -> bool:
 	if ap_queue.size() >= ap_max + ap_bonus_next_turn:
 		return false
-	# 卡从 hand 移出
-	if not (card in hand):
+	if not (card in card_library):
 		return false
-	hand.erase(card)
 	var conn := APConnection.new()
 	conn.slot_index = ap_queue.size()
 	conn.card = card
@@ -560,25 +528,22 @@ func add_to_ap_queue(card: Card, challenge_index: int, slot_index: int) -> bool:
 	conn.preview = _compute_preview(card, challenge_index, slot_index)
 	ap_queue.append(conn)
 	if has_signal("hand_changed"):
-		hand_changed.emit(hand.duplicate())
+		hand_changed.emit(card_library.duplicate())
 	if has_signal("board_changed"):
 		board_changed.emit()
 	return true
 
 
-## 把指定 slot_index 的连线移出 AP 队列，卡退回手牌；其它连线 slot_index 重新编号。
+## 把指定 slot_index 的连线移出 AP 队列；卡本来就一直在卡库里。其它连线 slot_index 重新编号。
 func remove_from_ap_queue(slot_index: int) -> bool:
 	if slot_index < 0 or slot_index >= ap_queue.size():
 		return false
-	var conn = ap_queue[slot_index]
-	if conn != null and conn.card != null:
-		hand.append(conn.card)
 	ap_queue.remove_at(slot_index)
 	# 重新编号
 	for i in ap_queue.size():
 		ap_queue[i].slot_index = i
 	if has_signal("hand_changed"):
-		hand_changed.emit(hand.duplicate())
+		hand_changed.emit(card_library.duplicate())
 	if has_signal("board_changed"):
 		board_changed.emit()
 	return true
@@ -640,7 +605,7 @@ func submit_all_ap() -> void:
 		ap_bonus_next_turn = 0
 	ap_queue.clear()
 	if has_signal("hand_changed"):
-		hand_changed.emit(hand.duplicate())
+		hand_changed.emit(card_library.duplicate())
 	if has_signal("board_changed"):
 		board_changed.emit()
 
@@ -673,35 +638,30 @@ func _resolve_connection(conn: APConnection) -> bool:
 	else:
 		ch_idx = conn.challenge_index
 	if ch_idx < 0 or ch_idx >= available_challenges.size():
-		# 题已不在棋盘（被前面的连线解掉或者非法 index）→ 卡浪费
-		discard.append(conn.card)
+		# 题已不在棋盘（被前面的连线解掉或者非法 index）→ 卡未生效；
+		# 静态卡库：卡仍在库里，不入弃牌堆。
 		return false
-	# 该题已失败：后续连线全部判错（但卡仍然消耗）
+	# 该题已失败：后续连线全部判错（卡仍留在库里）
 	if ch_idx in _failed_challenge_indices:
-		discard.append(conn.card)
 		return false
 	var template: ChallengeTemplate = available_challenges[ch_idx]
 	if template == null:
-		discard.append(conn.card)
 		return false
 	if conn.question_slot_index < 0 or conn.question_slot_index >= template.slots.size():
-		discard.append(conn.card)
 		return false
 	var slot: ChallengeSlot = template.slots[conn.question_slot_index]
 	# 校验卡是否能放进该槽
 	if not CardValidator.can_place(conn.card, slot):
-		# 错连：标整道题失败（弹模态信号）+ 弃牌
+		# 错连：标整道题失败（弹模态信号）。卡留在库里。
 		_mark_challenge_failed(ch_idx, template)
-		discard.append(conn.card)
 		return false
 	# 对：填槽
 	if ch_idx < available_filled_slots.size():
 		var slots_state: Array = available_filled_slots[ch_idx]
 		while slots_state.size() <= conn.question_slot_index:
 			slots_state.append(null)
-		# 槽里已有卡（前面的连线已填同槽）→ 视为浪费，但不算错；新卡入弃牌堆
+		# 槽里已有卡（前面的连线已填同槽）→ 视为浪费，但不算错。卡留在库里。
 		if slots_state[conn.question_slot_index] != null:
-			discard.append(conn.card)
 			return true
 		slots_state[conn.question_slot_index] = conn.card
 	# SRS 记录（与 try_place_card 保持一致）
@@ -709,12 +669,10 @@ func _resolve_connection(conn: APConnection) -> bool:
 		_srs.record_answer(conn.card.id, true)
 	# 检查是否全填且全对 → 走 submit_challenge 应用完整题效果
 	if _all_slots_filled_for(ch_idx) and not (ch_idx in _failed_challenge_indices):
-		# submit_challenge 会负责把卡进弃牌堆 + 移除该题 + 修正失败索引
+		# submit_challenge 会移除该题 + 修正失败索引。
 		# 注意：submit_challenge 移除 ch_idx 后，available_challenges 索引会左移；
 		# 后续连线在本函数开头通过 template_id 重查下标，因此不会受影响。
 		submit_challenge(ch_idx)
-	# 注意：未全填的对连，卡已经入槽（不入弃牌堆）；submit_challenge 路径里
-	# 槽内卡也由它统一处理——所以本函数不再额外 discard。
 	return true
 
 
@@ -771,8 +729,8 @@ func refill_board() -> void:
 		if i in _failed_challenge_indices:
 			continue
 		if tmpl != null and tmpl.template_id in kept_template_ids:
-			# 保留下来的题手牌已经变了——重新评估 is_warn
-			tmpl.is_warn = not _can_solve_with_hand(tmpl, hand)
+			# 保留下来的题——重新评估 is_warn（静态库基本不会变，但仍计算）
+			tmpl.is_warn = not _can_solve_with_library(tmpl, card_library)
 			new_chals.append(tmpl)
 			# kept 题的填槽清空——玩家下回合重新填
 			var fresh_slots: Array = []
@@ -787,7 +745,7 @@ func refill_board() -> void:
 	var target_size: int = board_size + max(0, _queued_for_next_turn)
 	_queued_for_next_turn = 0
 	# 3. 抽新题填到 target_size。先尽量去重（dedup pass），失败则强制填到目标数量。
-	#    B5：每次抽到的题都要 _can_solve_with_hand(tmpl, hand) — 否则跳过。
+	#    B5：每次抽到的题都要 _can_solve_with_library(tmpl, card_library) — 否则跳过。
 	var dedup_attempts: int = 0
 	while available_challenges.size() < target_size and dedup_attempts < 30:
 		dedup_attempts += 1
@@ -801,7 +759,7 @@ func refill_board() -> void:
 				break
 		if dup:
 			continue
-		if not _can_solve_with_hand(picked, hand):
+		if not _can_solve_with_library(picked, card_library):
 			continue
 		picked.is_warn = false
 		add_to_board(picked)
@@ -812,19 +770,18 @@ func refill_board() -> void:
 		var picked2: ChallengeTemplate = _pick_next_template()
 		if picked2 == null:
 			break
-		if not _can_solve_with_hand(picked2, hand):
+		if not _can_solve_with_library(picked2, card_library):
 			continue
 		picked2.is_warn = false
 		add_to_board(picked2)
-	# Task 13: Fallback —— 可解池抽不够则放宽过滤，标 is_warn=true 让 UI 提示玩家
-	# 「这题手里没法解，建议过牌或重排手牌」。永远比留空板更友好。
+	# Task 13: Fallback —— 可解池抽不够则放宽过滤，标 is_warn=true 让 UI 提示玩家。
+	# 永远比留空板更友好。
 	var fallback_attempts: int = 0
 	while available_challenges.size() < target_size and fallback_attempts < 30:
 		fallback_attempts += 1
 		var picked3: ChallengeTemplate = _pick_next_template()
 		if picked3 == null:
 			break
-		# 不再过滤 _can_solve_with_hand —— 直接收
 		picked3.is_warn = true
 		add_to_board(picked3)
 	# 4. 修正 selected_challenge_index
@@ -835,15 +792,15 @@ func refill_board() -> void:
 	board_changed.emit()
 
 
-## 判断 hand 中的卡是否能填满 template 的所有槽（贪心匹配，每张卡仅占一槽）。
+## 判断 library 中的卡是否能填满 template 的所有槽（贪心匹配，每张卡仅占一槽）。
 ## 简单 1-2 槽场景下贪心结果正确；更复杂的多槽组合可能漏判（比如槽1=A|B、槽2=B
 ## 时贪心给槽1放 A 后槽2无解），但 MVP 题库基本是 1-2 槽，足够用。
 ##
 ## 边界：
 ##   - template == null → 视为可解（兼容空 selector 路径）
 ##   - template.slots 为空 → 视为可解（无需填卡）
-##   - hand 为空且 slots 非空 → false
-func _can_solve_with_hand(template: ChallengeTemplate, hand_cards: Array[Card]) -> bool:
+##   - library 为空且 slots 非空 → false
+func _can_solve_with_library(template: ChallengeTemplate, library_cards: Array[Card]) -> bool:
 	if template == null:
 		return true
 	var slots: Array = template.slots
@@ -852,10 +809,10 @@ func _can_solve_with_hand(template: ChallengeTemplate, hand_cards: Array[Card]) 
 	var used_indices: Array[int] = []
 	for slot in slots:
 		var found_index: int = -1
-		for i in hand_cards.size():
+		for i in library_cards.size():
 			if i in used_indices:
 				continue
-			var c: Card = hand_cards[i]
+			var c: Card = library_cards[i]
 			if c == null:
 				continue
 			if CardValidator.can_place(c, slot):
@@ -867,12 +824,12 @@ func _can_solve_with_hand(template: ChallengeTemplate, hand_cards: Array[Card]) 
 	return true
 
 
-## 测试辅助：直接覆盖 hand。仅供测试用，生产代码请走 deck/draw 路径。
-func set_hand_for_test(new_hand: Array[Card]) -> void:
-	hand.clear()
-	for c in new_hand:
-		hand.append(c)
-	hand_changed.emit(hand.duplicate())
+## 测试辅助：直接覆盖 card_library。仅供测试用。
+func set_library_for_test(new_library: Array[Card]) -> void:
+	card_library.clear()
+	for c in new_library:
+		card_library.append(c)
+	hand_changed.emit(card_library.duplicate())
 
 
 ## 在所有槽都填满时由 try_place_card 自动调用；
@@ -948,14 +905,13 @@ func submit_challenge(challenge_index: int = -1) -> void:
 		player_shield += shield
 		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
 		shielded.emit(shield)
-	# 抽牌（题目 draw_card 效果 + 卡牌 draw_card 能力叠加）
+	# 抽牌效果（题目 draw_card + 卡牌 draw_card）：
+	# 静态卡库下"抽牌"不再有意义——保留信号 emit 兼容 UI 计数，但不变库内容。
+	# TODO(T2/T5)：考虑改成 "刷新可用卡" / "下回合 AP 容量 +1" 等替代效果。
 	var to_draw: int = int(effects.get("cards_drawn", 0)) + int(card_result.get("extra_draw", 0))
 	if to_draw > 0:
-		var n: int = draw_cards(to_draw)
 		_combo_increment_with_extra(int(card_result.get("combo_extra", 0)))
-		if n > 0:
-			cards_drawn.emit(n)
-			hand_changed.emit(hand.duplicate())
+		cards_drawn.emit(to_draw)
 	# 加题（题目 draw_question 效果立即生效 / 卡牌 draw_question 能力排队下回合）
 	var to_add: int = int(effects.get("questions_drawn", 0))
 	if to_add > 0:
@@ -1004,10 +960,7 @@ func submit_challenge(challenge_index: int = -1) -> void:
 	_log("你: 用 %s 解决 [%s] → %s" % [
 		_format_cards_for_log(slots), _short_dialogue(tmpl), summary_text])
 
-	# 槽中的卡进入弃牌堆
-	for c in slots:
-		if c is Card:
-			discard.append(c)
+	# 静态卡库：槽中的卡留在 card_library，不入弃牌堆。
 	# 把这道题从棋盘移除（无论是否 kept——已解决就解了）
 	# kept 仅影响"回合末刷不刷"，已解的题不应该再保留。
 	var solved_template_id: String = tmpl.template_id
@@ -1064,32 +1017,16 @@ func _combo_increment_with_extra(extra: int) -> void:
 
 ## 玩家点"过牌"。
 ##
-## 手牌不再全弃——玩家可以通过 toggle_hand_retain() 标记保留的卡，
-## 回合末仅丢弃未标记的卡，下回合补抽到 HAND_SIZE。保留标记在回合末清空。
+## 静态卡库（T1 改造）：卡不再进入弃牌堆——库内容永远不变。
+## 仅清空棋盘上未解题的填槽（卡留在库里，下回合可继续使用）。
 func end_player_turn() -> void:
 	if state != State.PLAYER_TURN and state != State.CARD_VALIDATION:
 		return
-	# 1. 拆分手牌：保留 vs 入弃牌堆
-	var keepers: Array[Card] = []
-	for c in hand:
-		if c != null and c.id in _retained_card_ids:
-			keepers.append(c)
-		else:
-			if c != null:
-				discard.append(c)
-	hand.clear()
-	for k in keepers:
-		hand.append(k)
-	# 退所有题里已放的卡进弃牌堆并清空槽（kept 也要退卡——下回合从空槽重填）
+	# 清空所有题里已放的卡（卡仍留在 card_library，不进弃牌堆）
 	for i in available_filled_slots.size():
 		var slots: Array = available_filled_slots[i]
 		for j in slots.size():
-			var c = slots[j]
-			if c is Card:
-				discard.append(c)
 			slots[j] = null
-	# 2. 重置保留标记（下回合重新选）
-	_retained_card_ids.clear()
 	cards_played_this_turn = 0
 	challenges_solved_this_turn = 0
 	turn_ended.emit(true)
@@ -1147,104 +1084,10 @@ func _advance_to_next_challenge() -> void:
 	board_changed.emit()
 
 
-func _draw_to_full_hand() -> void:
-	if hand.size() >= HAND_SIZE:
-		return
-	# 留题感知：先把"留下"题需要的答案卡牌预留到牌库顶（保证下回合发牌后手牌中
-	# 至少有一张能解 kept 题。否则玩家可能被卡死在自己留下的题上）。
-	_reserve_cards_for_kept_questions()
-	while hand.size() < HAND_SIZE:
-		if deck.is_empty():
-			if discard.is_empty():
-				break
-			for c in discard:
-				deck.append(c)
-			discard.clear()
-			deck.shuffle()
-		var c: Card = deck.pop_back()
-		hand.append(c)
-
-
-## 留题感知发牌的预留逻辑：扫描所有 kept 题的槽位，从牌库（必要时还有弃牌堆）中
-## 找出能填该槽的卡，搬到牌库顶（pop_back 优先发出）。每张卡只用一次；若实在
-## 没有任何可解卡，跳过——玩家下回合可能仍解不开 kept 题，但不会 crash。
-func _reserve_cards_for_kept_questions() -> void:
-	if kept_template_ids.is_empty():
-		return
-	var solving_cards: Array[Card] = []
-	for ch in available_challenges:
-		if ch == null:
-			continue
-		if not (ch.template_id in kept_template_ids):
-			continue
-		var slots: Array = ch.slots
-		for slot_idx in slots.size():
-			var slot: ChallengeSlot = slots[slot_idx]
-			if slot == null:
-				continue
-			# 1) 先在牌库找一张未占用的可解卡
-			var found_card: Card = null
-			for i in deck.size():
-				var c: Card = deck[i]
-				if c == null:
-					continue
-				if c in solving_cards:
-					continue
-				if CardValidator.can_place(c, slot):
-					found_card = c
-					break
-			# 2) 牌库没找到 → 再去弃牌堆找
-			if found_card == null:
-				for i in discard.size():
-					var c: Card = discard[i]
-					if c == null:
-						continue
-					if c in solving_cards:
-						continue
-					if CardValidator.can_place(c, slot):
-						found_card = c
-						break
-			if found_card != null:
-				solving_cards.append(found_card)
-	# 把预留的卡从原位置（deck 或 discard）搬到牌库顶（pop_back 端）
-	for c in solving_cards:
-		if c in discard:
-			discard.erase(c)
-		elif c in deck:
-			deck.erase(c)
-		# 牌库顶 = 数组末尾（_draw_to_full_hand 用 pop_back 抽牌）
-		deck.push_back(c)
-
-
-func draw_cards(count: int) -> int:
-	var drawn: int = 0
-	for _i in count:
-		if deck.is_empty():
-			if discard.is_empty():
-				break
-			for c in discard:
-				deck.append(c)
-			discard.clear()
-			deck.shuffle()
-		if deck.is_empty():
-			break
-		var c: Card = deck.pop_back()
-		hand.append(c)
-		drawn += 1
-	return drawn
-
-
-func _maybe_draw_bonus_card() -> void:
-	if DRAW_PER_N_CARDS <= 0:
-		return
-	if cards_played_this_turn <= 0:
-		return
-	if cards_played_this_turn % DRAW_PER_N_CARDS != 0:
-		return
-	var n: int = draw_cards(1)
-	if n > 0:
-		cards_drawn.emit(n)
-		hand_changed.emit(hand.duplicate())
+## 静态卡库下抽牌不再有意义；保留 stub 兼容外部调用（CardAbilities 等可能引用）。
+## 返回值固定为 0。如果未来想恢复抽牌玩法，请改回 deck/hand 结构或扩展库容量。
+func draw_cards(_count: int) -> int:
+	return 0
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -1413,11 +1256,10 @@ func _run_enemy_turn() -> void:
 		if player_hp <= 0:
 			_on_player_dead()
 			return
-	# 抽到满
-	_draw_to_full_hand()
+	# 静态卡库：不再补抽手牌。
 	# 刷新棋盘：保留 kept 题，其它换新
 	refill_board()
-	hand_changed.emit(hand.duplicate())
+	hand_changed.emit(card_library.duplicate())
 	state = State.PLAYER_TURN
 	turn_ended.emit(false)
 

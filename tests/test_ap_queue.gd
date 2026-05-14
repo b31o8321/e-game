@@ -25,8 +25,8 @@ func _make_ctrl() -> BattleController:
 func test_add_to_ap_queue_appends():
 	var c = _make_ctrl()
 	var card = _make_card("test")
-	var hand: Array[Card] = [card]
-	c.set_hand_for_test(hand)
+	var library: Array[Card] = [card]
+	c.set_library_for_test(library)
 	assert_true(c.add_to_ap_queue(card, 0, 0))
 	assert_eq(c.ap_queue.size(), 1)
 	assert_eq(c.ap_queue[0].slot_index, 0)
@@ -38,33 +38,36 @@ func test_add_to_ap_queue_full_rejects():
 	var c1 = _make_card("a")
 	var c2 = _make_card("b")
 	var c3 = _make_card("c")
-	var hand: Array[Card] = [c1, c2, c3]
-	c.set_hand_for_test(hand)
+	var library: Array[Card] = [c1, c2, c3]
+	c.set_library_for_test(library)
 	assert_true(c.add_to_ap_queue(c1, 0, 0))
 	assert_true(c.add_to_ap_queue(c2, 1, 0))
 	assert_false(c.add_to_ap_queue(c3, 2, 0))
 	assert_eq(c.ap_queue.size(), 2)
 
-func test_remove_from_ap_queue_returns_card():
+func test_remove_from_ap_queue_keeps_card_in_library():
+	# 静态卡库：卡入队后仍留在库中，移出队列后库不变。
 	var c = _make_ctrl()
 	var card = _make_card("a")
-	var hand: Array[Card] = [card]
-	c.set_hand_for_test(hand)
+	var library: Array[Card] = [card]
+	c.set_library_for_test(library)
 	c.add_to_ap_queue(card, 0, 0)
-	# 卡进入队列后从手牌移出
-	assert_eq(c.hand.size(), 0)
+	# 入队后卡仍在库
+	assert_eq(c.card_library.size(), 1)
+	assert_eq(c.card_library[0].id, "a")
 	c.remove_from_ap_queue(0)
 	assert_eq(c.ap_queue.size(), 0)
-	assert_eq(c.hand.size(), 1)
-	assert_eq(c.hand[0].id, "a")
+	# 移出后库依然不变
+	assert_eq(c.card_library.size(), 1)
+	assert_eq(c.card_library[0].id, "a")
 
 func test_reorder_ap_queue():
 	var c = _make_ctrl()
 	var c1 = _make_card("a")
 	var c2 = _make_card("b")
 	var c3 = _make_card("c")
-	var hand: Array[Card] = [c1, c2, c3]
-	c.set_hand_for_test(hand)
+	var library: Array[Card] = [c1, c2, c3]
+	c.set_library_for_test(library)
 	c.add_to_ap_queue(c1, 0, 0)
 	c.add_to_ap_queue(c2, 1, 0)
 	c.add_to_ap_queue(c3, 2, 0)

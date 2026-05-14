@@ -89,27 +89,11 @@ func test_cards_played_counter_increments_on_place() -> void:
 	assert_eq(ctrl.cards_played_this_turn, 1, "counter increments after card placement")
 
 
+## 2026-05-08 静态卡库改造：每打两张卡奖励抽 1 张 (DRAW_PER_N_CARDS) 已移除
+## ——库内卡始终可见，没有"抽牌"概念。本测试改为空 pass 保留为占位，
+## 真正的"过两张牌奖励"机制将由 T2/T3 重设计（譬如 AP 容量奖励）。
 func test_bonus_draw_every_two_cards() -> void:
-	var ctrl: BattleController = _build_controller(15)
-	# Hand starts at HAND_SIZE = 5; deck has 10 left
-	var initial_hand_size: int = ctrl.hand.size()
-	var initial_deck_size: int = ctrl.deck.size()
-	# Play first card → counter becomes 1, no bonus draw
-	var c1: Card = ctrl.hand[0]
-	ctrl.try_place_card(c1, 0)
-	# Submit advanced to next challenge automatically (single slot)
-	# After submit, the card from hand was used. Hand has 4 left.
-	# Now play a second card → counter becomes 2 → bonus draw
-	# But after the first submit, _advance_to_next_challenge sets up the new template.
-	# Let's check: hand should have lost one card (4 cards now), deck still 10.
-	# After the second placement+submit: cards_played_this_turn becomes 2 → triggers
-	# bonus draw of +1. So hand goes from 3 (4-1 played) → 4 (after bonus draw).
-	var c2: Card = ctrl.hand[0]
-	watch_signals(ctrl)
-	ctrl.try_place_card(c2, 0)
-	# Bonus draw should have fired during placement
-	assert_signal_emitted(ctrl, "cards_drawn",
-		"after 2 cards played in one turn, cards_drawn signal fires")
+	pass
 
 
 func test_challenges_solved_per_turn_counter() -> void:

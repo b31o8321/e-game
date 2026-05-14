@@ -74,7 +74,7 @@ func test_e2e_perfect_combo_grants_next_turn_bonus():
 	var card_a = _make_card("card_a")
 	var card_b = _make_card("card_b")
 	var card_c = _make_card("card_c")
-	c.set_hand_for_test([card_a, card_b, card_c])
+	c.set_library_for_test([card_a, card_b, card_c])
 
 	var all_ids: Array[String] = ["card_a", "card_b", "card_c"]
 	var t1 = _make_template_3slot_accepting("t1", all_ids)
@@ -116,7 +116,7 @@ func test_e2e_imperfect_no_bonus():
 
 	var card_correct = _make_card("card_correct")
 	var card_wrong = _make_card("card_wrong")
-	c.set_hand_for_test([card_correct, card_wrong])
+	c.set_library_for_test([card_correct, card_wrong])
 
 	var correct_ids: Array[String] = ["card_correct"]
 	var other_ids: Array[String] = ["card_other"]  # card_wrong not in accept list
@@ -154,7 +154,7 @@ func test_e2e_reorder_then_submit():
 
 	var card_a = _make_card("card_a")
 	var card_b = _make_card("card_b")
-	c.set_hand_for_test([card_a, card_b])
+	c.set_library_for_test([card_a, card_b])
 
 	# Both templates accept both cards so reorder + index shift after the first
 	# resolution still leaves valid placements for the second connection.
@@ -204,7 +204,7 @@ func test_e2e_multi_template_perfect_combo():
 
 	var card_a = _make_card("card_a")
 	var card_b = _make_card("card_b")
-	c.set_hand_for_test([card_a, card_b])
+	c.set_library_for_test([card_a, card_b])
 
 	# Two separate templates, each with one slot. card_a → t1, card_b → t2.
 	var ids_a: Array[String] = ["card_a"]
@@ -239,13 +239,14 @@ func test_e2e_multi_template_perfect_combo():
 	assert_eq(c.ap_bonus_next_turn, 1, "Multi-template perfect combo grants +1 AP")
 
 
-func test_e2e_remove_returns_card_to_hand():
+func test_e2e_remove_keeps_card_in_library():
+	# 静态卡库：卡入队和出队不影响 card_library 内容。
 	var c = BattleController.new()
 	add_child_autofree(c)
 	c.ap_max = 3
 
 	var card = _make_card("card_x")
-	c.set_hand_for_test([card])
+	c.set_library_for_test([card])
 
 	var card_x_ids: Array[String] = ["card_x"]
 	var t1 = _make_template_accepting("t1", card_x_ids)
@@ -254,7 +255,7 @@ func test_e2e_remove_returns_card_to_hand():
 	c.available_filled_slots = [[null]]
 
 	c.add_to_ap_queue(card, 0, 0)
-	assert_eq(c.hand.size(), 0)
+	assert_eq(c.card_library.size(), 1)
 	c.remove_from_ap_queue(0)
-	assert_eq(c.hand.size(), 1)
-	assert_eq(c.hand[0].id, "card_x")
+	assert_eq(c.card_library.size(), 1)
+	assert_eq(c.card_library[0].id, "card_x")

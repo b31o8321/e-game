@@ -27,14 +27,14 @@ func test_perfect_bonus_allows_extra_ap_next_turn():
 	var cards: Array[Card] = []
 	for i in 4:
 		cards.append(_make_card("c%d" % i))
-	c.set_hand_for_test(cards)
+	c.set_library_for_test(cards)
 	for i in 4:
 		var ok = c.add_to_ap_queue(cards[i], 0, 0)
 		assert_true(ok, "Connection %d should fit (cap=4)" % i)
 	# 5th should reject
 	var extra = _make_card("extra")
 	var extra_hand: Array[Card] = [extra]
-	c.set_hand_for_test(extra_hand)
+	c.set_library_for_test(extra_hand)
 	assert_false(c.add_to_ap_queue(extra, 0, 0))
 	assert_eq(c.ap_queue.size(), 4)
 

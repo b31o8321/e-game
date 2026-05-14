@@ -183,7 +183,8 @@ func _enumerate_valid_card_ids(slot: ChallengeSlot) -> Array[String]:
 	if slot == null or _controller == null:
 		return out
 	var seen: Dictionary = {}
-	var pools: Array = [_controller.hand, _controller.deck, _controller.discard]
+	# 静态卡库改造后只剩一个 pool；保留 Array 包装兼容下方循环结构。
+	var pools: Array = [_controller.card_library]
 	for pool in pools:
 		for c in pool:
 			if c == null or not (c is Card):

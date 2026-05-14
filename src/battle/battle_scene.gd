@@ -1072,16 +1072,16 @@ func _render_hand() -> void:
 	for child in _hand_row.get_children():
 		child.queue_free()
 	_card_buttons.clear()
-	if _selected_card != null and not (_selected_card in _controller.hand):
+	if _selected_card != null and not (_selected_card in _controller.card_library):
 		_selected_card = null
 	# Tighten separation so all 5 cards fit on narrower screens (1024px)
 	_hand_row.add_theme_constant_override("separation", 8)
-	# 更新手牌标签显示保留进度
+	# 更新卡库标签
 	_update_hand_label()
 
-	if _controller.hand.is_empty():
+	if _controller.card_library.is_empty():
 		var lbl := Label.new()
-		lbl.text = "（手牌空了，点过牌重抽）"
+		lbl.text = "（卡库为空）"
 		lbl.modulate = Color(0.7, 0.7, 0.7, 1)
 		_hand_row.add_child(lbl)
 		return
@@ -1091,7 +1091,7 @@ func _render_hand() -> void:
 		srs = GameState.srs_system
 
 	var debug_on: bool = _is_debug_enabled()
-	for c in _controller.hand:
+	for c in _controller.card_library:
 		var btn: Button = _make_card_button(c, srs)
 		if debug_on:
 			var wrap: VBoxContainer = VBoxContainer.new()
@@ -1113,12 +1113,12 @@ func _render_hand() -> void:
 		_card_buttons.append(btn)
 
 
-## 更新手牌标签上的"保留 X/Y"计数提示。
+## 更新卡库标签（T1：静态库改造——保留次留改造已移除）。
+## T4 会重做整个 hand row → card_library row；本处仅做最小适配。
 func _update_hand_label() -> void:
 	if _hand_label == null or _controller == null:
 		return
-	_hand_label.text = "手牌：📌 %d/%d  ·  右键标记保留（回合末此牌不被弃）" % [
-		_controller.get_retained_count(), _controller.hand_retain_max]
+	_hand_label.text = "卡库：%d 张（本场战斗可用）" % _controller.card_library.size()
 
 
 func _make_card_button(card: Card, srs: SRSSystem) -> Button:
@@ -1126,59 +1126,14 @@ func _make_card_button(card: Card, srs: SRSSystem) -> Button:
 	# Smaller min so 5 cards always fit even on 1024×768; expand to share width.
 	btn.custom_minimum_size = Vector2(96, 120)
 	btn.text = _card_button_text(card, srs)
-	btn.tooltip_text = _card_tooltip(card, srs) + "\n\n[右键标记 📌 保留：回合末此牌不入弃牌堆]"
+	btn.tooltip_text = _card_tooltip(card, srs)
 	btn.clip_text = false
 	btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	var retained: bool = _controller != null and _controller.is_hand_retained(card.id)
-	_apply_card_button_style(btn, card, false, retained)
+	_apply_card_button_style(btn, card, false, false)
 	btn.pressed.connect(_on_card_button_pressed.bind(card, btn))
-	# 右键 / 中键：标记保留
-	btn.gui_input.connect(_on_hand_card_input.bind(card))
-	# 在按钮右上角加📌徽章
-	if retained:
-		var badge := Label.new()
-		badge.text = "📌"
-		badge.add_theme_font_size_override("font_size", 18)
-		badge.add_theme_color_override("font_color", Color(1.0, 0.85, 0.3, 1))
-		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		badge.anchor_left = 1.0
-		badge.anchor_right = 1.0
-		badge.anchor_top = 0.0
-		badge.anchor_bottom = 0.0
-		badge.offset_left = -22.0
-		badge.offset_top = 2.0
-		badge.offset_right = -2.0
-		badge.offset_bottom = 22.0
-		btn.add_child(badge)
 	return btn
-
-
-## 右键 / 中键 toggle 手牌保留。左键继续走 button.pressed → _on_card_button_pressed。
-func _on_hand_card_input(event: InputEvent, card: Card) -> void:
-	if not (event is InputEventMouseButton):
-		return
-	var mb: InputEventMouseButton = event as InputEventMouseButton
-	if not mb.pressed:
-		return
-	if mb.button_index != MOUSE_BUTTON_RIGHT and mb.button_index != MOUSE_BUTTON_MIDDLE:
-		return
-	if _controller == null or card == null:
-		return
-	_idle_seconds_since_action = 0.0
-	var was_retained: bool = _controller.is_hand_retained(card.id)
-	var changed: bool = _controller.toggle_hand_retain(card.id)
-	if changed:
-		_render_hand()
-		if was_retained:
-			_set_status_hint("已取消 📌 保留")
-		else:
-			_set_status_hint("📌 已保留：回合末此牌不入弃牌堆 (%d/%d)" % [
-				_controller.get_retained_count(), _controller.hand_retain_max])
-	else:
-		# 静默拒绝——超过上限
-		_set_status_hint("最多保留 %d 张（提升上限需要装备/技能）" % _controller.hand_retain_max)
 
 
 func _card_button_text(card: Card, srs: SRSSystem) -> String:
@@ -1329,11 +1284,10 @@ func _refresh_card_button_styles() -> void:
 		var btn: Button = _card_buttons[i]
 		if btn == null:
 			continue
-		if i >= _controller.hand.size():
+		if i >= _controller.card_library.size():
 			continue
-		var c: Card = _controller.hand[i]
-		var retained: bool = _controller.is_hand_retained(c.id)
-		_apply_card_button_style(btn, c, c == _selected_card, retained)
+		var c: Card = _controller.card_library[i]
+		_apply_card_button_style(btn, c, c == _selected_card, false)
 
 
 # ═══════════════════════════════════════════════════════════════════
