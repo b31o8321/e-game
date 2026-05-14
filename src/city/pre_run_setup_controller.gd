@@ -3,8 +3,8 @@
 ## 职责：
 ##   - 展示当前楼层信息（unit_name / 推荐时长 / 子主题）
 ##   - 展示永久升级摘要（HP / 起手抽 / 词晶）
-##   - 卡组编辑（添加 / 移除 / 推荐补全 / 清空）
-##   - 卡组分析（熟练度分布 + 新卡奖励预估）
+##   - 启用单词库编辑（添加 / 移除 / 推荐补全 / 清空）
+##   - 单词库分析（熟练度分布 + 新卡奖励预估）
 ##   - 装备 / 卷轴只读概览（Phase 4.3 才接入完整选择）
 ##   - 复习卡片入口（CutscenePlayer）
 ##   - [启程] → RunState.start_floor + 切到 RunMapScene
@@ -190,14 +190,14 @@ func _render_class_and_upgrades() -> void:
 
 func _render_deck() -> void:
 	if _deck_size_label != null:
-		_deck_size_label.text = "当前卡组（%d/%d）：" % [_current_deck.size(), _deck_slot_max]
+		_deck_size_label.text = "启用单词库（%d/%d）：" % [_current_deck.size(), _deck_slot_max]
 	if _deck_grid == null:
 		return
 	for child in _deck_grid.get_children():
 		child.queue_free()
 	if _current_deck.is_empty():
 		var lbl := Label.new()
-		lbl.text = "（卡组为空，点击 '+ 添加卡' 或 '推荐补全'）"
+		lbl.text = "（单词库为空，点击 '+ 添加单词' 或 '推荐补全'）"
 		_deck_grid.add_child(lbl)
 		return
 	var srs: SRSSystem = _resolve_srs()
@@ -249,7 +249,7 @@ func _pct(n: int, total: int) -> int:
 
 
 # ───────────────────────────────────────────────────────────────────
-# 公共：卡组分析（静态，可被 test 调用）
+# 公共：单词库分析（静态，可被 test 调用）
 # ───────────────────────────────────────────────────────────────────
 
 ## 按熟练度等级分组统计；返回 {"fresh": n, "learning": n, "proficient": n, "mastered": n}
@@ -346,7 +346,7 @@ func _on_add_card_pressed() -> void:
 	_remove_mode = false
 	_set_status("")
 	if _current_deck.size() >= _deck_slot_max:
-		_set_status("卡组已满（%d/%d）" % [_current_deck.size(), _deck_slot_max])
+		_set_status("单词库已满（%d/%d）" % [_current_deck.size(), _deck_slot_max])
 		return
 	if _pack == null:
 		_set_status("内容包未加载，无法选卡")
@@ -380,7 +380,7 @@ func _on_picker_cancelled() -> void:
 func _on_remove_mode_toggled() -> void:
 	_remove_mode = not _remove_mode
 	if _remove_mode:
-		_set_status("[移除模式] 点击卡组中要移除的卡片，再次点击按钮取消")
+		_set_status("[移除模式] 点击单词库中要移除的卡片，再次点击按钮取消")
 	else:
 		_set_status("")
 
@@ -416,7 +416,7 @@ func _on_recommend_pressed() -> void:
 		return MasterySystem.get_level(a.id, srs) < MasterySystem.get_level(b.id, srs))
 	var slots_left: int = _deck_slot_max - _current_deck.size()
 	if slots_left <= 0:
-		_set_status("卡组已满，无法推荐补全")
+		_set_status("单词库已满，无法推荐补全")
 		return
 	var added: int = 0
 	for c in picks:
@@ -437,7 +437,7 @@ func _on_clear_pressed() -> void:
 	_current_deck = []
 	_render_deck()
 	_render_analysis()
-	_set_status("已清空卡组")
+	_set_status("已清空单词库")
 
 
 func _on_deck_card_pressed(index: int) -> void:
@@ -500,10 +500,10 @@ func _on_launch_pressed() -> void:
 
 
 # ───────────────────────────────────────────────────────────────────
-# 卡组 helper（公共，供测试使用）
+# 单词库 helper（公共，供测试使用）
 # ───────────────────────────────────────────────────────────────────
 
-## 添加一张卡到当前卡组，遵守 deck_slot_max；返回是否成功
+## 添加一张单词到启用单词库，遵守 deck_slot_max；返回是否成功
 func add_card_to_deck(card: Card) -> bool:
 	if card == null:
 		return false
@@ -513,7 +513,7 @@ func add_card_to_deck(card: Card) -> bool:
 	return true
 
 
-## 从当前卡组移除指定 index 的卡；返回是否成功
+## 从启用单词库移除指定 index 的单词；返回是否成功
 func remove_card_at(index: int) -> bool:
 	if index < 0 or index >= _current_deck.size():
 		return false

@@ -27,7 +27,7 @@ layout_mode = 2
 [node name="HeaderLabel" type="Label" parent="Margin/VBox/HeaderRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "添加卡片到当前卡组"
+text = "添加单词到启用单词库"
 
 [node name="FilterLabel" type="Label" parent="Margin/VBox/HeaderRow"]
 layout_mode = 2

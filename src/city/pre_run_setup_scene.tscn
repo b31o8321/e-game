@@ -70,7 +70,7 @@ layout_mode = 2
 [node name="DeckSizeLabel" type="Label" parent="Body/Sections/DeckSection/DeckHeader"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "当前卡组（0/12）："
+text = "启用单词库（0/12）："
 
 [node name="DeckScroll" type="ScrollContainer" parent="Body/Sections/DeckSection"]
 custom_minimum_size = Vector2(0, 320)
@@ -90,7 +90,7 @@ layout_mode = 2
 
 [node name="AddCardButton" type="Button" parent="Body/Sections/DeckSection/DeckActionsRow"]
 layout_mode = 2
-text = "+ 添加卡"
+text = "+ 添加单词"
 
 [node name="RemoveButton" type="Button" parent="Body/Sections/DeckSection/DeckActionsRow"]
 layout_mode = 2
@@ -109,7 +109,7 @@ layout_mode = 2
 
 [node name="AnalysisHeader" type="Label" parent="Body/Sections/AnalysisSection"]
 layout_mode = 2
-text = "📊 卡组分析"
+text = "📊 单词库分析"
 
 [node name="AnalysisGrid" type="GridContainer" parent="Body/Sections/AnalysisSection"]
 layout_mode = 2

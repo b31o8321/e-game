@@ -15,6 +15,11 @@ const LEGACY_SAVE_PATH: String = "user://save.json"
 const DEFAULT_PACK_ID: String = "english_grade46"
 const QUEUE_SAVE_DELAY: float = 1.0
 
+## 存档版本号。
+## v1 = v0.8 旧模型（hand/deck/discard + retained_card_ids）
+## v2 = v1.0 静态卡库模型（enabled_library_card_ids，无 hand-retention）
+const SAVE_VERSION_CURRENT: int = 2
+
 ## 默认解锁的楼层。0F 是教学层（字母厅），1F 是第一关；玩家从一开始就能进入这两层。
 ## 2F 仍然要打通 1F 的 Boss 才解锁。
 const DEFAULT_UNLOCKED_FLOOR_IDS: Array[String] = ["0F", "1F"]
@@ -113,10 +118,46 @@ func load_game_state() -> Dictionary:
 	if parsed == null or not (parsed is Dictionary):
 		return {}
 	var data: Dictionary = parsed
+	var changed: bool = false
+	# v1 → v2：卡组结构迁移（current_deck → enabled_library_card_ids、清理 hand-retention 字段）
+	var before_version: int = int(data.get("save_version", 1))
+	data = _migrate_save(data)
+	if int(data.get("save_version", 1)) != before_version:
+		changed = true
 	if _migrate_unlocked_floor_ids(data):
+		changed = true
+	if changed:
 		# 迁移后立刻回写，使后续读取也能拿到补齐后的数据
 		_write_state(data)
 	_apply_state_to_game_state(data)
+	return data
+
+
+## v1 → v2 存档结构迁移。幂等：同一份 data 多次调用结果一致。
+##
+## 主要操作：
+##   - current_deck → enabled_library_card_ids（旧字段保留，避免回滚时丢数据）
+##   - 移除 retained_card_ids / hand_retain_max（新模型无 hand-retention）
+##   - 写入 save_version = SAVE_VERSION_CURRENT
+func _migrate_save(data: Dictionary) -> Dictionary:
+	if data == null:
+		return {}
+	var version: int = int(data.get("save_version", 1))
+	if version >= SAVE_VERSION_CURRENT:
+		return data
+	if version < 2:
+		# 卡组字段重命名（旧字段保留以便回滚；新字段为准）
+		if data.has("current_deck") and not data.has("enabled_library_card_ids"):
+			var raw: Variant = data["current_deck"]
+			if raw is Array:
+				data["enabled_library_card_ids"] = raw
+			else:
+				data["enabled_library_card_ids"] = []
+		# 旧 deck_templates 字段保留不动（pre_run_setup 仍按 templates[0] 读取）
+		# 移除 hand-retention 相关字段
+		data.erase("retained_card_ids")
+		data.erase("hand_retain_max")
+		data["save_version"] = SAVE_VERSION_CURRENT
 	return data
 
 
