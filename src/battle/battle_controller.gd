@@ -131,6 +131,12 @@ var cards_played_this_turn: int = 0
 var challenges_solved_this_turn: int = 0
 const DRAW_PER_N_CARDS: int = 2
 
+## 本回合已触发过能力的卡 id 列表（T2: card-library redesign）。
+## 卡放入 AP 队列 + submit_all_ap 结算后，其 id 加入此列表；
+## CardAbilities.apply_pre_submit 跳过 id 在此列表的卡，避免无限触发。
+## 在 setup / start_battle / end_player_turn 清空。
+var _used_ability_card_ids_this_turn: Array[String] = []
+
 # === 内部依赖 ===
 var _enemy: EnemyData
 var _pack: ContentPackBase
@@ -266,6 +272,7 @@ func setup(
 	_queued_for_next_turn = 0
 	_seen_template_ids.clear()
 	_used_card_ids_this_battle.clear()
+	_used_ability_card_ids_this_turn.clear()
 	battle_log.clear()
 	cards_played_this_turn = 0
 	challenges_solved_this_turn = 0
@@ -317,6 +324,7 @@ func set_combo_system(combo: ComboSystem) -> void:
 func start_battle() -> void:
 	if state != State.IDLE:
 		return
+	_used_ability_card_ids_this_turn.clear()
 	refill_board()
 	# 默认选中第 0 道题（玩家可手动切）
 	if not available_challenges.is_empty():
@@ -598,6 +606,9 @@ func submit_all_ap() -> void:
 		var ok: bool = _resolve_connection(conn)
 		if not ok:
 			perfect = false
+		# T2：标记本卡能力本回合已触发（同卡同回合再放仍可造成伤害，但能力不再加成）
+		if conn != null and conn.card != null and conn.card.id != "":
+			mark_card_ability_used(conn.card.id)
 	# 完美连击 → 下回合 +1 AP 容量
 	if perfect:
 		ap_bonus_next_turn = 1
@@ -824,6 +835,22 @@ func _can_solve_with_library(template: ChallengeTemplate, library_cards: Array[C
 	return true
 
 
+## 返回本回合已触发能力的卡 id 列表的副本（T2）。
+## 外部调用方（如 CardAbilities）用此列表跳过已触发的卡，避免无限触发。
+## 返回 duplicate 防止外部 mutate 内部状态。
+func get_used_ability_card_ids() -> Array[String]:
+	return _used_ability_card_ids_this_turn.duplicate()
+
+
+## 标记某卡的能力本回合已触发（T2）。空字符串或已在列表中则跳过。
+func mark_card_ability_used(card_id: String) -> void:
+	if card_id == "":
+		return
+	if card_id in _used_ability_card_ids_this_turn:
+		return
+	_used_ability_card_ids_this_turn.append(card_id)
+
+
 ## 测试辅助：直接覆盖 card_library。仅供测试用。
 func set_library_for_test(new_library: Array[Card]) -> void:
 	card_library.clear()
@@ -1019,7 +1046,12 @@ func _combo_increment_with_extra(extra: int) -> void:
 ##
 ## 静态卡库（T1 改造）：卡不再进入弃牌堆——库内容永远不变。
 ## 仅清空棋盘上未解题的填槽（卡留在库里，下回合可继续使用）。
+##
+## T2：清空"本回合已触发能力"列表，让下回合卡的能力可以再次触发。
 func end_player_turn() -> void:
+	# T2：能力 once-per-turn 列表清空在 state check 之前，
+	# 这样测试场景（state == IDLE）调用 end_player_turn 也能清空。
+	_used_ability_card_ids_this_turn.clear()
 	if state != State.PLAYER_TURN and state != State.CARD_VALIDATION:
 		return
 	# 清空所有题里已放的卡（卡仍留在 card_library，不进弃牌堆）

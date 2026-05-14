@@ -27,7 +27,7 @@ class_name CardAbilities extends RefCounted
 ##   extra_heal:      int      — 额外回血数（heal_on_use 累加）
 ##   queue_questions: int      — 加题数（draw_question 累加）
 ##   combo_extra:     int      — 命中时额外连击数（combo_charge 累加）
-static func apply_pre_submit(_controller, cards: Array, _base: int) -> Dictionary:
+static func apply_pre_submit(controller, cards: Array, _base: int) -> Dictionary:
 	var result := {
 		"damage_modifier": 1.0,
 		"heal_modifier": 1.0,
@@ -37,12 +37,22 @@ static func apply_pre_submit(_controller, cards: Array, _base: int) -> Dictionar
 		"queue_questions": 0,
 		"combo_extra": 0,
 	}
+	# T2: 拿到 controller 本回合"已触发能力"的卡 id 列表（缺省空数组——背compat）。
+	var used_ids: Array = []
+	if controller != null:
+		if controller.has_method("get_used_ability_card_ids"):
+			used_ids = controller.get_used_ability_card_ids()
+		elif "_used_ability_card_ids_this_turn" in controller:
+			used_ids = controller._used_ability_card_ids_this_turn
 	# chain_bonus 需要"上一张已填卡"的引用——按填槽顺序处理
 	for i in cards.size():
 		var c = cards[i]
 		if not (c is Card):
 			continue
 		var card := c as Card
+		# T2: 该卡能力本回合已触发 → 跳过（卡仍参与伤害结算，但能力不再加成）
+		if card.id != "" and card.id in used_ids:
+			continue
 		var atype: String = card.ability_type
 		var mag: int = max(0, card.ability_magnitude)
 		match atype:
