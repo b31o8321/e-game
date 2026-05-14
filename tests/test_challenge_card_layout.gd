@@ -234,24 +234,25 @@ func test_anchors_no_overlap_between_board_status_handlabel_handrow() -> void:
 
 	var board: Control = scene.get_node("ChallengeBoardPanel")
 	var status: Control = scene.get_node("PlayerStatus")
-	var hand_label: Control = scene.get_node("HandLabel")
+	# T4: HandLabel was moved into HandLabelRow (now hosts the filter toggle too).
+	var hand_label_row: Control = scene.get_node("HandLabelRow")
 	var hand_row: Control = scene.get_node("HandRow")
 	var action_row: Control = scene.get_node("ActionRow")
 	assert_not_null(board)
 	assert_not_null(status)
-	assert_not_null(hand_label)
+	assert_not_null(hand_label_row)
 	assert_not_null(hand_row)
 	assert_not_null(action_row)
 
 	# anchor_bottom of board must be ≤ anchor_top of status
 	assert_lte(board.anchor_bottom, status.anchor_top,
 		"ChallengeBoardPanel and PlayerStatus must not overlap vertically")
-	# status_bottom ≤ hand_label_top
-	assert_lte(status.anchor_bottom, hand_label.anchor_top,
-		"PlayerStatus and HandLabel must not overlap")
-	# hand_label_bottom ≤ hand_row_top
-	assert_lte(hand_label.anchor_bottom, hand_row.anchor_top,
-		"HandLabel and HandRow must not overlap")
+	# status_bottom ≤ hand_label_row_top
+	assert_lte(status.anchor_bottom, hand_label_row.anchor_top,
+		"PlayerStatus and HandLabelRow must not overlap")
+	# hand_label_row_bottom ≤ hand_row_top
+	assert_lte(hand_label_row.anchor_bottom, hand_row.anchor_top,
+		"HandLabelRow and HandRow must not overlap")
 	# hand_row_bottom ≤ action_row_top
 	assert_lte(hand_row.anchor_bottom, action_row.anchor_top,
 		"HandRow and ActionRow must not overlap")

@@ -224,7 +224,8 @@ text = "词晶 0🔮"
 modulate = Color(0.6, 0.85, 1, 1)
 
 ; ─── HintLabel (helper hint band between PlayerStatus and Hand) ───
-[node name="HandLabel" type="Label" parent="."]
+; HandLabelRow contains the library size label and a filter-mode toggle button.
+[node name="HandLabelRow" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.04
 anchor_right = 0.96
@@ -234,12 +235,21 @@ offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
-text = "手牌："
+
+[node name="HandLabel" type="Label" parent="HandLabelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📚 卡库："
 modulate = Color(0.85, 0.85, 0.95, 1)
 vertical_alignment = 1
 
-; ─── Hand (bottom card row) ───────────────────────────────
-[node name="HandRow" type="HBoxContainer" parent="."]
+[node name="FilterToggle" type="Button" parent="HandLabelRow"]
+layout_mode = 2
+text = "🎯 仅候选"
+visible = false
+
+; ─── Hand (bottom card row, now an HFlowContainer that wraps to 2+ rows) ───
+[node name="HandRow" type="HFlowContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.02
 anchor_right = 0.98

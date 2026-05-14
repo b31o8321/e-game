@@ -145,6 +145,9 @@ var _debug_overlay: Node = null
 
 # Currently selected hand card (click-to-place flow).
 var _selected_card: Card = null
+# T5: Library filter mode — "all" shows full card library; "candidate" filters to
+# cards whose type/pos matches an empty slot of the currently-selected challenge.
+var _filter_mode: String = "all"
 # Cached refs to slot panels: _slot_nodes_by_challenge[challenge_idx] = Array of PanelContainer.
 var _slot_nodes_by_challenge: Array = []
 # Cached refs to challenge card panels (index parallel to controller.available_challenges).
@@ -176,8 +179,15 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _shield_label: Label = $PlayerStatus/ShieldLabel
 @onready var _combo_label: Label = $PlayerStatus/ComboLabel
 @onready var _crystal_label: Label = $PlayerStatus/CrystalLabel
-@onready var _hand_row: HBoxContainer = $HandRow
-@onready var _hand_label: Label = get_node_or_null("HandLabel")
+@onready var _hand_row: HFlowContainer = $HandRow
+# HandLabel was moved into HandLabelRow (T4). Keep get_node_or_null for safety
+# in case tests load a stripped scene; fall back to legacy path.
+@onready var _hand_label: Label = (
+	get_node_or_null("HandLabelRow/HandLabel")
+	if get_node_or_null("HandLabelRow/HandLabel") != null
+	else get_node_or_null("HandLabel")
+)
+@onready var _filter_toggle_btn: Button = get_node_or_null("HandLabelRow/FilterToggle")
 @onready var _end_turn_button: Button = $ActionRow/EndTurnButton
 @onready var _status_hint: Label = $ActionRow/StatusHint
 @onready var _fx_layer: Control = $FxLayer
@@ -220,6 +230,9 @@ func _ready() -> void:
 	_render_ap_row()
 	if _submit_button != null:
 		_submit_button.pressed.connect(_on_submit_pressed)
+	if _filter_toggle_btn != null:
+		_filter_toggle_btn.pressed.connect(_on_filter_toggle_pressed)
+	_update_filter_toggle_ui()
 	_maybe_show_tutorial()
 	_setup_debug_overlay()
 	_play_battle_bgm()
@@ -1003,7 +1016,12 @@ func _on_challenge_card_clicked(event: InputEvent, idx: int) -> void:
 	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
 		return
 	_idle_seconds_since_action = 0.0
+	# T5：选中题自动启用"候选"过滤，玩家看到的卡库立刻收敛到匹配 slot 类型的子集。
+	# 切回 "all" 通过 FilterToggle 按钮。
+	_filter_mode = "candidate"
 	_controller.set_selected_challenge_index(idx)
+	# board_changed 信号会再触发 _render_board；但 hand 也要刷新过滤态。
+	_render_library()
 
 
 func _on_keep_button_pressed(idx: int) -> void:
@@ -1067,32 +1085,60 @@ func _on_slot_clicked(event: InputEvent, challenge_idx: int, slot_index: int, pa
 # ═══════════════════════════════════════════════════════════════════
 
 func _render_hand() -> void:
+	_render_library()
+
+
+## T4：渲染静态卡库（HFlowContainer 自动换行容纳 10-15 张）。
+## T5：根据 _filter_mode + selected challenge 过滤显示子集。
+## 已用能力的卡（_used_ability_card_ids_this_turn 内）显示为半透明 + ✓ 角标，
+## 但仍可点击/拖入 AP 槽。
+func _render_library() -> void:
 	if _hand_row == null:
 		return
 	for child in _hand_row.get_children():
 		child.queue_free()
 	_card_buttons.clear()
+	if _controller == null:
+		return
 	if _selected_card != null and not (_selected_card in _controller.card_library):
 		_selected_card = null
-	# Tighten separation so all 5 cards fit on narrower screens (1024px)
-	_hand_row.add_theme_constant_override("separation", 8)
-	# 更新卡库标签
-	_update_hand_label()
+	# 紧凑分隔；HFlowContainer 没有 alignment 概念，靠 separation 控制间距
+	_hand_row.add_theme_constant_override("h_separation", 8)
+	_hand_row.add_theme_constant_override("v_separation", 8)
 
-	if _controller.card_library.is_empty():
+	var library: Array[Card] = _controller.card_library
+	var filtered: Array[Card] = _apply_library_filter(library)
+	_update_hand_label_text(library.size(), filtered.size())
+	_update_filter_toggle_ui()
+
+	if library.is_empty():
 		var lbl := Label.new()
 		lbl.text = "（卡库为空）"
 		lbl.modulate = Color(0.7, 0.7, 0.7, 1)
 		_hand_row.add_child(lbl)
+		return
+	if filtered.is_empty():
+		var lbl2 := Label.new()
+		lbl2.text = "（库中无匹配卡——点 📚 看全部）"
+		lbl2.modulate = Color(0.85, 0.7, 0.55, 1)
+		_hand_row.add_child(lbl2)
 		return
 
 	var srs: SRSSystem = null
 	if typeof(GameState) != TYPE_NIL and GameState != null:
 		srs = GameState.srs_system
 
+	var used_ids: Array[String] = []
+	if _controller.has_method("get_used_ability_card_ids"):
+		used_ids = _controller.get_used_ability_card_ids()
+
 	var debug_on: bool = _is_debug_enabled()
-	for c in _controller.card_library:
+	for c in filtered:
 		var btn: Button = _make_card_button(c, srs)
+		var is_used: bool = c.id in used_ids
+		if is_used:
+			btn.modulate = Color(0.6, 0.6, 0.6, 1.0)
+			_add_used_badge(btn)
 		if debug_on:
 			var wrap: VBoxContainer = VBoxContainer.new()
 			wrap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1113,12 +1159,98 @@ func _render_hand() -> void:
 		_card_buttons.append(btn)
 
 
-## 更新卡库标签（T1：静态库改造——保留次留改造已移除）。
-## T4 会重做整个 hand row → card_library row；本处仅做最小适配。
-func _update_hand_label() -> void:
-	if _hand_label == null or _controller == null:
+## 在按钮内右上角添加"✓ 本回合已用"角标。
+func _add_used_badge(btn: Button) -> void:
+	var badge := Label.new()
+	badge.text = "✓本回合已用"
+	badge.add_theme_font_size_override("font_size", 10)
+	badge.modulate = Color(0.75, 0.95, 0.75, 1.0)
+	badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# 用相对锚点贴到按钮右下，避免遮挡主文本
+	badge.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	btn.add_child(badge)
+
+
+## T4/T5 标签文案：根据是否过滤显示不同信息。
+func _update_hand_label_text(total: int, filtered: int) -> void:
+	if _hand_label == null:
 		return
-	_hand_label.text = "卡库：%d 张（本场战斗可用）" % _controller.card_library.size()
+	if total == filtered:
+		_hand_label.text = "📚 卡库（%d 张，本场战斗可用）" % total
+	else:
+		_hand_label.text = "🎯 候选（%d / %d 匹配选中题）— 点 📚 看全部" % [filtered, total]
+
+
+## 兼容旧调用：保留 _update_hand_label() 入口（无参版本）。
+func _update_hand_label() -> void:
+	if _controller == null:
+		return
+	_update_hand_label_text(_controller.card_library.size(), _controller.card_library.size())
+
+
+# ═══════════════════════════════════════════════════════════════════
+# T5: Library filter (smart context: 选中题 → 自动过滤候选卡)
+# ═══════════════════════════════════════════════════════════════════
+
+## 过滤逻辑入口：返回 _filter_mode + selected challenge 决定的子集。
+## "all" 模式或没有选中题 → 返回完整库（不复制——只是引用）。
+func _apply_library_filter(library: Array[Card]) -> Array[Card]:
+	if _filter_mode == "all" or _controller == null:
+		return library
+	var selected = _get_selected_challenge()
+	if selected == null:
+		return library
+	var out: Array[Card] = []
+	for card in library:
+		for slot in selected.slots:
+			if _matches_by_type_pos(card, slot):
+				out.append(card)
+				break
+	return out
+
+
+## 粗匹配：只看 required_type + required_pos。
+## 故意不看 accept_card_ids / required_tags / forbidden_tags —— 这些是精匹配，
+## 拿来过滤会暴露答案。语义判断留给玩家。
+func _matches_by_type_pos(card: Card, slot: ChallengeSlot) -> bool:
+	if card == null or slot == null:
+		return false
+	if slot.required_type != "" and card.type != slot.required_type:
+		return false
+	if slot.required_pos != "" and card.pos != slot.required_pos:
+		return false
+	return true
+
+
+## 取当前 selected_challenge_index 指向的 ChallengeTemplate，找不到返回 null。
+func _get_selected_challenge() -> ChallengeTemplate:
+	if _controller == null:
+		return null
+	var idx: int = _controller.selected_challenge_index
+	if idx < 0 or idx >= _controller.available_challenges.size():
+		return null
+	return _controller.available_challenges[idx]
+
+
+func _on_filter_toggle_pressed() -> void:
+	if _filter_mode == "all":
+		_filter_mode = "candidate"
+	else:
+		_filter_mode = "all"
+	_render_library()
+
+
+## 按钮文案 + 可见性：仅在有 selected challenge 时显示。
+func _update_filter_toggle_ui() -> void:
+	if _filter_toggle_btn == null:
+		return
+	var has_selected: bool = _get_selected_challenge() != null
+	_filter_toggle_btn.visible = has_selected
+	if _filter_mode == "all":
+		_filter_toggle_btn.text = "🎯 仅候选"
+	else:
+		_filter_toggle_btn.text = "📚 全部库"
 
 
 func _make_card_button(card: Card, srs: SRSSystem) -> Button:
@@ -1280,13 +1412,18 @@ func _find_any_valid_slot(card: Card) -> int:
 
 
 func _refresh_card_button_styles() -> void:
+	# T5: _card_buttons 索引与 _apply_library_filter 后的 filtered 列表对齐，
+	# 不一定与 card_library 顺序一致。重新按 filter 顺序取卡，确保高亮正确。
+	if _controller == null:
+		return
+	var filtered: Array[Card] = _apply_library_filter(_controller.card_library)
 	for i in _card_buttons.size():
 		var btn: Button = _card_buttons[i]
 		if btn == null:
 			continue
-		if i >= _controller.card_library.size():
+		if i >= filtered.size():
 			continue
-		var c: Card = _controller.card_library[i]
+		var c: Card = filtered[i]
 		_apply_card_button_style(btn, c, c == _selected_card, false)
 
 
@@ -1353,6 +1490,8 @@ func _on_card_played(_card: Card, _slot_index: int) -> void:
 
 func _on_board_changed() -> void:
 	_render_board()
+	# T5：选中题变化或棋盘刷新时，候选过滤集要重算。
+	_render_library()
 	_maybe_show_no_solvable_hint()
 
 
