@@ -230,6 +230,8 @@ func _ready() -> void:
 	_render_ap_row()
 	if _submit_button != null:
 		_submit_button.pressed.connect(_on_submit_pressed)
+		# 单卡即施法模式下，提交按钮隐藏：每次放卡就立刻结算
+		_submit_button.visible = false
 	if _filter_toggle_btn != null:
 		_filter_toggle_btn.pressed.connect(_on_filter_toggle_pressed)
 	_update_filter_toggle_ui()
@@ -452,6 +454,8 @@ func _render_enemy() -> void:
 		var h: int = seed_str.hash() if seed_str != "" else 0
 		var hue: float = float(abs(h) % 360) / 360.0
 		_enemy_portrait.color = Color.from_hsv(hue, 0.4, 0.55)
+		# "侵蚀态" 默认调暗：唯有玩家答对才能短暂"觉醒"
+		_enemy_portrait.modulate = _ENEMY_PORTRAIT_CORRUPTED
 	# Try real portrait image when EnemyData.sprite_path is provided.
 	if _enemy_portrait_image != null:
 		_enemy_portrait_image.visible = false
@@ -462,6 +466,7 @@ func _render_enemy() -> void:
 			if ptex != null:
 				_enemy_portrait_image.texture = ptex
 				_enemy_portrait_image.visible = true
+				_enemy_portrait_image.modulate = _ENEMY_PORTRAIT_CORRUPTED
 	if _weakness_label != null:
 		if enemy.weak_axes.is_empty():
 			_weakness_label.text = "弱点：无"
@@ -890,14 +895,80 @@ func _on_card_dropped_to_slot(card, challenge_idx: int, slot_index: int) -> void
 		_set_status_hint("这题已失败 — 选其它题作答")
 		return
 	var ok: bool = _controller.add_to_ap_queue(card, challenge_idx, slot_index)
-	if ok:
-		_selected_card = null
-		_set_status_hint("")
-		_render_hand()
-		_render_board()
-		_render_ap_row()
-	else:
+	if not ok:
 		_set_status_hint("AP 队列已满 — 先 Submit 或撤回再放卡")
+		return
+	_selected_card = null
+	_set_status_hint("")
+	_render_ap_row()
+	# 立即施法：词汇飞向敌人 → 结算 → 反馈
+	await _cast_card_at_slot(card, challenge_idx, slot_index)
+	_controller.submit_all_ap()
+	_render_hand()
+	_render_board()
+	_render_ap_row()
+	_render_player_status()
+	_render_enemy()
+
+
+## 词卡上的英文文字粒子化飞向敌人，给"答题=施法"的连贯感。
+const _CAST_FLIGHT_DURATION: float = 0.45
+const _CAST_GLOW_COLOR: Color = Color(1.0, 0.86, 0.42, 1.0)
+
+func _cast_card_at_slot(card: Card, challenge_idx: int, slot_index: int) -> void:
+	if card == null:
+		return
+	# 起点：从槽位中心。如果取不到，就从手牌区中央起飞
+	var from_pos: Vector2 = Vector2.ZERO
+	if challenge_idx >= 0 and challenge_idx < _slot_nodes_by_challenge.size():
+		var slots_arr: Array = _slot_nodes_by_challenge[challenge_idx]
+		if slot_index >= 0 and slot_index < slots_arr.size():
+			var slot_panel: Control = slots_arr[slot_index]
+			if slot_panel and is_instance_valid(slot_panel):
+				from_pos = slot_panel.global_position + slot_panel.size * 0.5
+	if from_pos == Vector2.ZERO and _hand_row:
+		from_pos = _hand_row.global_position + _hand_row.size * 0.5
+	# 终点：敌人立绘中心
+	var to_pos: Vector2 = from_pos + Vector2(0, -120)
+	if _enemy_portrait and is_instance_valid(_enemy_portrait):
+		to_pos = _enemy_portrait.global_position + _enemy_portrait.size * 0.5
+	# 临时 Label 当"光符"
+	var lbl := Label.new()
+	lbl.text = card.text
+	lbl.add_theme_font_size_override("font_size", 28)
+	lbl.modulate = _CAST_GLOW_COLOR
+	lbl.z_index = 200
+	lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lbl.custom_minimum_size = Vector2(120, 36)
+	lbl.position = from_pos - Vector2(60, 18)
+	# 挂到 fx 层（若无则挂场景根）
+	var holder: Node = _fx_layer if _fx_layer != null else self
+	holder.add_child(lbl)
+	# 飞行 tween（位置 + 缩放 + 末段淡出）
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(lbl, "position", to_pos - Vector2(60, 18), _CAST_FLIGHT_DURATION).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(lbl, "scale", Vector2(1.3, 1.3), _CAST_FLIGHT_DURATION * 0.5)
+	var fade_delay: float = _CAST_FLIGHT_DURATION * 0.7
+	tw.tween_property(lbl, "modulate:a", 0.0, _CAST_FLIGHT_DURATION - fade_delay).set_delay(fade_delay)
+	await tw.finished
+	if is_instance_valid(lbl):
+		lbl.queue_free()
+	_sfx("card_drop_success")
+
+
+## 答对时敌人立绘闪一下"觉醒态"
+func _animate_enemy_awaken() -> void:
+	if _enemy_portrait == null or not is_instance_valid(_enemy_portrait):
+		return
+	var orig: Color = _ENEMY_PORTRAIT_CORRUPTED
+	var tw := create_tween()
+	tw.tween_property(_enemy_portrait, "modulate", Color.WHITE, 0.15)
+	tw.tween_interval(0.25)
+	tw.tween_property(_enemy_portrait, "modulate", orig, 0.35)
+
+
+const _ENEMY_PORTRAIT_CORRUPTED: Color = Color(0.62, 0.52, 0.74, 1.0)
 
 
 func _on_slot_hovered(challenge_idx: int, slot_index: int) -> void:
@@ -1255,17 +1326,44 @@ func _update_filter_toggle_ui() -> void:
 
 func _make_card_button(card: Card, srs: SRSSystem) -> Button:
 	var btn := Button.new()
-	# Smaller min so 5 cards always fit even on 1024×768; expand to share width.
-	btn.custom_minimum_size = Vector2(96, 120)
+	# 重叠堆叠模式：每张卡固定宽度，HandRow 负 separation 让卡互相覆盖。
+	btn.custom_minimum_size = Vector2(108, 140)
 	btn.text = _card_button_text(card, srs)
 	btn.tooltip_text = _card_tooltip(card, srs)
 	btn.clip_text = false
 	btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	btn.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	# 固定 SHRINK_BEGIN，避免被 container 撑开造成 negative separation 失效
+	btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	_apply_card_button_style(btn, card, false, false)
 	btn.pressed.connect(_on_card_button_pressed.bind(card, btn))
+	# Hover：抬起 + 高 z_index 让卡盖到右侧邻居上方，露出完整内容
+	btn.mouse_entered.connect(_on_card_hover_enter.bind(btn))
+	btn.mouse_exited.connect(_on_card_hover_exit.bind(btn))
+	btn.set_meta("base_position_y", 0.0)
 	return btn
+
+
+const _CARD_HOVER_LIFT: float = 14.0
+const _CARD_HOVER_SCALE: Vector2 = Vector2(1.06, 1.06)
+
+
+func _on_card_hover_enter(btn: Button) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	btn.z_index = 100
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(btn, "position:y", btn.position.y - _CARD_HOVER_LIFT, 0.08)
+	tw.tween_property(btn, "scale", _CARD_HOVER_SCALE, 0.08)
+
+
+func _on_card_hover_exit(btn: Button) -> void:
+	if btn == null or not is_instance_valid(btn):
+		return
+	btn.z_index = 0
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(btn, "position:y", btn.position.y + _CARD_HOVER_LIFT, 0.08)
+	tw.tween_property(btn, "scale", Vector2.ONE, 0.08)
 
 
 func _card_button_text(card: Card, srs: SRSSystem) -> String:
@@ -1518,6 +1616,8 @@ func _on_damage_dealt(amount: int, crit: bool, weak: bool) -> void:
 	_update_combo_label()
 	_animate_enemy_shake()
 	_animate_combo_glow()
+	# 觉醒闪光：怪物被"知识"短暂修复
+	_animate_enemy_awaken()
 	var label_parts: Array[String] = ["%d 伤害" % amount]
 	if crit:
 		label_parts.append("暴击!")

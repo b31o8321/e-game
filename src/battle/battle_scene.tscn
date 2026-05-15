@@ -261,7 +261,9 @@ offset_right = 0.0
 offset_bottom = 0.0
 size_flags_horizontal = 3
 alignment = 1
-clip_contents = true
+clip_contents = false
+theme_override_constants/h_separation = -64
+theme_override_constants/v_separation = 8
 
 ; ─── BottomBar (action buttons / status hint) ─────────────
 [node name="ActionRow" type="HBoxContainer" parent="."]
