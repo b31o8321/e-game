@@ -1398,7 +1398,15 @@ func _populate_card_button_layout(btn: Button, card: Card, srs: SRSSystem) -> vo
 	left_strip.text = _vertical_letters(card.text)
 	left_strip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	left_strip.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-	left_strip.add_theme_font_size_override("font_size", 20)
+	# 字号按字符数自适应：卡高 ~140px，每字行高 ≈ font_size*1.2
+	# 6 字符以内放心 20pt；7-9 用 16；10+ 压到 12
+	var word_len: int = card.text.length() if card.text else 0
+	var font_sz: int = 20
+	if word_len >= 10:
+		font_sz = 12
+	elif word_len >= 7:
+		font_sz = 16
+	left_strip.add_theme_font_size_override("font_size", font_sz)
 	left_strip.add_theme_color_override("font_color", Color(1.0, 0.96, 0.78, 1.0))
 	left_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	left_strip.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)

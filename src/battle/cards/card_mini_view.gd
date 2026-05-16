@@ -48,11 +48,42 @@ func _ready() -> void:
 	# 不让父容器把卡片压扁
 	size_flags_horizontal = 0
 	size_flags_vertical = 0
+	# 全局 Kenney 主题的 Button 背景是浅灰，Label 默认白字会看不清。
+	# 给 CardMiniView 单独覆盖一套深底 + 浅字 stylebox。
+	_apply_dark_card_style()
 	if _audio_button != null and not _audio_button.pressed.is_connected(_on_audio_button_pressed):
 		_audio_button.pressed.connect(_on_audio_button_pressed)
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 	refresh()
+
+
+func _apply_dark_card_style() -> void:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.15, 0.17, 0.23, 1.0)
+	sb.set_corner_radius_all(8)
+	sb.set_border_width_all(2)
+	sb.border_color = Color(0.3, 0.35, 0.45, 1.0)
+	sb.content_margin_left = 6
+	sb.content_margin_right = 6
+	sb.content_margin_top = 4
+	sb.content_margin_bottom = 4
+	add_theme_stylebox_override("normal", sb)
+	var sb_hover := sb.duplicate() as StyleBoxFlat
+	sb_hover.bg_color = sb.bg_color.lightened(0.08)
+	add_theme_stylebox_override("hover", sb_hover)
+	add_theme_stylebox_override("pressed", sb_hover)
+	add_theme_stylebox_override("focus", sb_hover)
+	# 文字浅色让 Label 在深底上可读
+	add_theme_color_override("font_color", Color(0.95, 0.95, 1.0, 1.0))
+	add_theme_color_override("font_hover_color", Color(1.0, 1.0, 1.0, 1.0))
+	add_theme_color_override("font_pressed_color", Color(1.0, 1.0, 0.85, 1.0))
+	# 让内部 Label 子节点也浅色（Label 没继承 Button font_color，需要单独设）
+	var light: Color = Color(0.95, 0.95, 1.0, 1.0)
+	for n in [_damage_big_label, _text_label, _phonetic_label, _meaning_label,
+			_meta_label, _mastery_label]:
+		if n != null:
+			n.add_theme_color_override("font_color", light)
 
 
 func _on_mouse_entered() -> void:
