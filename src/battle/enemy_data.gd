@@ -56,7 +56,9 @@ static func from_dict(data: Dictionary) -> EnemyData:
 	e.enemy_name = str(data.get("enemy_name", ""))
 	e.max_hp = int(data.get("max_hp", 100))
 	e.base_attack = int(data.get("base_attack", 10))
-	e.sprite_path = str(data.get("sprite_path", ""))
+	# 兼容：enemies.json 历史用 "portrait_path" key —— 若没显式 sprite_path 则回退到它。
+	# （原 from_dict 只读 sprite_path 导致 50+ portrait PNG 一直没加载——pre-existing bug 顺手修。）
+	e.sprite_path = str(data.get("sprite_path", data.get("portrait_path", "")))
 	e.topic_id = str(data.get("topic_id", ""))
 
 	var raw_axes: Array = data.get("weak_axes", [])
