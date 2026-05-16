@@ -147,6 +147,18 @@ text = "装备：⚔ 木剑 / 🛡 无 / 💍 无"
 layout_mode = 2
 text = "卷轴：📜 (Phase 4.3)"
 
+[node name="RelicSection" type="VBoxContainer" parent="Body/Sections"]
+layout_mode = 2
+
+[node name="RelicHeader" type="Label" parent="Body/Sections/RelicSection"]
+layout_mode = 2
+text = "🎁 遗物"
+
+[node name="RelicListLabel" type="Label" parent="Body/Sections/RelicSection"]
+layout_mode = 2
+text = "（暂无）"
+modulate = Color(0.75, 0.78, 0.85, 1.0)
+
 [node name="ReviewSection" type="VBoxContainer" parent="Body/Sections"]
 layout_mode = 2
 

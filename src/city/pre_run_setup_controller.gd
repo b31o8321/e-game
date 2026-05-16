@@ -57,6 +57,7 @@ var _deck_slot_max: int = 12
 
 @onready var _equipment_label: Label = $Body/Sections/EquipmentRow/EquipmentLabel
 @onready var _spice_label: Label = $Body/Sections/EquipmentRow/SpiceLabel
+@onready var _relic_list_label: Label = $Body/Sections/RelicSection/RelicListLabel
 
 @onready var _review_button: Button = $Body/Sections/ReviewSection/ReviewActionsRow/ReviewButton
 @onready var _skip_review_button: Button = $Body/Sections/ReviewSection/ReviewActionsRow/SkipReviewButton
@@ -161,6 +162,7 @@ func _render_all() -> void:
 	_render_deck()
 	_render_analysis()
 	_render_equipment()
+	_render_relics()
 
 
 func _render_header() -> void:
@@ -239,6 +241,19 @@ func _render_equipment() -> void:
 		_equipment_label.text = "装备：⚔ 木剑  /  🛡 无  /  💍 无"
 	if _spice_label != null:
 		_spice_label.text = "卷轴：📜 (Phase 4.3)"
+
+
+func _render_relics() -> void:
+	if _relic_list_label == null:
+		return
+	if typeof(RunState) == TYPE_NIL or RunState == null or RunState.equipped_relics.is_empty():
+		_relic_list_label.text = "（暂无）"
+		return
+	var parts: Array[String] = []
+	for r in RunState.equipped_relics:
+		if r != null:
+			parts.append("%s %s" % [r.icon, r.display_name])
+	_relic_list_label.text = "  ·  ".join(parts)
 
 
 func _pct(n: int, total: int) -> int:

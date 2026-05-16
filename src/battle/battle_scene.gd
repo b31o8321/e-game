@@ -203,6 +203,7 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _log_text: RichTextLabel = get_node_or_null("LogPanel/LogMargin/LogColumn/LogText")
 @onready var _ap_blocks_container: HBoxContainer = get_node_or_null("ApRow/Margin/HBox/Blocks")
 @onready var _submit_button: Button = get_node_or_null("ApRow/Margin/HBox/SubmitButton")
+@onready var _relic_row: HBoxContainer = get_node_or_null("RelicRow")
 
 const APBlockViewScene = preload("res://src/battle/ap_block_view.tscn")
 const SlotDropZone = preload("res://src/battle/slot_drop_zone.gd")
@@ -224,6 +225,7 @@ func _ready() -> void:
 	_setup_controller()
 	_apply_battle_background()
 	_render_top_bar()
+	_render_relic_row()
 	_render_enemy()
 	_render_player_status()
 	_controller.start_battle()
@@ -437,6 +439,31 @@ func _render_top_bar() -> void:
 	if node_total > 0:
 		counter = " · 战斗 %d/%d" % [node_idx, node_total]
 	_floor_label.text = "楼层 %s · Act %d%s" % [floor_display, act_idx + 1, counter]
+
+
+func _render_relic_row() -> void:
+	if _relic_row == null:
+		return
+	for c in _relic_row.get_children():
+		c.queue_free()
+	if typeof(RunState) == TYPE_NIL or RunState == null:
+		return
+	for r in RunState.equipped_relics:
+		if r == null:
+			continue
+		var lbl := Label.new()
+		lbl.text = "%s %s" % [r.icon, r.display_name]
+		lbl.tooltip_text = "%s\n%s +%d" % [r.description, r.effect_type, r.magnitude]
+		lbl.add_theme_font_size_override("font_size", 14)
+		lbl.add_theme_color_override("font_color", _relic_color_for(r.rarity))
+		_relic_row.add_child(lbl)
+
+
+func _relic_color_for(rarity: String) -> Color:
+	match rarity:
+		"rare":     return Color(1.0, 0.65, 0.95, 1.0)
+		"uncommon": return Color(0.45, 0.9, 0.55, 1.0)
+		_:          return Color(0.85, 0.85, 0.85, 1.0)
 
 
 # ═══════════════════════════════════════════════════════════════════

@@ -52,12 +52,25 @@ tooltip_text = "查看 / 关闭最近的战斗动作记录"
 layout_mode = 2
 text = "⏸ 撤退"
 
+; ─── RelicRow (below TopBar, above EnemyArea) ─────────────
+[node name="RelicRow" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchor_left = 0.02
+anchor_right = 0.98
+anchor_top = 0.045
+anchor_bottom = 0.07
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+theme_override_constants/separation = 6
+
 ; ─── EnemyArea (center-top, compact) ──────────────────────
 [node name="EnemyArea" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.18
 anchor_right = 0.82
-anchor_top = 0.04
+anchor_top = 0.075
 anchor_bottom = 0.26
 offset_left = 0.0
 offset_top = 0.0
