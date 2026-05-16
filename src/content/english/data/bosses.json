@@ -5,11 +5,22 @@
 			"display_name": "字母混乱者",
 			"max_hp": 60,
 			"phases": 1,
-			"weak_axes": ["letter"],
+			"weak_axes": [
+				"letter"
+			],
 			"topic_id": "0F_alphabet",
-			"challenge_template_ids": ["0F_alphabet_next", "0F_alphabet_before_h", "0F_alphabet_after_n", "0F_alphabet_listen_b"],
-			"drops": {"crystals": 30, "blueprints": 1, "equipment_id": ""},
-			"portrait_path": "res://assets/visual/portraits/boss_letter_chaos.png",
+			"challenge_template_ids": [
+				"0F_alphabet_next",
+				"0F_alphabet_before_h",
+				"0F_alphabet_after_n",
+				"0F_alphabet_listen_b"
+			],
+			"drops": {
+				"crystals": 30,
+				"blueprints": 1,
+				"equipment_id": ""
+			},
+			"portrait_path": "res://assets/external/anime_characters/dragon_0.png",
 			"pre_dialogue_id": "boss_letter_chaos_pre",
 			"post_dialogue_id": "boss_letter_chaos_post"
 		},
@@ -18,11 +29,22 @@
 			"display_name": "发音之灵",
 			"max_hp": 70,
 			"phases": 1,
-			"weak_axes": ["syllable", "phonics"],
+			"weak_axes": [
+				"syllable",
+				"phonics"
+			],
 			"topic_id": "0F_phonics",
-			"challenge_template_ids": ["0F_phonics_cat", "0F_phonics_pig", "0F_phonics_run"],
-			"drops": {"crystals": 30, "blueprints": 1, "equipment_id": ""},
-			"portrait_path": "res://assets/visual/portraits/boss_phonics_spirit.png",
+			"challenge_template_ids": [
+				"0F_phonics_cat",
+				"0F_phonics_pig",
+				"0F_phonics_run"
+			],
+			"drops": {
+				"crystals": 30,
+				"blueprints": 1,
+				"equipment_id": ""
+			},
+			"portrait_path": "res://assets/external/anime_characters/samurai_0.png",
 			"pre_dialogue_id": "boss_phonics_spirit_pre",
 			"post_dialogue_id": "boss_phonics_spirit_post"
 		},
@@ -31,11 +53,25 @@
 			"display_name": "字母守关者",
 			"max_hp": 120,
 			"phases": 2,
-			"weak_axes": ["letter", "syllable", "sight_word"],
+			"weak_axes": [
+				"letter",
+				"syllable",
+				"sight_word"
+			],
 			"topic_id": "0F_sight_words",
-			"challenge_template_ids": ["0F_sight_iam", "0F_sight_thisis", "0F_sight_he_is", "0F_alphabet_next", "0F_phonics_cat"],
-			"drops": {"crystals": 50, "blueprints": 3, "equipment_id": "equip_starter_badge"},
-			"portrait_path": "res://assets/visual/portraits/boss_letter_warden.png",
+			"challenge_template_ids": [
+				"0F_sight_iam",
+				"0F_sight_thisis",
+				"0F_sight_he_is",
+				"0F_alphabet_next",
+				"0F_phonics_cat"
+			],
+			"drops": {
+				"crystals": 50,
+				"blueprints": 3,
+				"equipment_id": "equip_starter_badge"
+			},
+			"portrait_path": "res://assets/external/anime_characters/samurai_0.png",
 			"pre_dialogue_id": "boss_letter_warden_pre",
 			"post_dialogue_id": "boss_letter_warden_post"
 		},
@@ -44,11 +80,23 @@
 			"display_name": "迷雾低吟者",
 			"max_hp": 80,
 			"phases": 1,
-			"weak_axes": ["emotion", "positive_emotion"],
+			"weak_axes": [
+				"emotion",
+				"positive_emotion"
+			],
 			"topic_id": "1F_emotion",
-			"challenge_template_ids": ["1F_emotion_blank", "1F_emotion_positive", "1F_emotion_tired", "1F_emotion_listen"],
-			"drops": {"crystals": 40, "blueprints": 1, "equipment_id": ""},
-			"portrait_path": "res://assets/visual/portraits/boss_fog_whisperer.png",
+			"challenge_template_ids": [
+				"1F_emotion_blank",
+				"1F_emotion_positive",
+				"1F_emotion_tired",
+				"1F_emotion_listen"
+			],
+			"drops": {
+				"crystals": 40,
+				"blueprints": 1,
+				"equipment_id": ""
+			},
+			"portrait_path": "res://assets/external/anime_characters/werewolf_0.png",
 			"pre_dialogue_id": "boss_fog_whisperer_pre",
 			"post_dialogue_id": "boss_fog_whisperer_post"
 		},
@@ -57,11 +105,22 @@
 			"display_name": "静默叹息者",
 			"max_hp": 90,
 			"phases": 1,
-			"weak_axes": ["personality"],
+			"weak_axes": [
+				"personality"
+			],
 			"topic_id": "1F_personality",
-			"challenge_template_ids": ["1F_personality_blank", "1F_personality_he_brave", "1F_personality_quiet", "1F_personality_lazy_correct"],
-			"drops": {"crystals": 40, "blueprints": 1, "equipment_id": ""},
-			"portrait_path": "res://assets/visual/portraits/boss_silent_sigher.png",
+			"challenge_template_ids": [
+				"1F_personality_blank",
+				"1F_personality_he_brave",
+				"1F_personality_quiet",
+				"1F_personality_lazy_correct"
+			],
+			"drops": {
+				"crystals": 40,
+				"blueprints": 1,
+				"equipment_id": ""
+			},
+			"portrait_path": "res://assets/external/anime_characters/zombie_2.png",
 			"pre_dialogue_id": "boss_silent_sigher_pre",
 			"post_dialogue_id": "boss_silent_sigher_post"
 		},
@@ -70,11 +129,27 @@
 			"display_name": "图书管理员",
 			"max_hp": 180,
 			"phases": 2,
-			"weak_axes": ["adjective", "emotion", "personality", "sentence_pattern"],
+			"weak_axes": [
+				"adjective",
+				"emotion",
+				"personality",
+				"sentence_pattern"
+			],
 			"topic_id": "1F_grammar",
-			"challenge_template_ids": ["1F_be_correct", "1F_be_we_are", "1F_grammar_size", "1F_grammar_pattern_iam", "1F_emotion_blank", "1F_personality_blank"],
-			"drops": {"crystals": 80, "blueprints": 3, "equipment_id": "equip_silent_book"},
-			"portrait_path": "res://assets/visual/portraits/boss_librarian.png",
+			"challenge_template_ids": [
+				"1F_be_correct",
+				"1F_be_we_are",
+				"1F_grammar_size",
+				"1F_grammar_pattern_iam",
+				"1F_emotion_blank",
+				"1F_personality_blank"
+			],
+			"drops": {
+				"crystals": 80,
+				"blueprints": 3,
+				"equipment_id": "equip_silent_book"
+			},
+			"portrait_path": "res://assets/external/anime_characters/knight_0.png",
 			"pre_dialogue_id": "boss_librarian_pre",
 			"post_dialogue_id": "boss_librarian_post"
 		},
@@ -83,11 +158,22 @@
 			"display_name": "家族散乱者",
 			"max_hp": 90,
 			"phases": 1,
-			"weak_axes": ["family"],
+			"weak_axes": [
+				"family"
+			],
 			"topic_id": "2F_family",
-			"challenge_template_ids": ["2F_family_blank", "2F_family_grandma", "2F_family_listen", "2F_family_baby_correct"],
-			"drops": {"crystals": 50, "blueprints": 1, "equipment_id": ""},
-			"portrait_path": "res://assets/visual/portraits/boss_family_scatter.png",
+			"challenge_template_ids": [
+				"2F_family_blank",
+				"2F_family_grandma",
+				"2F_family_listen",
+				"2F_family_baby_correct"
+			],
+			"drops": {
+				"crystals": 50,
+				"blueprints": 1,
+				"equipment_id": ""
+			},
+			"portrait_path": "res://assets/external/anime_characters/dragon_0.png",
 			"pre_dialogue_id": "boss_family_scatter_pre",
 			"post_dialogue_id": "boss_family_scatter_post"
 		},
@@ -96,11 +182,21 @@
 			"display_name": "形体迷失者",
 			"max_hp": 100,
 			"phases": 1,
-			"weak_axes": ["body"],
+			"weak_axes": [
+				"body"
+			],
 			"topic_id": "2F_body",
-			"challenge_template_ids": ["2F_body_blank", "2F_body_head", "2F_body_listen"],
-			"drops": {"crystals": 50, "blueprints": 1, "equipment_id": ""},
-			"portrait_path": "res://assets/visual/portraits/boss_body_lost.png",
+			"challenge_template_ids": [
+				"2F_body_blank",
+				"2F_body_head",
+				"2F_body_listen"
+			],
+			"drops": {
+				"crystals": 50,
+				"blueprints": 1,
+				"equipment_id": ""
+			},
+			"portrait_path": "res://assets/external/anime_characters/zombie_2.png",
 			"pre_dialogue_id": "boss_body_lost_pre",
 			"post_dialogue_id": "boss_body_lost_post"
 		},
@@ -109,11 +205,28 @@
 			"display_name": "家庭守护者",
 			"max_hp": 200,
 			"phases": 2,
-			"weak_axes": ["family", "body", "pronoun", "subject_form"],
+			"weak_axes": [
+				"family",
+				"body",
+				"pronoun",
+				"subject_form"
+			],
 			"topic_id": "2F_pronoun",
-			"challenge_template_ids": ["2F_pronoun_correct", "2F_pronoun_she", "2F_pronoun_we", "2F_this_that", "2F_pronoun_object_me", "2F_family_blank", "2F_body_blank"],
-			"drops": {"crystals": 100, "blueprints": 3, "equipment_id": "equip_blood_ring"},
-			"portrait_path": "res://assets/visual/portraits/boss_family_guardian.png",
+			"challenge_template_ids": [
+				"2F_pronoun_correct",
+				"2F_pronoun_she",
+				"2F_pronoun_we",
+				"2F_this_that",
+				"2F_pronoun_object_me",
+				"2F_family_blank",
+				"2F_body_blank"
+			],
+			"drops": {
+				"crystals": 100,
+				"blueprints": 3,
+				"equipment_id": "equip_blood_ring"
+			},
+			"portrait_path": "res://assets/external/anime_characters/knight_0.png",
 			"pre_dialogue_id": "boss_family_guardian_pre",
 			"post_dialogue_id": "boss_family_guardian_post"
 		}

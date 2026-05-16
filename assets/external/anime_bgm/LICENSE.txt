@@ -1,0 +1,41 @@
+BGM Credits
+===========
+
+Files used in assets/audio/bgm/
+---------------------------------
+
+1. battle.ogg
+   Source: https://opengameart.org/content/battle-theme-a
+   File:   https://opengameart.org/sites/default/files/audio_preview/battleThemeA_0.mp3.ogg
+   Author: Alexandr Zhelanov (https://soundcloud.com/alexandr-zhelanov)
+   License: CC0 Public Domain
+   Used as: battle.ogg
+
+2. boss.ogg, retreat.ogg (same file reused)
+   Source: https://opengameart.org/content/rpg-battle-loop
+   File:   https://opengameart.org/sites/default/files/audio_preview/rbl.mp3.ogg
+   License: CC0 Public Domain
+   Used as: boss.ogg, retreat.ogg
+
+3. city.ogg
+   Source: https://opengameart.org/content/battle-music
+   File:   https://opengameart.org/sites/default/files/audio_preview/battle-mus.mp3.ogg
+   License: CC-BY 3.0 (Creative Commons Attribution 3.0)
+   Note: Attribution required — credit the original artist when distributing.
+   Used as: city.ogg
+
+4. main_menu.ogg
+   Source: https://opengameart.org/content/menu-theme
+   File:   https://opengameart.org/sites/default/files/audio_preview/menu_title.mp3.ogg
+   License: CC0 Public Domain
+   Used as: main_menu.ogg
+
+5. victory.ogg
+   Source: https://opengameart.org/content/victory-fanfare
+   File:   https://opengameart.org/sites/default/files/fanfare1.ogg
+   License: CC0 Public Domain
+   Used as: victory.ogg
+
+---
+Downloaded: 2026-05-17
+All files are in OGG Vorbis format and verified as valid audio.
