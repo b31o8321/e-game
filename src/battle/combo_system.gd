@@ -1,4 +1,6 @@
-class_name ComboSystem extends Node
+## RefCounted（不是 Node）—— combo 只是数据 + 信号容器，不需要进场景树。
+## 进树会触发 orphan 警告（smoke 之前发现过：每场战斗泄漏 1 个 combo_system Node）。
+class_name ComboSystem extends RefCounted
 
 var count: int = 0
 
