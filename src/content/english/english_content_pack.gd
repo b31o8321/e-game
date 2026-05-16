@@ -13,6 +13,7 @@ class_name EnglishContentPack extends ContentPackBase
 
 const VoiceScrollSpice = preload("res://src/content/english/spices/voice_scroll_spice.gd")
 const DictationSpice = preload("res://src/content/english/spices/dictation_spice.gd")
+const WordChoiceSpice = preload("res://src/content/english/spices/word_choice_spice.gd")
 
 const _DATA_DIR := "res://src/content/english/data/"
 
@@ -331,6 +332,20 @@ func _build_spice_from_entry(entry: Dictionary):
 			d.set_meta("spice_id_override", str(entry.get("id", "")))
 			d.set_meta("display_name_override", str(entry.get("display_name", "")))
 			return d
+		"word_choice":
+			var w: WordChoiceSpice = WordChoiceSpice.new()
+			w.target_word = str(entry.get("target_word", ""))
+			w.prompt_meaning = str(entry.get("prompt_meaning", ""))
+			var choices_raw: Variant = entry.get("choices", [])
+			if choices_raw is Array:
+				var typed_choices: Array[String] = []
+				for v in choices_raw:
+					typed_choices.append(str(v))
+				w.choices = typed_choices
+			w.damage_bonus = int(entry.get("damage_bonus", 20))
+			w.set_meta("spice_id_override", str(entry.get("id", "")))
+			w.set_meta("display_name_override", str(entry.get("display_name", "")))
+			return w
 	push_error("[EnglishContentPack] 未知 spice kind: %s" % kind)
 	return null
 
@@ -543,6 +558,13 @@ func _build_default_spices() -> Array:
 	dict.counter_damage = 25
 	dict.audio_path = ""
 	out.append(dict)
+
+	var wc: WordChoiceSpice = WordChoiceSpice.new()
+	wc.target_word = "happy"
+	wc.prompt_meaning = "高兴的"
+	wc.choices = ["happy", "sad", "angry", "tired"]
+	wc.damage_bonus = 20
+	out.append(wc)
 
 	return out
 

@@ -3,8 +3,8 @@ extends GutTest
 var combo: ComboSystem
 
 func before_each() -> void:
+	# ComboSystem 是 RefCounted（自 2026-05-17 改），不进场景树 → 不要 add_child。
 	combo = ComboSystem.new()
-	add_child_autofree(combo)
 
 func test_initial_count_is_zero() -> void:
 	assert_eq(combo.count, 0)

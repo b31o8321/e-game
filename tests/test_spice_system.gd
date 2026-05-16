@@ -179,8 +179,8 @@ func test_english_pack_provides_voice_and_dictation_spices() -> void:
 	var pack: EnglishContentPack = EnglishContentPack.new()
 	add_child_autofree(pack)
 	var spices: Array = pack.get_available_spices()
-	# Phase 3 MVP: spec 要求 5 个 Spice 实例（3 voice + 2 dictation）
-	assert_eq(spices.size(), 5, "english pack should expose 5 spices")
+	# 5 个 base spice（3 voice + 2 dictation）+ 2 个 word_choice（Slice 6 加）= 7
+	assert_eq(spices.size(), 7, "english pack should expose 7 spices (3 voice + 2 dictation + 2 word_choice)")
 
 	var class_ids: Array = []
 	for s in spices:

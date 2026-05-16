@@ -162,10 +162,11 @@ func test_english_pack_loads_4_equipment() -> void:
 	assert_eq(pool.size(), 4, "should load 4 equipment items")
 
 
-func test_english_pack_loads_5_spices() -> void:
+func test_english_pack_loads_7_spices() -> void:
+	# 3 voice + 2 dictation + 2 word_choice = 7（Slice 6 加 word_choice）
 	var pack := loader.get_pack("english_grade46")
 	var spices := pack.get_available_spices()
-	assert_eq(spices.size(), 5, "should load 5 spices from spices.json")
+	assert_eq(spices.size(), 7, "should load 7 spices from spices.json")
 
 
 func test_english_pack_card_pool_for_1f_includes_emotion_cards() -> void:

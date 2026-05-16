@@ -53,6 +53,26 @@
 			"draw_cards": 2,
 			"audio_path": "res://src/content/english/audio/words/family.mp3",
 			"source_boss_id": "body_lost"
+		},
+		{
+			"id": "word_choice_happy",
+			"kind": "word_choice",
+			"display_name": "心情选择",
+			"description": "4 选 1 选出释义对应的英文 → 额外伤害 +20",
+			"target_word": "happy",
+			"prompt_meaning": "高兴的",
+			"choices": ["happy", "sad", "angry", "tired"],
+			"damage_bonus": 20
+		},
+		{
+			"id": "word_choice_family",
+			"kind": "word_choice",
+			"display_name": "家人辨识",
+			"description": "4 选 1 选出释义对应的英文 → 额外伤害 +25",
+			"target_word": "mother",
+			"prompt_meaning": "妈妈",
+			"choices": ["mother", "father", "sister", "brother"],
+			"damage_bonus": 25
 		}
 	]
 }
