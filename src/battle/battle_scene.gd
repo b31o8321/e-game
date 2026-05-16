@@ -1545,21 +1545,17 @@ func _card_tooltip(card: Card, srs: SRSSystem) -> String:
 	return "\n".join(lines)
 
 
-func _apply_card_button_style(btn: Button, card: Card, selected: bool, retained: bool = false) -> void:
+func _apply_card_button_style(btn: Button, card: Card, selected: bool, _retained_unused: bool = false) -> void:
+	# `_retained_unused` 是 hand-retention 时代的遗留参数，静态卡库下卡不可被"保留"
+	# （它一直在场）。保留默认参数防止外部测试调用断裂；可在下一次大重构中删除。
 	var border_color: Color = TYPE_COLORS.get(card.type, Color(0.6, 0.6, 0.6, 1))
 	var sb := StyleBoxFlat.new()
-	# 保留的卡：偏蓝色调暗示
-	if retained:
-		sb.bg_color = Color(0.18, 0.22, 0.36, 1)
-	else:
-		sb.bg_color = Color(0.16, 0.18, 0.24, 1)
+	sb.bg_color = Color(0.16, 0.18, 0.24, 1)
 	if selected:
 		sb.border_color = Color(1, 1, 0.55, 1)
-	elif retained:
-		sb.border_color = Color(1, 0.85, 0.3, 1)  # 金黄表示📌
 	else:
 		sb.border_color = border_color
-	sb.set_border_width_all(3 if (selected or retained) else 2)
+	sb.set_border_width_all(3 if selected else 2)
 	sb.set_corner_radius_all(8)
 	sb.content_margin_left = 6.0
 	sb.content_margin_right = 6.0
@@ -1699,8 +1695,8 @@ func _on_board_changed() -> void:
 	_maybe_show_no_solvable_hint()
 
 
-## 当棋盘没填满（手牌中没题可解）时，给玩家提示"过牌抽新卡"。
-## 不打扰玩家正常出题状态——只在棋盘小于预期时露出。
+## 棋盘没填满（解过若干题）时给玩家提示"结束回合补满"。静态库下，没有"过牌抽
+## 新卡"的概念——卡永远在场，题在回合结束时补满到 board_size。
 func _maybe_show_no_solvable_hint() -> void:
 	if _controller == null:
 		return
@@ -1711,9 +1707,9 @@ func _maybe_show_no_solvable_hint() -> void:
 	if actual >= expected:
 		return
 	if actual == 0:
-		_set_status_hint("手牌中没有可解的题——过牌抽新卡")
+		_set_status_hint("题板已清空 — 点 结束回合 让敌人出招并补满新题")
 	else:
-		_set_status_hint("剩余 %d 题；新题需手牌补齐后才会出现——过牌抽新卡" % actual)
+		_set_status_hint("剩余 %d 题；结束回合后补满到 %d 题" % [actual, expected])
 
 
 func _on_damage_dealt(amount: int, crit: bool, weak: bool) -> void:

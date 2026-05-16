@@ -18,7 +18,7 @@
 ##   1) 玩家点击棋盘上某道题 → set_selected_challenge_index(i)
 ##   2) 玩家点手牌 → 选中卡 → 点空槽 → try_place_card(card, slot_idx) 放入"已选中题"的槽
 ##   3) 全部填满 → submit_challenge() 结算 → 该道题被移除（解了的就消失）
-##   4) 不再回合内自动补题；如果玩家解光了 3 道题就只能过牌（或留下 kept 题继续填）
+##   4) 不再回合内自动补题；如果玩家解光了 3 道题就只能结束回合（或留下 kept 题继续填）
 ##
 ## 回合末（end_player_turn）：
 ##   - 弃手牌 + 退槽
@@ -420,7 +420,7 @@ func is_failed(challenge_index: int) -> bool:
 	return challenge_index in _failed_challenge_indices
 
 
-## 若棋盘上所有题都已失败 —— UI 可据此提示玩家"过牌"。
+## 若棋盘上所有题都已失败 —— UI 可据此提示玩家"结束回合"重置题板。
 func has_solvable_challenges() -> bool:
 	if available_challenges.is_empty():
 		return false
@@ -1028,7 +1028,7 @@ func submit_challenge(challenge_index: int = -1) -> void:
 		_on_enemy_dead()
 		return
 
-	# B4：不再回合内自动补题。如果玩家解光所有题——只能过牌或留下 kept 继续。
+	# B4：不再回合内自动补题。如果玩家解光所有题——只能结束回合或留下 kept 继续。
 	# 棋盘补满发生在 end_player_turn → _run_enemy_turn → refill_board()。
 	if selected_challenge_index >= 0:
 		challenge_advanced.emit(current_template)
@@ -1042,10 +1042,11 @@ func _combo_increment_with_extra(extra: int) -> void:
 		_combo.increment()
 
 
-## 玩家点"过牌"。
+## 玩家点"结束回合"。
 ##
 ## 静态卡库（T1 改造）：卡不再进入弃牌堆——库内容永远不变。
-## 仅清空棋盘上未解题的填槽（卡留在库里，下回合可继续使用）。
+## 仅清空棋盘上未解题的填槽（卡留在库里，下回合可继续使用）；然后敌人出招，
+## 题板在敌方回合末由 refill_board 补满。
 ##
 ## T2：清空"本回合已触发能力"列表，让下回合卡的能力可以再次触发。
 func end_player_turn() -> void:

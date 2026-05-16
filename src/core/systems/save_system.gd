@@ -153,7 +153,8 @@ func _migrate_save(data: Dictionary) -> Dictionary:
 				data["enabled_library_card_ids"] = raw
 			else:
 				data["enabled_library_card_ids"] = []
-		# 旧 deck_templates 字段保留不动（pre_run_setup 仍按 templates[0] 读取）
+		# v2.1：单词库按楼层独立存储到 decks_by_floor[floor_id]，旧 deck_templates
+		# 字段不再读取（pre_run_setup 已切换到 decks_by_floor）。
 		# 移除 hand-retention 相关字段
 		data.erase("retained_card_ids")
 		data.erase("hand_retain_max")

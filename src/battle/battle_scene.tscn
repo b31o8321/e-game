@@ -289,7 +289,7 @@ vertical_alignment = 1
 
 [node name="EndTurnButton" type="Button" parent="ActionRow"]
 layout_mode = 2
-text = "过牌 / 弃手重抽"
+text = "结束回合"
 
 ; ─── BattleLog (collapsible right-side log panel) ────────
 [node name="LogPanel" type="PanelContainer" parent="."]

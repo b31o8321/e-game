@@ -138,10 +138,9 @@ func _load_initial_deck() -> void:
 	_current_deck = []
 	if _pack == null:
 		return
-	# 优先使用 SaveSystem 上保存的 deck_templates[0]；否则用按楼层定制的起手卡组
-	# （解决"题目和手卡对不上"——0F 给字母卡 / 2F 给名词卡，而不是默认形容词）
-	var saved_ids: Array[String] = _read_saved_deck_ids()
-	var ids_to_use: Array[String] = saved_ids
+	# 每个楼层有独立的"已保存单词库"。若该楼层无存档则用 get_starting_deck_for_floor
+	# 的楼层默认（0F 字母 / 1F 形容词 / 2F 名词）。这样切楼层不会拖前一楼的库。
+	var ids_to_use: Array[String] = _read_saved_deck_ids_for_floor(_floor_id)
 	if ids_to_use.is_empty():
 		ids_to_use = _pack.get_starting_deck_for_floor(_floor_id)
 		if ids_to_use.is_empty():
@@ -300,20 +299,18 @@ func _default_permanent_upgrades() -> Dictionary:
 	}
 
 
-func _read_saved_deck_ids() -> Array[String]:
+## 读楼层独立的已保存单词库。schema: state["decks_by_floor"][floor_id] = ["card_x", ...]
+func _read_saved_deck_ids_for_floor(floor_id: String) -> Array[String]:
 	var out: Array[String] = []
 	if typeof(GameState) == TYPE_NIL or GameState.save_system == null:
 		return out
+	if floor_id == "":
+		return out
 	var state: Dictionary = GameState.save_system.load_game_state()
-	var templates: Variant = state.get("deck_templates", [])
-	if not (templates is Array):
+	var by_floor: Variant = state.get("decks_by_floor", {})
+	if not (by_floor is Dictionary):
 		return out
-	if templates.is_empty():
-		return out
-	var first: Variant = templates[0]
-	if not (first is Dictionary):
-		return out
-	var ids_raw: Variant = first.get("card_ids", [])
+	var ids_raw: Variant = by_floor.get(floor_id, [])
 	if ids_raw is Array:
 		for v in ids_raw:
 			out.append(str(v))
@@ -578,8 +575,11 @@ func _build_candidate_pool() -> Array[Card]:
 	return out
 
 
+## 把当前单词库以楼层为键持久化到存档。每楼独立，互不覆盖。
 func _persist_deck() -> void:
 	if typeof(GameState) == TYPE_NIL or GameState.save_system == null:
+		return
+	if _floor_id == "":
 		return
 	var ids: Array = []
 	for c in _current_deck:
@@ -587,16 +587,10 @@ func _persist_deck() -> void:
 			ids.append(c.id)
 	var save: SaveSystem = GameState.save_system
 	var state: Dictionary = save.load_game_state()
-	var templates_v: Variant = state.get("deck_templates", [])
-	var templates: Array = templates_v if templates_v is Array else []
-	if templates.is_empty():
-		templates.append({"name": "默认", "card_ids": ids})
-	else:
-		var first_v: Variant = templates[0]
-		var first: Dictionary = first_v if first_v is Dictionary else {"name": "默认"}
-		first["card_ids"] = ids
-		templates[0] = first
-	state["deck_templates"] = templates
+	var by_floor_v: Variant = state.get("decks_by_floor", {})
+	var by_floor: Dictionary = by_floor_v if by_floor_v is Dictionary else {}
+	by_floor[_floor_id] = ids
+	state["decks_by_floor"] = by_floor
 	save.save_game_state(state)
 
 
