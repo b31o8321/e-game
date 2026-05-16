@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Pre-push smoke gate.
+# 在 push 前自动跑 ./scripts/smoke.sh。失败 → 阻止推送。
+#
+# 安装：./scripts/install_hooks.sh  (一次性，配 core.hooksPath = scripts/hooks)
+# 绕过（紧急时）：git push --no-verify
+
+set -e
+cd "$(git rev-parse --show-toplevel)"
+
+echo "[pre-push] running smoke gate..."
+
+if ! ./scripts/smoke.sh; then
+  echo
+  echo "[pre-push] smoke FAILED — push blocked"
+  echo "[pre-push] 看上面输出修；紧急绕过用 git push --no-verify"
+  exit 1
+fi
+
+echo "[pre-push] smoke OK — proceeding to push"
