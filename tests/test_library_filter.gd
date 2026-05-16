@@ -118,13 +118,13 @@ func test_apply_library_filter_returns_all_when_no_challenge_selected() -> void:
 	assert_eq(out.size(), 2, "no selected challenge → fall back to full library")
 
 
-func test_hand_row_is_hflow_container() -> void:
-	# T4：HandRow 从 HBoxContainer 改为 HFlowContainer（容纳 10-15 张卡换行）。
+func test_hand_row_is_box_container() -> void:
+	# Phase-A UX 重做：HandRow 切回 HBoxContainer + 负 separation 让卡片重叠堆叠。
 	var s = BattleSceneScene.instantiate()
 	add_child_autofree(s)
 	var hand_row = s.get_node_or_null("HandRow")
 	assert_not_null(hand_row, "HandRow must exist")
-	assert_true(hand_row is HFlowContainer, "HandRow should be an HFlowContainer for wrap")
+	assert_true(hand_row is BoxContainer, "HandRow should be a BoxContainer for stacking")
 
 
 func test_hand_label_row_has_filter_toggle() -> void:

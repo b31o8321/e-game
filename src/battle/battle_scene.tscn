@@ -110,13 +110,14 @@ custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 text = "0/0"
 
-; ─── ApRow (AP block queue + Submit button) ───────────────
+; ─── ApRow (legacy; hidden under immediate-cast model — kept for test compat) ─
 [node name="ApRow" type="PanelContainer" parent="."]
 layout_mode = 1
+visible = false
 anchor_left = 0.04
 anchor_right = 0.96
 anchor_top = 0.21
-anchor_bottom = 0.30
+anchor_bottom = 0.23
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
@@ -146,8 +147,8 @@ text = "🎯 提交结算"
 layout_mode = 1
 anchor_left = 0.02
 anchor_right = 0.98
-anchor_top = 0.31
-anchor_bottom = 0.60
+anchor_top = 0.24
+anchor_bottom = 0.58
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
@@ -160,7 +161,8 @@ layout_mode = 2
 
 [node name="BoardLabel" type="Label" parent="ChallengeBoardPanel/ChallengeContent"]
 layout_mode = 2
-text = "题板：选一道题作答（点📌留卡）"
+text = ""
+visible = false
 modulate = Color(0.85, 0.85, 0.95, 1)
 horizontal_alignment = 1
 
@@ -173,6 +175,7 @@ alignment = 1
 [node name="HelperLabel" type="Label" parent="ChallengeBoardPanel/ChallengeContent"]
 layout_mode = 2
 text = ""
+visible = false
 modulate = Color(0.7, 0.95, 0.7, 1)
 horizontal_alignment = 1
 
@@ -249,7 +252,7 @@ text = "🎯 仅候选"
 visible = false
 
 ; ─── Hand (bottom card row, now an HFlowContainer that wraps to 2+ rows) ───
-[node name="HandRow" type="HFlowContainer" parent="."]
+[node name="HandRow" type="HBoxContainer" parent="."]
 layout_mode = 1
 anchor_left = 0.02
 anchor_right = 0.98
@@ -262,8 +265,7 @@ offset_bottom = 0.0
 size_flags_horizontal = 3
 alignment = 1
 clip_contents = false
-theme_override_constants/h_separation = -64
-theme_override_constants/v_separation = 8
+theme_override_constants/separation = -68
 
 ; ─── BottomBar (action buttons / status hint) ─────────────
 [node name="ActionRow" type="HBoxContainer" parent="."]

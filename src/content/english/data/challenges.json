@@ -111,16 +111,6 @@
             "card_letter_a"
           ],
           "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_syllable_at"
-          ],
-          "tag_match_mode": "any"
         }
       ],
       "perfect_match_card_ids": [
@@ -160,7 +150,7 @@
     {
       "template_id": "0F_phonics_dog_multi",
       "kind": "listening_fill",
-      "dialogue": "Listen: ___-o-___. (dog)",
+      "dialogue": "Listen: ___-o- ... . (dog)",
       "topic_id": "0F_phonics",
       "slots": [
         {
@@ -170,16 +160,6 @@
           "forbidden_tags": [],
           "accept_card_ids": [
             "card_letter_d"
-          ],
-          "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_letter_g"
           ],
           "tag_match_mode": "any"
         }
@@ -206,16 +186,6 @@
           "forbidden_tags": [],
           "accept_card_ids": [
             "card_letter_i"
-          ],
-          "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_syllable_ig"
           ],
           "tag_match_mode": "any"
         }
@@ -388,7 +358,7 @@
     {
       "template_id": "1F_emotion_contrast",
       "kind": "fill_in_blank",
-      "dialogue": "I am very ___ but my friend is ___.",
+      "dialogue": "I am very ___ but my friend is  ... .",
       "topic_id": "1F_emotion",
       "slots": [
         {
@@ -396,16 +366,6 @@
           "required_pos": "adjective",
           "required_tags": [
             "positive_emotion"
-          ],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
-        },
-        {
-          "required_type": "word",
-          "required_pos": "adjective",
-          "required_tags": [
-            "negative_emotion"
           ],
           "forbidden_tags": [],
           "tag_match_mode": "all",
@@ -424,35 +384,9 @@
     {
       "template_id": "1F_personality_three",
       "kind": "fill_in_blank",
-      "dialogue": "She is ___, ___, and ___.",
+      "dialogue": "She is ___,  ... , and  ... .",
       "topic_id": "1F_personality",
       "slots": [
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_brave",
-            "card_kind",
-            "card_smart",
-            "card_quiet"
-          ],
-          "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_brave",
-            "card_kind",
-            "card_smart",
-            "card_quiet"
-          ],
-          "tag_match_mode": "any"
-        },
         {
           "required_type": "",
           "required_pos": "",
@@ -714,21 +648,6 @@
           "forbidden_tags": [],
           "accept_card_ids": [
             "card_pattern_i_am_blank"
-          ],
-          "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_happy",
-            "card_brave",
-            "card_kind",
-            "card_smart",
-            "card_excited",
-            "card_strong"
           ],
           "tag_match_mode": "any"
         }
@@ -1045,7 +964,7 @@
     {
       "template_id": "2F_family_describe",
       "kind": "fill_in_blank",
-      "dialogue": "My ___ is so ___.",
+      "dialogue": "My ___ is so  ... .",
       "topic_id": "2F_family",
       "slots": [
         {
@@ -1057,22 +976,6 @@
           "forbidden_tags": [],
           "tag_match_mode": "all",
           "accept_card_ids": []
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_happy",
-            "card_kind",
-            "card_brave",
-            "card_smart",
-            "card_beautiful",
-            "card_strong",
-            "card_quiet"
-          ],
-          "tag_match_mode": "any"
         }
       ],
       "perfect_match_card_ids": [
@@ -1087,7 +990,7 @@
     {
       "template_id": "2F_body_pronoun_combo",
       "kind": "fill_in_blank",
-      "dialogue": "___ has two ___.",
+      "dialogue": "___ has two  ... .",
       "topic_id": "2F_body",
       "slots": [
         {
@@ -1101,17 +1004,6 @@
             "card_pronoun_it"
           ],
           "tag_match_mode": "any"
-        },
-        {
-          "required_type": "word",
-          "required_pos": "noun",
-          "required_tags": [
-            "body",
-            "paired_appendage"
-          ],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
         }
       ],
       "perfect_match_card_ids": [
@@ -1126,7 +1018,7 @@
     {
       "template_id": "2F_family_body_full",
       "kind": "fill_in_blank",
-      "dialogue": "My ___ has ___ ___.",
+      "dialogue": "My ___ has ... .",
       "topic_id": "2F_family",
       "slots": [
         {
@@ -1134,30 +1026,6 @@
           "required_pos": "noun",
           "required_tags": [
             "family"
-          ],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_big",
-            "card_small",
-            "card_beautiful",
-            "card_strong",
-            "card_fast"
-          ],
-          "tag_match_mode": "any"
-        },
-        {
-          "required_type": "word",
-          "required_pos": "noun",
-          "required_tags": [
-            "body"
           ],
           "forbidden_tags": [],
           "tag_match_mode": "all",
@@ -1189,16 +1057,6 @@
             "card_letter_a"
           ],
           "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_letter_t"
-          ],
-          "tag_match_mode": "any"
         }
       ],
       "perfect_match_card_ids": [
@@ -1225,16 +1083,6 @@
             "card_letter_d"
           ],
           "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_letter_g"
-          ],
-          "tag_match_mode": "any"
         }
       ],
       "perfect_match_card_ids": [
@@ -1249,7 +1097,7 @@
     {
       "template_id": "0F_elite_alphabet_seq",
       "kind": "fill_in_blank",
-      "dialogue": "F, ___, H, ___, J",
+      "dialogue": "F, ___, H,  ... , J",
       "topic_id": "0F_alphabet",
       "slots": [
         {
@@ -1259,16 +1107,6 @@
           "forbidden_tags": [],
           "accept_card_ids": [
             "card_letter_g"
-          ],
-          "tag_match_mode": "any"
-        },
-        {
-          "required_type": "",
-          "required_pos": "",
-          "required_tags": [],
-          "forbidden_tags": [],
-          "accept_card_ids": [
-            "card_letter_i"
           ],
           "tag_match_mode": "any"
         }
@@ -1285,22 +1123,18 @@
     {
       "template_id": "1F_elite_personality_pair",
       "kind": "fill_in_blank",
-      "dialogue": "She is ___ and he is ___.",
+      "dialogue": "She is ___ and he is  ... .",
       "topic_id": "1F_personality",
       "slots": [
         {
           "required_type": "word",
           "required_pos": "adjective",
-          "required_tags": ["personality"],
-          "forbidden_tags": ["negative_personality"],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
-        },
-        {
-          "required_type": "word",
-          "required_pos": "adjective",
-          "required_tags": ["personality"],
-          "forbidden_tags": ["positive_personality"],
+          "required_tags": [
+            "personality"
+          ],
+          "forbidden_tags": [
+            "negative_personality"
+          ],
           "tag_match_mode": "all",
           "accept_card_ids": []
         }
@@ -1317,24 +1151,20 @@
     {
       "template_id": "1F_elite_be_pattern_pair",
       "kind": "fill_in_blank",
-      "dialogue": "I ___ ___, you are happy.",
+      "dialogue": "I ___  ... , you are happy.",
       "topic_id": "1F_emotion",
       "slots": [
         {
           "required_type": "word",
           "required_pos": "verb_be",
-          "required_tags": ["be_verb"],
+          "required_tags": [
+            "be_verb"
+          ],
           "forbidden_tags": [],
           "tag_match_mode": "all",
-          "accept_card_ids": ["card_be_am"]
-        },
-        {
-          "required_type": "word",
-          "required_pos": "adjective",
-          "required_tags": ["personality"],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
+          "accept_card_ids": [
+            "card_be_am"
+          ]
         }
       ],
       "perfect_match_card_ids": [
@@ -1349,22 +1179,18 @@
     {
       "template_id": "1F_elite_emotion_listen",
       "kind": "listening_fill",
-      "dialogue": "Listen — She is ___ but he is ___.",
+      "dialogue": "Listen — She is ___ but he is  ... .",
       "topic_id": "1F_emotion",
       "slots": [
         {
           "required_type": "word",
           "required_pos": "adjective",
-          "required_tags": ["positive_emotion"],
-          "forbidden_tags": ["negative_emotion"],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
-        },
-        {
-          "required_type": "word",
-          "required_pos": "adjective",
-          "required_tags": ["personality"],
-          "forbidden_tags": ["positive_personality"],
+          "required_tags": [
+            "positive_emotion"
+          ],
+          "forbidden_tags": [
+            "negative_emotion"
+          ],
           "tag_match_mode": "all",
           "accept_card_ids": []
         }
@@ -1381,21 +1207,15 @@
     {
       "template_id": "2F_elite_family_body",
       "kind": "fill_in_blank",
-      "dialogue": "My ___ has my ___.",
+      "dialogue": "My ___ has my  ... .",
       "topic_id": "2F_family",
       "slots": [
         {
           "required_type": "word",
           "required_pos": "noun",
-          "required_tags": ["family"],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
-        },
-        {
-          "required_type": "word",
-          "required_pos": "noun",
-          "required_tags": ["body"],
+          "required_tags": [
+            "family"
+          ],
           "forbidden_tags": [],
           "tag_match_mode": "all",
           "accept_card_ids": []
@@ -1413,24 +1233,20 @@
     {
       "template_id": "2F_elite_pronoun_be",
       "kind": "fill_in_blank",
-      "dialogue": "She and he ___ my ___.",
+      "dialogue": "She and he ___ my  ... .",
       "topic_id": "2F_family",
       "slots": [
         {
           "required_type": "word",
           "required_pos": "verb_be",
-          "required_tags": ["be_verb"],
+          "required_tags": [
+            "be_verb"
+          ],
           "forbidden_tags": [],
           "tag_match_mode": "all",
-          "accept_card_ids": ["card_be_are"]
-        },
-        {
-          "required_type": "word",
-          "required_pos": "noun",
-          "required_tags": ["family"],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
+          "accept_card_ids": [
+            "card_be_are"
+          ]
         }
       ],
       "perfect_match_card_ids": [
@@ -1445,7 +1261,7 @@
     {
       "template_id": "2F_elite_pronoun_object",
       "kind": "fill_in_blank",
-      "dialogue": "I see ___ and ___.",
+      "dialogue": "I see ___ and  ... .",
       "topic_id": "2F_family",
       "slots": [
         {
@@ -1454,15 +1270,12 @@
           "required_tags": [],
           "forbidden_tags": [],
           "tag_match_mode": "any",
-          "accept_card_ids": ["card_pronoun_he", "card_pronoun_she", "card_pronoun_we", "card_pronoun_me"]
-        },
-        {
-          "required_type": "word",
-          "required_pos": "noun",
-          "required_tags": ["family"],
-          "forbidden_tags": [],
-          "tag_match_mode": "all",
-          "accept_card_ids": []
+          "accept_card_ids": [
+            "card_pronoun_he",
+            "card_pronoun_she",
+            "card_pronoun_we",
+            "card_pronoun_me"
+          ]
         }
       ],
       "perfect_match_card_ids": [

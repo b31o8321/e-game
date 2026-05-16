@@ -179,7 +179,7 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _shield_label: Label = $PlayerStatus/ShieldLabel
 @onready var _combo_label: Label = $PlayerStatus/ComboLabel
 @onready var _crystal_label: Label = $PlayerStatus/CrystalLabel
-@onready var _hand_row: HFlowContainer = $HandRow
+@onready var _hand_row: BoxContainer = $HandRow
 # HandLabel was moved into HandLabelRow (T4). Keep get_node_or_null for safety
 # in case tests load a stripped scene; fall back to legacy path.
 @onready var _hand_label: Label = (
@@ -232,6 +232,10 @@ func _ready() -> void:
 		_submit_button.pressed.connect(_on_submit_pressed)
 		# 单卡即施法模式下，提交按钮隐藏：每次放卡就立刻结算
 		_submit_button.visible = false
+	# 单卡即施法 → 整个 AP 排空着没意义，隐掉
+	var ap_row := get_node_or_null("ApRow")
+	if ap_row is Control:
+		(ap_row as Control).visible = false
 	if _filter_toggle_btn != null:
 		_filter_toggle_btn.pressed.connect(_on_filter_toggle_pressed)
 	_update_filter_toggle_ui()
@@ -718,20 +722,17 @@ func _make_challenge_card(idx: int, tmpl: ChallengeTemplate) -> PanelContainer:
 		hint_lbl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		dialogue_row.add_child(hint_lbl)
 
-	# ─ Footer: select/selected indicator ─
-	var footer := Label.new()
+	# ─ Footer: 失败时显示提示，其它情况靠黄色边框示意"已选"，不放冗余文字
 	var selected: bool = (idx == _controller.selected_challenge_index)
 	if failed:
+		var footer := Label.new()
 		footer.text = "已失败 — 不可作答"
 		footer.modulate = Color(0.85, 0.45, 0.45, 0.9)
-	else:
-		footer.text = ("✓ 选中作答中" if selected else "点此选中作答")
-		footer.modulate = (Color(0.95, 0.85, 0.45, 1) if selected else Color(0.65, 0.65, 0.7, 0.9))
-	footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	footer.add_theme_font_size_override("font_size", 12)
-	footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	footer.size_flags_vertical = Control.SIZE_SHRINK_END
-	vbox.add_child(footer)
+		footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		footer.add_theme_font_size_override("font_size", 12)
+		footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		footer.size_flags_vertical = Control.SIZE_SHRINK_END
+		vbox.add_child(footer)
 
 	_apply_challenge_card_style(card, selected, is_kept)
 	if failed:
