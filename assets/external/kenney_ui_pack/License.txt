@@ -1,0 +1,10 @@
+Pack: Kenney UI Pack
+Source URL: https://kenney.nl/assets/ui-pack
+Download URL: https://kenney.nl/media/pages/assets/ui-pack/f651646eab-1718203990/kenney_ui-pack.zip
+License: CC0 1.0 Universal (Public Domain)
+Author: Kenney (https://kenney.nl)
+
+Contents: UI buttons, panels, arrows, icons in PNG format (5 color themes: Blue, Green, Grey, Red, Yellow)
+Suitable for: UI HUD, menus, battle interface elements
+
+This asset is released under CC0 - no attribution required, but appreciated.

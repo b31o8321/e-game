@@ -1,0 +1,10 @@
+Pack: Kenney RPG Audio
+Source URL: https://kenney.nl/assets/rpg-audio
+Download URL: https://kenney.nl/media/pages/assets/rpg-audio/8e99002d76-1677590336/kenney_rpg-audio.zip
+License: CC0 1.0 Universal (Public Domain)
+Author: Kenney (https://kenney.nl)
+
+Contents: 51 RPG-themed SFX in .ogg format - book open/close, cloth sounds, creaks, steps, chop, belt, equipment handling
+Suitable for: card draw SFX, item use sounds, battle action audio
+
+This asset is released under CC0 - no attribution required, but appreciated.

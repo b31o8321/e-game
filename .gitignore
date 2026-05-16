@@ -24,3 +24,6 @@ user-data/
 .AppleDouble
 .LSOverride
 Thumbs.db
+
+# Claude Code worktrees
+.claude/worktrees/

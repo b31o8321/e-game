@@ -1,0 +1,10 @@
+Pack: Kenney Interface Sounds
+Source URL: https://kenney.nl/assets/interface-sounds
+Download URL: https://kenney.nl/media/pages/assets/interface-sounds/fa43c1dd4d-1677589452/kenney_interface-sounds.zip
+License: CC0 1.0 Universal (Public Domain)
+Author: Kenney (https://kenney.nl)
+
+Contents: 100 UI SFX in .ogg format - clicks, confirmations, back, close, drops, error, maximize, minimize, rollover, select, switch
+Suitable for: UI button clicks, card selection SFX, turn-start/end chimes, menu navigation
+
+This asset is released under CC0 - no attribution required, but appreciated.

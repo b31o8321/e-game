@@ -30,6 +30,9 @@ var current_deck: Array[Card] = []
 var current_equipment: Array = []           # Equipment 类未实现，先用 Array
 var current_spices: Array[String] = []      # Spice IDs
 
+# ─── 遗物（Run 内持有，撤退时丢弃）──────────────────────────────
+var equipped_relics: Array[Relic] = []
+
 # ─── 玩家 HP（局内可被 rest 节点回血）────────────────────────────
 var player_hp: int = 100
 var player_max_hp: int = 100
@@ -74,6 +77,7 @@ func start_floor(floor_id: String, pack: ContentPackBase) -> void:
 	current_deck = []
 	current_equipment = []
 	current_spices = []
+	equipped_relics = []
 	nodes_visited = []
 	new_card_ids_this_run = []
 	did_retreat_this_run = false
@@ -212,6 +216,36 @@ func add_blueprints(amount: int) -> void:
 func add_card_to_deck(card: Card) -> void:
 	if card != null:
 		current_deck.append(card)
+
+
+# ─── 遗物 API ──────────────────────────────────────────────────────
+
+## 装备遗物；同一遗物重复装备返回 false，成功返回 true。
+func add_relic(relic: Relic) -> bool:
+	if relic == null:
+		return false
+	for r in equipped_relics:
+		if r.id == relic.id:
+			return false
+	equipped_relics.append(relic)
+	return true
+
+
+## 检查是否已装备指定 id 的遗物。
+func has_relic(relic_id: String) -> bool:
+	for r in equipped_relics:
+		if r.id == relic_id:
+			return true
+	return false
+
+
+## 合计所有已装备遗物中 effect_type 匹配的 magnitude 之和。
+func get_relic_total_magnitude(effect_type: String) -> int:
+	var total: int = 0
+	for r in equipped_relics:
+		if r.effect_type == effect_type:
+			total += r.magnitude
+	return total
 
 
 ## 反舒适区：BattleController 战斗结算时上报本场新用卡。
