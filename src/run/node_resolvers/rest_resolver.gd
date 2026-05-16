@@ -47,10 +47,49 @@ static func resolve(node: RunNode, parent: Node) -> void:
 	)
 	vbox.add_child(btn_review)
 
+	var btn_boon := Button.new()
+	btn_boon.text = "🎁  抽取 Boon（随机三选一增益）"
+	btn_boon.pressed.connect(func():
+		dialog.hide()
+		_show_boon_picker(node, parent)
+	)
+	vbox.add_child(btn_boon)
+
 	dialog.add_child(vbox)
 	if parent != null:
 		parent.add_child(dialog)
 		dialog.popup_centered()
+
+
+static func _show_boon_picker(node: RunNode, parent: Node) -> void:
+	var all_boons := BoonRegistry.get_all()
+	all_boons.shuffle()
+	var choices: Array[Boon] = []
+	for i in min(3, all_boons.size()):
+		choices.append(all_boons[i])
+
+	var pick_dialog := AcceptDialog.new()
+	pick_dialog.title = "🎁 选择一个 Boon"
+	pick_dialog.dialog_hide_on_ok = false
+	var vbox2 := VBoxContainer.new()
+	vbox2.add_theme_constant_override("separation", 8)
+	vbox2.add_child(_make_label("选择一项立即生效的增益："))
+
+	for b in choices:
+		var btn := Button.new()
+		btn.text = "%s %s — %s" % [b.icon, b.display_name, b.description]
+		var captured_b: Boon = b
+		btn.pressed.connect(func():
+			BoonRegistry.apply(captured_b)
+			RunState.complete_node(node.id)
+			pick_dialog.hide()
+		)
+		vbox2.add_child(btn)
+
+	pick_dialog.add_child(vbox2)
+	if parent != null:
+		parent.add_child(pick_dialog)
+		pick_dialog.popup_centered()
 
 
 static func _upgrade_first_card() -> void:

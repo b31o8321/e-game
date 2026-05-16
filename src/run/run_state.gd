@@ -37,6 +37,9 @@ var equipped_relics: Array[Relic] = []
 var player_hp: int = 100
 var player_max_hp: int = 100
 
+# ─── Boon 临时加成（每回合开始消耗后重置）──────────────────────────
+var ap_bonus_next_turn: int = 0
+
 # ─── 已访问节点（防止重复进入同一节点）────────────────────────────
 var nodes_visited: Array[String] = []
 
@@ -82,6 +85,7 @@ func start_floor(floor_id: String, pack: ContentPackBase) -> void:
 	new_card_ids_this_run = []
 	did_retreat_this_run = false
 	act_maps = []
+	ap_bonus_next_turn = 0
 
 	if pack == null:
 		push_warning("[RunState] start_floor called with null pack")
