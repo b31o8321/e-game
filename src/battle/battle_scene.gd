@@ -145,6 +145,8 @@ var _debug_overlay: Node = null
 
 # Currently selected hand card (click-to-place flow).
 var _selected_card: Card = null
+# 单卡即施法模式：动画+结算期间锁住卡库输入，否则连点会塞爆 AP 队列。
+var _is_casting: bool = false
 # T5: Library filter mode — "all" shows full card library; "candidate" filters to
 # cards whose type/pos matches an empty slot of the currently-selected challenge.
 var _filter_mode: String = "all"
@@ -890,6 +892,8 @@ func _make_slot_node(challenge_idx: int, slot_index: int) -> PanelContainer:
 func _on_card_dropped_to_slot(card, challenge_idx: int, slot_index: int) -> void:
 	if _controller == null or card == null:
 		return
+	if _is_casting:
+		return
 	_idle_seconds_since_action = 0.0
 	# 失败的题不能再操作（一锤定音）
 	if _controller.is_failed(challenge_idx):
@@ -897,14 +901,16 @@ func _on_card_dropped_to_slot(card, challenge_idx: int, slot_index: int) -> void
 		return
 	var ok: bool = _controller.add_to_ap_queue(card, challenge_idx, slot_index)
 	if not ok:
-		_set_status_hint("AP 队列已满 — 先 Submit 或撤回再放卡")
+		_set_status_hint("施法进行中…")
 		return
 	_selected_card = null
 	_set_status_hint("")
 	_render_ap_row()
 	# 立即施法：词汇飞向敌人 → 结算 → 反馈
+	_is_casting = true
 	await _cast_card_at_slot(card, challenge_idx, slot_index)
 	_controller.submit_all_ap()
+	_is_casting = false
 	_render_hand()
 	_render_board()
 	_render_ap_row()
@@ -1119,6 +1125,8 @@ func _on_slot_clicked(event: InputEvent, challenge_idx: int, slot_index: int, pa
 	var mb: InputEventMouseButton = event as InputEventMouseButton
 	if not mb.pressed:
 		return
+	if _is_casting:
+		return
 	_idle_seconds_since_action = 0.0
 	# 失败的题不能再操作（一锤定音）
 	if _controller.is_failed(challenge_idx):
@@ -1136,20 +1144,25 @@ func _on_slot_clicked(event: InputEvent, challenge_idx: int, slot_index: int, pa
 	var tmpl: ChallengeTemplate = _controller.available_challenges[challenge_idx]
 	if tmpl == null or slot_index >= tmpl.slots.size():
 		return
-	# AP 队列模式：点击放卡 = 入队，不立即结算。提交结算只发生在 🎯 提交 按钮。
-	# add_to_ap_queue 处理：容量检查、从手牌移除、构建 APConnection、preview 计算。
-	# 验证（卡型/答案是否对）发生在 submit_all_ap → _resolve_connection。
-	var ok: bool = _controller.add_to_ap_queue(_selected_card, challenge_idx, slot_index)
-	if ok:
-		_selected_card = null
-		_set_status_hint("")
-		_render_hand()
-		_render_board()
-		_render_ap_row()
-	else:
-		# 入队失败 = AP 槽满 或 卡不在手牌（不应发生）
-		_set_status_hint("AP 槽已满，请先点 🎯 提交结算 或 撤回一条")
+	# 单卡即施法：与 drag-drop 路径一致 — 入队 + 立刻动画 + submit 清队。
+	var card_to_cast: Card = _selected_card
+	var ok: bool = _controller.add_to_ap_queue(card_to_cast, challenge_idx, slot_index)
+	if not ok:
+		_set_status_hint("施法进行中…")
 		_flash_slot_red(panel)
+		return
+	_selected_card = null
+	_set_status_hint("")
+	_render_ap_row()
+	_is_casting = true
+	await _cast_card_at_slot(card_to_cast, challenge_idx, slot_index)
+	_controller.submit_all_ap()
+	_is_casting = false
+	_render_hand()
+	_render_board()
+	_render_ap_row()
+	_render_player_status()
+	_render_enemy()
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -1325,24 +1338,116 @@ func _update_filter_toggle_ui() -> void:
 		_filter_toggle_btn.text = "📚 全部库"
 
 
+## 卡按钮采用 左 40px 竖排英文字母 + 右 ~68px 详情 的双区布局。
+## 在 HandRow 负 separation 下，右区被下一张卡盖住，露出的就是左竖字符串；
+## hover 抬起后下一张让位 → 整张卡显形，玩家看到伤害/词性/释义。
+const _CARD_LEFT_STRIP_W: float = 40.0
+
 func _make_card_button(card: Card, srs: SRSSystem) -> Button:
 	var btn := Button.new()
-	# 重叠堆叠模式：每张卡固定宽度，HandRow 负 separation 让卡互相覆盖。
 	btn.custom_minimum_size = Vector2(108, 140)
-	btn.text = _card_button_text(card, srs)
+	btn.text = ""  # 用子节点排版，不依赖按钮自带 text
 	btn.tooltip_text = _card_tooltip(card, srs)
 	btn.clip_text = false
-	btn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# 固定 SHRINK_BEGIN，避免被 container 撑开造成 negative separation 失效
 	btn.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	btn.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	_apply_card_button_style(btn, card, false, false)
+	_populate_card_button_layout(btn, card, srs)
 	btn.pressed.connect(_on_card_button_pressed.bind(card, btn))
 	# Hover：抬起 + 高 z_index 让卡盖到右侧邻居上方，露出完整内容
 	btn.mouse_entered.connect(_on_card_hover_enter.bind(btn))
 	btn.mouse_exited.connect(_on_card_hover_exit.bind(btn))
 	btn.set_meta("base_position_y", 0.0)
 	return btn
+
+
+## 给卡按钮挂上 "左竖字母 + 右详情" 两个子 Label/VBox。
+func _populate_card_button_layout(btn: Button, card: Card, srs: SRSSystem) -> void:
+	# 左侧竖排英文字母：每字符一行，固定窄宽 → 重叠堆栈中始终可见
+	var left_strip := Label.new()
+	left_strip.name = "LeftStrip"
+	left_strip.text = _vertical_letters(card.text)
+	left_strip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	left_strip.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	left_strip.add_theme_font_size_override("font_size", 20)
+	left_strip.add_theme_color_override("font_color", Color(1.0, 0.96, 0.78, 1.0))
+	left_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	left_strip.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+	left_strip.offset_left = 4
+	left_strip.offset_right = _CARD_LEFT_STRIP_W
+	left_strip.offset_top = 6
+	left_strip.offset_bottom = -6
+	btn.add_child(left_strip)
+
+	# 右侧详情：伤害 / 词性 / 能力 / 中文释义 — 被相邻卡覆盖，hover 抬起时露出
+	var right_panel := VBoxContainer.new()
+	right_panel.name = "RightPanel"
+	right_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	right_panel.add_theme_constant_override("separation", 2)
+	right_panel.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+	right_panel.offset_left = _CARD_LEFT_STRIP_W + 4
+	right_panel.offset_right = -4
+	right_panel.offset_top = 6
+	right_panel.offset_bottom = -6
+	btn.add_child(right_panel)
+
+	if card.base_damage > 0:
+		var dmg := Label.new()
+		dmg.text = "⚔%d" % card.base_damage
+		dmg.add_theme_font_size_override("font_size", 18)
+		dmg.add_theme_color_override("font_color", Color(1.0, 0.92, 0.55, 1.0))
+		dmg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		right_panel.add_child(dmg)
+	else:
+		var ico := Label.new()
+		ico.text = MasterySystem.get_icon(MasterySystem.get_level(card.id, srs))
+		ico.add_theme_font_size_override("font_size", 16)
+		ico.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		right_panel.add_child(ico)
+
+	var type_disp: String = ""
+	if card.pos != "":
+		type_disp = POS_DISPLAY.get(card.pos, card.pos)
+	elif card.type != "":
+		type_disp = TYPE_DISPLAY.get(card.type, card.type)
+	if type_disp != "":
+		var tlbl := Label.new()
+		tlbl.text = type_disp
+		tlbl.add_theme_font_size_override("font_size", 11)
+		tlbl.add_theme_color_override("font_color", Color(0.78, 0.86, 1.0, 1.0))
+		tlbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		right_panel.add_child(tlbl)
+
+	if CardAbilities.has_ability(card):
+		var abl := Label.new()
+		var icn: String = CardAbilities.icon(card.ability_type)
+		var mag: int = card.ability_magnitude
+		abl.text = ("%s+%d" % [icn, mag]) if mag > 0 else icn
+		abl.add_theme_font_size_override("font_size", 12)
+		abl.add_theme_color_override("font_color", Color(0.7, 0.95, 0.75, 1.0))
+		abl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		right_panel.add_child(abl)
+
+	if card.meaning != "":
+		var mlbl := Label.new()
+		mlbl.text = card.meaning
+		mlbl.add_theme_font_size_override("font_size", 11)
+		mlbl.add_theme_color_override("font_color", Color(0.92, 0.92, 0.92, 1.0))
+		mlbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		mlbl.custom_minimum_size = Vector2(60, 0)
+		mlbl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		right_panel.add_child(mlbl)
+
+
+## "green" → "g\nr\ne\ne\nn"; 非英文则按字符切。
+func _vertical_letters(s: String) -> String:
+	if s == null or s == "":
+		return ""
+	var out: PackedStringArray = PackedStringArray()
+	for i in s.length():
+		out.append(s[i])
+	return "\n".join(out)
 
 
 const _CARD_HOVER_LIFT: float = 14.0
