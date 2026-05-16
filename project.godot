@@ -37,7 +37,7 @@ window/stretch/aspect="expand"
 
 [gui]
 
-theme/custom="res://assets/fonts/default_theme.tres"
+theme/custom="res://assets/themes/main_theme.tres"
 theme/custom_font="res://assets/fonts/NotoSansSC-Regular.otf"
 
 [rendering]

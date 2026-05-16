@@ -1346,6 +1346,7 @@ func _get_selected_challenge() -> ChallengeTemplate:
 
 
 func _on_filter_toggle_pressed() -> void:
+	_sfx("button_click")
 	if _filter_mode == "all":
 		_filter_mode = "candidate"
 	else:
@@ -1955,6 +1956,7 @@ func _on_log_appended(message: String) -> void:
 
 
 func _on_log_toggle_pressed() -> void:
+	_sfx("button_click")
 	if _log_panel == null:
 		return
 	_log_panel.visible = not _log_panel.visible
@@ -2050,6 +2052,7 @@ func _spawn_floating_text(text: String, color: Color, near_player: bool = false)
 # ═══════════════════════════════════════════════════════════════════
 
 func _on_retreat_pressed() -> void:
+	_sfx("button_click")
 	if typeof(RunState) != TYPE_NIL and RunState != null:
 		RunState.settle_retreat()
 	if get_tree() != null:
@@ -2057,6 +2060,7 @@ func _on_retreat_pressed() -> void:
 
 
 func _on_end_turn_pressed() -> void:
+	_sfx("button_click")
 	_selected_card = null
 	_set_status_hint("")
 	_idle_seconds_since_action = 0.0
@@ -2129,6 +2133,7 @@ func _delayed_settlement() -> void:
 
 
 func _on_end_button_pressed() -> void:
+	_sfx("button_click")
 	if _controller == null:
 		return
 	if _controller.state != BattleController.State.END:

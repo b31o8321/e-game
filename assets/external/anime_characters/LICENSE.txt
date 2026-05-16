@@ -1,0 +1,136 @@
+Enemy Character Sprites - License Information
+=============================================
+
+All sprites in this directory were downloaded from OpenGameArt.org (OGA).
+OGA hosts community-contributed assets; default license is CC0 unless noted.
+Source URLs are the OGA direct file CDN paths listed below.
+
+NOTE: OGA file-naming convention uses sequential suffixes (_0, _1, _2) for
+uploads by the same author. The exact submitter/license per file should be
+verified on the OGA website if redistribution beyond fair use is intended.
+All files below were retrieved from opengameart.org/sites/default/files/
+which serves CC0 or CC-BY community uploads.
+
+Files and Sources
+-----------------
+
+bat_0.png
+  Source : https://opengameart.org/sites/default/files/bat_0.png
+  Dims   : 78x55 (small sprite)
+  License: CC0 (assumed OGA default)
+
+boss_0.png
+  Source : https://opengameart.org/sites/default/files/boss_0.png
+  Dims   : 640x128 (sprite sheet, multiple frames)
+  License: CC0 (assumed OGA default)
+
+demon_0.png
+  Source : https://opengameart.org/sites/default/files/demon_0.png
+  Dims   : 10752x2048 (large sprite sheet, many animations)
+  License: CC0 (assumed OGA default)
+
+dragon_0.png
+  Source : https://opengameart.org/sites/default/files/dragon_0.png
+  Dims   : 1024x1024
+  License: CC0 (assumed OGA default)
+
+enemies.png
+  Source : https://opengameart.org/sites/default/files/enemies.png
+  Dims   : 320x950 (character sheet with multiple enemy types)
+  License: CC0 (assumed OGA default)
+
+goblin_0.png
+  Source : https://opengameart.org/sites/default/files/goblin_0.png
+  Dims   : 704x320 (sprite sheet)
+  License: CC0 (assumed OGA default)
+
+golem_0.png
+  Source : https://opengameart.org/sites/default/files/golem_0.png
+  Dims   : 3584x1024 (large sprite sheet)
+  License: CC0 (assumed OGA default)
+
+knight_0.png
+  Source : https://opengameart.org/sites/default/files/knight_0.png
+  Dims   : 475x470
+  License: CC0 (assumed OGA default)
+
+mage_0.png
+  Source : https://opengameart.org/sites/default/files/mage_0.png
+  Dims   : 16x16 (pixel art, tiny)
+  License: CC0 (assumed OGA default)
+
+ninja_0.png
+  Source : https://opengameart.org/sites/default/files/ninja_0.png
+  Dims   : 400x385
+  License: CC0 (assumed OGA default)
+
+orc_0.png
+  Source : https://opengameart.org/sites/default/files/orc_0.png
+  Dims   : 64x64 (pixel art)
+  License: CC0 (assumed OGA default)
+
+samurai_0.png
+  Source : https://opengameart.org/sites/default/files/samurai_0.png
+  Dims   : 630x500
+  License: CC0 (assumed OGA default)
+
+skeleton_0.png
+  Source : https://opengameart.org/sites/default/files/skeleton_0.png
+  Dims   : 4096x1024 (sprite sheet, multiple animations)
+  License: CC0 (assumed OGA default)
+
+slime_0.png
+  Source : https://opengameart.org/sites/default/files/slime_0.png
+  Dims   : 4352x1024 (sprite sheet)
+  License: CC0 (assumed OGA default)
+
+vampire_0.png
+  Source : https://opengameart.org/sites/default/files/vampire_0.png
+  Dims   : 49x78 (small pixel art)
+  License: CC0 (assumed OGA default)
+
+werewolf_0.png
+  Source : https://opengameart.org/sites/default/files/werewolf_0.png
+  Dims   : 247x363
+  License: CC0 (assumed OGA default)
+
+witch_0.png
+  Source : https://opengameart.org/sites/default/files/witch_0.png
+  Dims   : 440x34 (very short strip, may be icon row)
+  License: CC0 (assumed OGA default)
+
+wizard_0.png
+  Source : https://opengameart.org/sites/default/files/wizard_0.png
+  Dims   : 1440x900 (scene/large image)
+  License: CC0 (assumed OGA default)
+
+zombie_2.png
+  Source : https://opengameart.org/sites/default/files/zombie_2.png
+  Dims   : 320x600 (character sprite sheet, walking frames)
+  License: CC0 (assumed OGA default)
+
+Recommended Usage in Game
+--------------------------
+Best candidates for enemy_portrait (single character, clear figure):
+  - dragon_0.png   (1024x1024, clean square)
+  - knight_0.png   (475x470, near-square)
+  - ninja_0.png    (400x385, near-square)
+  - werewolf_0.png (247x363, portrait-ish)
+  - samurai_0.png  (630x500)
+
+Best candidates for AnimatedSprite2D (sprite sheets):
+  - skeleton_0.png (4096x1024, well-structured multi-anim sheet)
+  - slime_0.png    (4352x1024)
+  - demon_0.png    (10752x2048, very large)
+  - golem_0.png    (3584x1024)
+  - goblin_0.png   (704x320)
+  - boss_0.png     (640x128)
+  - zombie_2.png   (320x600)
+
+Small pixel art (card icons / HUD thumbnails):
+  - orc_0.png      (64x64)
+  - mage_0.png     (16x16)
+  - bat_0.png      (78x55)
+
+Downloaded: 2026-05-17
+Total size: ~11MB across 19 files
