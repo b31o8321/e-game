@@ -39,29 +39,29 @@ var _deck_slot_max: int = 12
 @onready var _back_button: Button = $Footer/BackButton
 @onready var _launch_button: Button = $Footer/LaunchButton
 
-@onready var _class_label: Label = $Body/Sections/ClassRow/ClassLabel
-@onready var _upgrades_label: Label = $Body/Sections/ClassRow/UpgradesLabel
+@onready var _class_label: Label = $Body/Split/RightCol/ClassRow/ClassLabel
+@onready var _upgrades_label: Label = $Body/Split/RightCol/ClassRow/UpgradesLabel
 
-@onready var _deck_size_label: Label = $Body/Sections/DeckSection/DeckHeader/DeckSizeLabel
-@onready var _deck_grid: GridContainer = $Body/Sections/DeckSection/DeckScroll/DeckGrid
-@onready var _add_card_button: Button = $Body/Sections/DeckSection/DeckActionsRow/AddCardButton
-@onready var _remove_card_button: Button = $Body/Sections/DeckSection/DeckActionsRow/RemoveButton
-@onready var _recommend_button: Button = $Body/Sections/DeckSection/DeckActionsRow/RecommendButton
-@onready var _clear_button: Button = $Body/Sections/DeckSection/DeckActionsRow/ClearButton
+@onready var _deck_size_label: Label = $Body/Split/LeftCol/DeckSection/DeckHeader/DeckSizeLabel
+@onready var _deck_grid: GridContainer = $Body/Split/LeftCol/DeckSection/DeckScroll/DeckGrid
+@onready var _add_card_button: Button = $Body/Split/LeftCol/DeckSection/DeckActionsRow/AddCardButton
+@onready var _remove_card_button: Button = $Body/Split/LeftCol/DeckSection/DeckActionsRow/RemoveButton
+@onready var _recommend_button: Button = $Body/Split/LeftCol/DeckSection/DeckActionsRow/RecommendButton
+@onready var _clear_button: Button = $Body/Split/LeftCol/DeckSection/DeckActionsRow/ClearButton
 
-@onready var _analysis_fresh: Label = $Body/Sections/AnalysisSection/AnalysisGrid/FreshLabel
-@onready var _analysis_learning: Label = $Body/Sections/AnalysisSection/AnalysisGrid/LearningLabel
-@onready var _analysis_proficient: Label = $Body/Sections/AnalysisSection/AnalysisGrid/ProficientLabel
-@onready var _analysis_mastered: Label = $Body/Sections/AnalysisSection/AnalysisGrid/MasteredLabel
-@onready var _analysis_reward: Label = $Body/Sections/AnalysisSection/AnalysisGrid/RewardLabel
+@onready var _analysis_fresh: Label = $Body/Split/RightCol/AnalysisSection/AnalysisGrid/FreshLabel
+@onready var _analysis_learning: Label = $Body/Split/RightCol/AnalysisSection/AnalysisGrid/LearningLabel
+@onready var _analysis_proficient: Label = $Body/Split/RightCol/AnalysisSection/AnalysisGrid/ProficientLabel
+@onready var _analysis_mastered: Label = $Body/Split/RightCol/AnalysisSection/AnalysisGrid/MasteredLabel
+@onready var _analysis_reward: Label = $Body/Split/RightCol/AnalysisSection/AnalysisGrid/RewardLabel
 
-@onready var _equipment_label: Label = $Body/Sections/EquipmentRow/EquipmentLabel
-@onready var _spice_label: Label = $Body/Sections/EquipmentRow/SpiceLabel
-@onready var _relic_list_label: Label = $Body/Sections/RelicSection/RelicListLabel
+@onready var _equipment_label: Label = $Body/Split/RightCol/EquipmentRow/EquipmentLabel
+@onready var _spice_label: Label = $Body/Split/RightCol/EquipmentRow/SpiceLabel
+@onready var _relic_list_label: Label = $Body/Split/RightCol/RelicSection/RelicListLabel
 
-@onready var _review_button: Button = $Body/Sections/ReviewSection/ReviewActionsRow/ReviewButton
-@onready var _skip_review_button: Button = $Body/Sections/ReviewSection/ReviewActionsRow/SkipReviewButton
-@onready var _review_section: VBoxContainer = $Body/Sections/ReviewSection
+@onready var _review_button: Button = $Body/Split/RightCol/ReviewSection/ReviewActionsRow/ReviewButton
+@onready var _skip_review_button: Button = $Body/Split/RightCol/ReviewSection/ReviewActionsRow/SkipReviewButton
+@onready var _review_section: VBoxContainer = $Body/Split/RightCol/ReviewSection
 
 @onready var _status_label: Label = $StatusLabel
 

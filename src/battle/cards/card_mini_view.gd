@@ -29,8 +29,10 @@ const RARITY_COLORS: Dictionary = {
 
 @export var card: Card = null
 var mastery_level: int = 0  # MasterySystem.MasteryLevel
-## hover 时是否展开知识细节（B4 视觉降级：默认隐藏 释义/例句/音标）
-var show_knowledge_on_hover: bool = true
+## hover 时是否在卡内联展开知识细节。默认 false：避免长释义把卡撑爆 +
+## 溢出到外面（已发现 bug）。Godot 原生 tooltip_text 已含全信息，悬停会弹出
+## 系统级气泡，无需卡内联。
+var show_knowledge_on_hover: bool = false
 
 @onready var _mastery_label: Label = $Layout/HeaderRow/MasteryLabel
 @onready var _rarity_label: Label = $Layout/HeaderRow/RarityLabel
