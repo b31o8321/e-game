@@ -66,7 +66,7 @@ func test_battle_scene_relic_row_renders_two_relics():
 func test_pre_run_setup_has_relic_section():
 	var s = PreRunSetupScene.instantiate()
 	add_child_autofree(s)
-	var sec = s.get_node_or_null("Body/Sections/RelicSection")
+	var sec = s.get_node_or_null("Body/Split/RightCol/RelicSection")
 	assert_not_null(sec, "PreRunSetupScene 应有 RelicSection 节点")
 
 
@@ -81,7 +81,7 @@ func test_pre_run_setup_relic_list_label_shows_display_name():
 	add_child_autofree(s)
 
 	await get_tree().process_frame
-	var lbl: Label = s.get_node_or_null("Body/Sections/RelicSection/RelicListLabel")
+	var lbl: Label = s.get_node_or_null("Body/Split/RightCol/RelicSection/RelicListLabel")
 	assert_not_null(lbl, "RelicListLabel 应存在")
 	if lbl == null:
 		return

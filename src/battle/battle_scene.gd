@@ -2381,8 +2381,9 @@ func _render_challenge() -> void:
 # AP Row (T15)
 # ═══════════════════════════════════════════════════════════════════
 
-## 渲染 AP 行：把 controller.ap_queue 里每条连线展示为 APBlockView，
-## 后面用空 placeholder 补到 ap_max + ap_bonus_next_turn 个槽位。
+## 渲染 AP 行：把 controller.ap_queue 里每条连线展示为 APBlockView。
+## 注：ApRow 在 .tscn 里 visible=false（单卡即施法模式不需要可视队列），
+## 这里的渲染只为旧测试兼容；空 placeholder 渲染已删（玩家看不到）。
 func _render_ap_row() -> void:
 	if _ap_blocks_container == null:
 		return
@@ -2398,16 +2399,6 @@ func _render_ap_row() -> void:
 			v.reorder_requested.connect(_on_ap_reorder_requested)
 		if v.has_signal("remove_requested"):
 			v.remove_requested.connect(_on_ap_remove_requested)
-	# 空占位：补足 ap_max + ap_bonus_next_turn 个槽位
-	var total_slots: int = _controller.ap_max + _controller.ap_bonus_next_turn
-	for i in range(_controller.ap_queue.size(), total_slots):
-		var placeholder := PanelContainer.new()
-		placeholder.custom_minimum_size = Vector2(120, 96)
-		var lbl := Label.new()
-		lbl.text = "[%d]\n空" % (i + 1)
-		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		placeholder.add_child(lbl)
-		_ap_blocks_container.add_child(placeholder)
 
 
 func _on_ap_reorder_requested(from_idx: int, to_idx: int) -> void:

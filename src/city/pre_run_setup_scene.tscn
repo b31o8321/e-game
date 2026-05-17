@@ -112,6 +112,7 @@ size_flags_stretch_ratio = 2.0
 theme_override_constants/separation = 14
 
 [node name="ClassRow" type="HBoxContainer" parent="Body/Split/RightCol"]
+visible = false
 layout_mode = 2
 
 [node name="ClassLabel" type="Label" parent="Body/Split/RightCol/ClassRow"]
@@ -159,6 +160,7 @@ text = "预估本局新卡奖励：+0 词晶"
 modulate = Color(1.0, 0.85, 0.4, 1.0)
 
 [node name="EquipmentRow" type="VBoxContainer" parent="Body/Split/RightCol"]
+visible = false
 layout_mode = 2
 
 [node name="EquipmentHeader" type="Label" parent="Body/Split/RightCol/EquipmentRow"]
@@ -190,6 +192,7 @@ modulate = Color(0.75, 0.78, 0.85, 1.0)
 autowrap_mode = 2
 
 [node name="ReviewSection" type="VBoxContainer" parent="Body/Split/RightCol"]
+visible = false
 layout_mode = 2
 
 [node name="ReviewHeader" type="Label" parent="Body/Split/RightCol/ReviewSection"]
