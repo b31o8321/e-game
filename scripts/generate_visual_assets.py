@@ -96,32 +96,43 @@ def add_clouds(img, count=8, color=(255, 240, 230), alpha=130, seed=7):
     return Image.alpha_composite(img, overlay)
 
 
-def silhouette_tower(img, base_color=(40, 30, 70), alpha=235):
+def silhouette_tower(img, base_color=(40, 30, 70), alpha=235,
+                     base_y_ratio=0.95, top_y_ratio=0.18, roof_y_ratio=0.05,
+                     bw_base=240, bw_top=90):
     """Magical tower silhouette in anime fantasy style — narrow tapered
-    body with stacked tiers and a pointed roof."""
+    body with stacked tiers and a pointed roof.
+
+    base_y_ratio / top_y_ratio 控制塔的纵向区间（0=顶 1=底）。
+    城市场景把塔限制在上半部分（base_y_ratio≈0.55），给底部城镇建筑留空间。
+    """
     w, h = img.size
     overlay = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     od = ImageDraw.Draw(overlay)
     cx = w // 2
-    base_y = int(h * 0.95)
-    top_y = int(h * 0.18)
+    base_y = int(h * base_y_ratio)
+    top_y = int(h * top_y_ratio)
     # Trapezoid body
-    bw_b, bw_t = 240, 90
-    od.polygon([(cx - bw_b // 2, base_y), (cx + bw_b // 2, base_y),
-                (cx + bw_t // 2, top_y), (cx - bw_t // 2, top_y)],
+    od.polygon([(cx - bw_base // 2, base_y), (cx + bw_base // 2, base_y),
+                (cx + bw_top // 2, top_y), (cx - bw_top // 2, top_y)],
                fill=base_color + (alpha,))
-    # Tier discs
-    for tier_t, ww in [(0.78, 220), (0.62, 190), (0.46, 160), (0.32, 130)]:
-        ty = int(h * tier_t)
+    # Tier discs — proportional to (top_y_ratio, base_y_ratio) 区间
+    span = base_y_ratio - top_y_ratio
+    tier_ratios = [0.78, 0.62, 0.46, 0.32]
+    tier_widths = [int(bw_base * f) for f in (0.91, 0.79, 0.66, 0.54)]
+    for raw_r, ww in zip(tier_ratios, tier_widths):
+        # raw_r 原 0.18→0.95 区间，重映到 (top_y_ratio, base_y_ratio)
+        actual = top_y_ratio + (raw_r - 0.18) / 0.77 * span
+        ty = int(h * actual)
         od.rectangle([cx - ww // 2, ty - 16, cx + ww // 2, ty + 8],
                      fill=lerp_color(base_color, (60, 50, 110), 0.3) + (alpha,))
     # Pointed roof
-    od.polygon([(cx - bw_t // 2, top_y), (cx + bw_t // 2, top_y),
-                (cx, int(h * 0.05))],
+    od.polygon([(cx - bw_top // 2, top_y), (cx + bw_top // 2, top_y),
+                (cx, int(h * roof_y_ratio))],
                fill=lerp_color(base_color, (90, 60, 130), 0.4) + (alpha,))
-    # Windows (warm yellow glow dots)
-    for tier_t in [0.74, 0.58, 0.42]:
-        ty = int(h * tier_t)
+    # Windows (warm yellow glow dots) — 一样 remap
+    for raw_r in [0.74, 0.58, 0.42]:
+        actual = top_y_ratio + (raw_r - 0.18) / 0.77 * span
+        ty = int(h * actual)
         for dx in (-30, 0, 30):
             od.rectangle([cx + dx - 5, ty - 30, cx + dx + 5, ty - 18],
                          fill=(255, 220, 130, 230))
@@ -177,13 +188,18 @@ def bg_main_menu():
 
 
 def bg_city():
-    """Warm cozy plaza at base of tower — dusk pastels."""
+    """Warm cozy plaza at base of tower — dusk pastels.
+
+    塔限制在画面上半部（base_y_ratio=0.55），给城镇建筑留下半部空间。
+    """
     img = vgradient(BG_W, BG_H, (255, 210, 180), (90, 70, 140))
     img = add_radial_glow(img, (BG_W * 0.5, BG_H * 0.25), 200, (255, 230, 180), alpha=150)
     img = add_clouds(img, count=6, color=(255, 240, 220), alpha=120, seed=21)
-    # Small tower in distance
-    img = silhouette_tower(img, base_color=(50, 38, 85), alpha=200)
-    # Ground (city silhouette implied)
+    # Small distant tower in upper half only — let 5 buildings sit at ground in lower half.
+    img = silhouette_tower(img, base_color=(50, 38, 85), alpha=180,
+                            base_y_ratio=0.55, top_y_ratio=0.10, roof_y_ratio=0.03,
+                            bw_base=140, bw_top=60)
+    # Ground (city silhouette implied) at bottom — fills the buildings' row backdrop
     img = ground_silhouette(img, color=(35, 25, 60), height_ratio=0.16, alpha=240)
     img = vignette(img, strength=0.30)
     return img

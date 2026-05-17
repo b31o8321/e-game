@@ -1,0 +1,26 @@
+CC0 / CC-BY Background Images — City Scene Assets
+====================================================
+
+town_bg_1.jpg
+  Source : https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Bodiam-castle-10My8-1191.jpg&width=1280
+  Subject: Bodiam Castle, East Sussex, England (medieval moated castle, 1385)
+  License: Creative Commons CC BY-SA 3.0
+           Author: Antony McCallum (WyrdLight.com)
+           https://creativecommons.org/licenses/by-sa/3.0/
+  Size   : 1280 × 854 px
+
+town_bg_2.jpg
+  Source : https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/Mont_St_Michel_3%2C_Brittany%2C_France_-_July_2011.jpg&width=1280
+  Subject: Mont Saint-Michel, Brittany, France — walled island abbey town
+  License: Creative Commons CC BY-SA 3.0
+           Author: Diliff
+           https://creativecommons.org/licenses/by-sa/3.0/
+  Size   : 1280 × 908 px
+
+Usage notes
+-----------
+Both images are CC BY-SA 3.0.  You may use them freely in the game provided that:
+  1. Credit is retained in game credits or docs (author names above).
+  2. Any modified version is distributed under the same license.
+
+All images retrieved from Wikimedia Commons which enforces free licensing.
