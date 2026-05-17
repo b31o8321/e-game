@@ -3,7 +3,7 @@
 		{
 			"id": "letter_wisp",
 			"display_name": "字母游魂",
-			"max_hp": 30,
+			"max_hp": 32,
 			"base_attack": 5,
 			"topic_id": "0F_alphabet",
 			"weak_axes": [
@@ -20,8 +20,8 @@
 		{
 			"id": "phonics_phantom",
 			"display_name": "音节幻影",
-			"max_hp": 40,
-			"base_attack": 7,
+			"max_hp": 30,
+			"base_attack": 4,
 			"topic_id": "0F_phonics",
 			"weak_axes": [
 				"syllable",
@@ -37,8 +37,8 @@
 		{
 			"id": "library_dust",
 			"display_name": "书页尘灵",
-			"max_hp": 35,
-			"base_attack": 6,
+			"max_hp": 50,
+			"base_attack": 8,
 			"topic_id": "1F_emotion",
 			"weak_axes": [
 				"emotion",
@@ -72,8 +72,8 @@
 		{
 			"id": "bookworm",
 			"display_name": "书虫",
-			"max_hp": 60,
-			"base_attack": 10,
+			"max_hp": 50,
+			"base_attack": 7,
 			"topic_id": "1F_grammar",
 			"weak_axes": [
 				"sentence_pattern",
@@ -90,8 +90,8 @@
 		{
 			"id": "home_haunter",
 			"display_name": "家屋萦绕者",
-			"max_hp": 45,
-			"base_attack": 7,
+			"max_hp": 67,
+			"base_attack": 9,
 			"topic_id": "2F_family",
 			"weak_axes": [
 				"family"
@@ -107,8 +107,8 @@
 		{
 			"id": "body_blur",
 			"display_name": "形影模糊",
-			"max_hp": 55,
-			"base_attack": 9,
+			"max_hp": 68,
+			"base_attack": 10,
 			"topic_id": "2F_body",
 			"weak_axes": [
 				"body"
@@ -123,8 +123,8 @@
 		{
 			"id": "pronoun_pest",
 			"display_name": "代词捣蛋鬼",
-			"max_hp": 70,
-			"base_attack": 11,
+			"max_hp": 63,
+			"base_attack": 8,
 			"topic_id": "2F_pronoun",
 			"weak_axes": [
 				"pronoun",
@@ -143,8 +143,8 @@
 		{
 			"id": "elite_letter_master",
 			"display_name": "[精英] 字母守护者",
-			"max_hp": 60,
-			"base_attack": 8,
+			"max_hp": 67,
+			"base_attack": 9,
 			"topic_id": "0F_alphabet",
 			"weak_axes": [
 				"letter",
@@ -166,8 +166,8 @@
 		{
 			"id": "elite_book_keeper",
 			"display_name": "[精英] 图书守护者",
-			"max_hp": 90,
-			"base_attack": 11,
+			"max_hp": 82,
+			"base_attack": 12,
 			"topic_id": "1F_emotion",
 			"weak_axes": [
 				"adjective",
@@ -190,8 +190,8 @@
 		{
 			"id": "elite_family_keeper",
 			"display_name": "[精英] 家族守护者",
-			"max_hp": 100,
-			"base_attack": 13,
+			"max_hp": 102,
+			"base_attack": 14,
 			"topic_id": "2F_family",
 			"weak_axes": [
 				"noun",
@@ -214,10 +214,13 @@
 		{
 			"id": "verb_runner",
 			"display_name": "动词逃跑者",
-			"max_hp": 55,
-			"base_attack": 9,
+			"max_hp": 89,
+			"base_attack": 10,
 			"topic_id": "3F_verb",
-			"weak_axes": ["verb", "action"],
+			"weak_axes": [
+				"verb",
+				"action"
+			],
 			"challenge_template_ids": [
 				"3F_verb_go_school",
 				"3F_verb_eat_apple",
@@ -230,10 +233,14 @@
 		{
 			"id": "action_seeker",
 			"display_name": "动作追寻者",
-			"max_hp": 65,
+			"max_hp": 93,
 			"base_attack": 10,
 			"topic_id": "3F_action",
-			"weak_axes": ["verb", "action", "present_tense"],
+			"weak_axes": [
+				"verb",
+				"action",
+				"present_tense"
+			],
 			"challenge_template_ids": [
 				"3F_verb_swim_lake",
 				"3F_verb_read_book",
@@ -246,10 +253,14 @@
 		{
 			"id": "elite_verb_master",
 			"display_name": "[精英] 动词主宰",
-			"max_hp": 110,
-			"base_attack": 14,
+			"max_hp": 133,
+			"base_attack": 16,
 			"topic_id": "3F_verb",
-			"weak_axes": ["verb", "action", "present_tense"],
+			"weak_axes": [
+				"verb",
+				"action",
+				"present_tense"
+			],
 			"challenge_template_ids": [
 				"3F_verb_go_school",
 				"3F_verb_play_ball",
@@ -257,16 +268,22 @@
 				"3F_he_plays_tennis",
 				"3F_present_she_eats"
 			],
-			"ability_ids": ["regen_2", "shield_at_50"],
+			"ability_ids": [
+				"regen_2",
+				"shield_at_50"
+			],
 			"portrait_path": "res://assets/external/anime_characters/orc_0.png"
 		},
 		{
 			"id": "number_sprite",
 			"display_name": "数字精灵",
-			"max_hp": 60,
-			"base_attack": 9,
+			"max_hp": 106,
+			"base_attack": 13,
 			"topic_id": "4F_number",
-			"weak_axes": ["number", "quantity"],
+			"weak_axes": [
+				"number",
+				"quantity"
+			],
 			"challenge_template_ids": [
 				"4F_num_apples_five",
 				"4F_num_birds_three",
@@ -279,10 +296,13 @@
 		{
 			"id": "clock_phantom",
 			"display_name": "时钟幻影",
-			"max_hp": 70,
-			"base_attack": 10,
+			"max_hp": 100,
+			"base_attack": 13,
 			"topic_id": "4F_time",
-			"weak_axes": ["time", "number"],
+			"weak_axes": [
+				"time",
+				"number"
+			],
 			"challenge_template_ids": [
 				"4F_time_morning_wake",
 				"4F_time_afternoon_play",
@@ -295,10 +315,14 @@
 		{
 			"id": "elite_count_keeper",
 			"display_name": "[精英] 数量守护者",
-			"max_hp": 120,
-			"base_attack": 15,
+			"max_hp": 180,
+			"base_attack": 16,
 			"topic_id": "4F_number",
-			"weak_axes": ["number", "quantity", "time"],
+			"weak_axes": [
+				"number",
+				"quantity",
+				"time"
+			],
 			"challenge_template_ids": [
 				"4F_num_apples_five",
 				"4F_time_morning_wake",
@@ -306,16 +330,23 @@
 				"4F_num_eight_crayons",
 				"4F_num_six_pens"
 			],
-			"ability_ids": ["multi_action_2", "regen_2"],
+			"ability_ids": [
+				"multi_action_2",
+				"regen_2"
+			],
 			"portrait_path": "res://assets/external/anime_characters/wizard_0.png"
 		},
 		{
 			"id": "sentence_breaker",
 			"display_name": "句子破坏者",
-			"max_hp": 75,
-			"base_attack": 11,
+			"max_hp": 137,
+			"base_attack": 15,
 			"topic_id": "5F_sentence_form",
-			"weak_axes": ["verb", "pronoun", "sentence_pattern"],
+			"weak_axes": [
+				"verb",
+				"pronoun",
+				"sentence_pattern"
+			],
 			"challenge_template_ids": [
 				"5F_i_go_school",
 				"5F_she_is_happy",
@@ -328,10 +359,14 @@
 		{
 			"id": "grammar_ghost",
 			"display_name": "语法游魂",
-			"max_hp": 80,
-			"base_attack": 12,
+			"max_hp": 150,
+			"base_attack": 15,
 			"topic_id": "5F_compound",
-			"weak_axes": ["verb", "adjective", "be_verb"],
+			"weak_axes": [
+				"verb",
+				"adjective",
+				"be_verb"
+			],
 			"challenge_template_ids": [
 				"5F_she_is_kind",
 				"5F_i_like_cats",
@@ -344,10 +379,15 @@
 		{
 			"id": "elite_sentence_lord",
 			"display_name": "[精英] 句型领主",
-			"max_hp": 130,
-			"base_attack": 16,
+			"max_hp": 209,
+			"base_attack": 18,
 			"topic_id": "5F_sentence_form",
-			"weak_axes": ["verb", "pronoun", "adjective", "be_verb"],
+			"weak_axes": [
+				"verb",
+				"pronoun",
+				"adjective",
+				"be_verb"
+			],
 			"challenge_template_ids": [
 				"5F_i_go_school",
 				"5F_she_is_happy",
@@ -356,7 +396,10 @@
 				"5F_she_is_kind",
 				"5F_i_am_student"
 			],
-			"ability_ids": ["shield_each_turn_5", "multi_action_2"],
+			"ability_ids": [
+				"shield_each_turn_5",
+				"multi_action_2"
+			],
 			"portrait_path": "res://assets/external/anime_characters/mage_0.png"
 		}
 	]

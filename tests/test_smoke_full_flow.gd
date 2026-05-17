@@ -76,6 +76,12 @@ func test_smoke_settlement_scene_instantiates() -> void:
 
 func test_smoke_no_dead_buttons_in_battle() -> void:
 	# 死按钮 = 可见 Button 但 pressed 信号没人 connect。
+	# 先标教程已看过 → TutorialOverlay 不出，避免误判 Next/Skip 按钮
+	# （那俩按钮的 connect 发生在 _show_tutorial_step，未触发时未 connect）
+	if typeof(GameState) != TYPE_NIL and GameState.save_system != null:
+		var state := GameState.save_system.load_game_state()
+		state["tutorial_battle_seen"] = true
+		GameState.save_system.save_game_state(state)
 	var b: Control = BattleScene.instantiate()
 	add_child_autofree(b)
 	await get_tree().process_frame
@@ -87,7 +93,8 @@ func test_smoke_no_dead_buttons_in_battle() -> void:
 func _collect_dead_buttons(node: Node, out: Array[String]) -> void:
 	if node is Button:
 		var btn: Button = node
-		if btn.visible and btn.pressed.get_connections().is_empty():
+		# is_visible_in_tree 比 visible 严格：父级隐藏（如 TutorialOverlay）就算 false
+		if btn.is_visible_in_tree() and btn.pressed.get_connections().is_empty():
 			out.append(str(btn.get_path()))
 	for ch in node.get_children():
 		_collect_dead_buttons(ch, out)

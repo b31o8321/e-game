@@ -8,13 +8,24 @@
 class_name ShopResolver extends Object
 
 
-const CARD_COST: int = 10
+const CARD_COST: int = 10  # fallback; use _card_cost_for_floor() at runtime
 
 const RELIC_PRICE_BY_RARITY: Dictionary = {
 	"common":   30,
 	"uncommon": 50,
 	"rare":     80,
 }
+
+
+## 根据当前楼层返回卡片价格（0F=10, 1F=13 … 5F=25）
+static func _card_cost_for_floor() -> int:
+	var fid: String = ""
+	if RunState != null:
+		fid = RunState.current_floor_id
+	var idx: int = 0
+	if fid.length() >= 1 and fid[0].is_valid_int():
+		idx = int(fid[0])
+	return 10 + idx * 3
 
 
 ## 同步解析：在 parent 上叠加一个自定义 PanelContainer 弹窗
@@ -58,19 +69,20 @@ static func resolve(node: RunNode, pack: ContentPackBase, parent: Node) -> void:
 	for i in min(2, pool.size()):
 		card_offers.append(pool[i])
 
+	var card_price: int = _card_cost_for_floor()
 	for card in card_offers:
 		var row := HBoxContainer.new()
 		var lbl := Label.new()
-		lbl.text = "「%s」  %d 💰" % [card.text, CARD_COST]
+		lbl.text = "「%s」  %d 💰" % [card.text, card_price]
 		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(lbl)
 
 		var btn := Button.new()
-		btn.text = "买 %d 💰" % CARD_COST
-		if RunState.crystals_collected < CARD_COST:
+		btn.text = "买 %d 💰" % card_price
+		if RunState.crystals_collected < card_price:
 			btn.disabled = true
 		btn.pressed.connect(func():
-			if _try_buy_card(card, pool.size()):
+			if _try_buy_card(card, pool.size(), card_price):
 				btn.disabled = true
 				crystal_lbl.text = "🔮 词晶：%d" % RunState.crystals_collected
 				_refresh_buy_buttons(panel, crystal_lbl)
@@ -162,12 +174,14 @@ static func _try_buy_relic(relic: Relic) -> bool:
 
 
 ## 尝试购买卡片。pool_size > 0 且词晶足 → 扣词晶 + 加入牌组 → 返回 true；否则返回 false。
-static func _try_buy_card(card: Card, pool_size: int) -> bool:
+## price 默认用 _card_cost_for_floor()；也可显式传入（用于测试）。
+static func _try_buy_card(card: Card, pool_size: int, price: int = -1) -> bool:
 	if card == null or pool_size <= 0:
 		return false
-	if RunState.crystals_collected < CARD_COST:
+	var actual_price: int = price if price >= 0 else _card_cost_for_floor()
+	if RunState.crystals_collected < actual_price:
 		return false
-	RunState.crystals_collected -= CARD_COST
+	RunState.crystals_collected -= actual_price
 	RunState.add_card_to_deck(card)
 	return true
 

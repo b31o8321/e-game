@@ -33,6 +33,11 @@ var current_spices: Array[String] = []      # Spice IDs
 # ─── 遗物（Run 内持有，撤退时丢弃）──────────────────────────────
 var equipped_relics: Array[Relic] = []
 
+# ─── 装备槽（每 slot 一件，撤退时保留 — 跨 Run 持久）─────────────
+var equipped_weapon: Equipment = null
+var equipped_shield: Equipment = null
+var equipped_ring: Equipment = null
+
 # ─── 玩家 HP（局内可被 rest 节点回血）────────────────────────────
 var player_hp: int = 100
 var player_max_hp: int = 100
@@ -81,6 +86,9 @@ func start_floor(floor_id: String, pack: ContentPackBase) -> void:
 	current_equipment = []
 	current_spices = []
 	equipped_relics = []
+	equipped_weapon = null
+	equipped_shield = null
+	equipped_ring = null
 	nodes_visited = []
 	new_card_ids_this_run = []
 	did_retreat_this_run = false
@@ -141,6 +149,12 @@ func start_floor(floor_id: String, pack: ContentPackBase) -> void:
 			pool.shuffle()
 			for i in min(relic_lv, pool.size()):
 				add_relic(pool[i])
+
+	# 装备：max_hp_plus（含古老戒隐藏效果）
+	var equip_hp: int = get_combined_magnitude("max_hp_plus")
+	if equip_hp > 0:
+		player_max_hp += equip_hp
+		player_hp = player_max_hp
 
 	floor_started.emit(floor_id)
 
@@ -265,6 +279,48 @@ func get_relic_total_magnitude(effect_type: String) -> int:
 		if r.effect_type == effect_type:
 			total += r.magnitude
 	return total
+
+
+## 装备一件装备到对应 slot；返回 true 表示替换了旧装备，false 表示新装。
+func equip(item: Equipment) -> bool:
+	if item == null:
+		return false
+	var replaced: bool = false
+	match item.slot:
+		"weapon":
+			replaced = equipped_weapon != null
+			equipped_weapon = item
+		"shield":
+			replaced = equipped_shield != null
+			equipped_shield = item
+		"ring":
+			replaced = equipped_ring != null
+			equipped_ring = item
+		_:
+			push_warning("[RunState] equip: unknown slot '%s'" % item.slot)
+	return replaced
+
+
+## 合计三件装备中 effect_type 匹配的 magnitude 之和。
+## 古老戒的隐藏双效果（max_hp_plus）通过 EquipmentRegistry _defs 中 _extra_effect_type 记录，
+## 这里用固定映射处理，避免破坏 Equipment.effect_type 单一字段设计。
+func get_equipment_total_magnitude(effect_type: String) -> int:
+	var total: int = 0
+	var slots: Array = [equipped_weapon, equipped_shield, equipped_ring]
+	for eq in slots:
+		if eq == null:
+			continue
+		if eq.effect_type == effect_type:
+			total += eq.magnitude
+		# 古老戒隐藏效果：damage_boost + max_hp_plus
+		if eq.id == "eq_ancient_ring" and effect_type == "max_hp_plus":
+			total += 10
+	return total
+
+
+## 合计遗物 + 装备的同 effect_type magnitude（BattleController 钩子统一入口）。
+func get_combined_magnitude(effect_type: String) -> int:
+	return get_relic_total_magnitude(effect_type) + get_equipment_total_magnitude(effect_type)
 
 
 ## 反舒适区：BattleController 战斗结算时上报本场新用卡。

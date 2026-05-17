@@ -90,6 +90,7 @@ static func on_boss_victory(node: RunNode, pack: ContentPackBase, tree: SceneTre
 	var save: SaveSystem = GameState.save_system if typeof(GameState) != TYPE_NIL else null
 	if save != null:
 		save.record_boss_defeated(node.enemy_id)
+	_maybe_award_equipment_after_boss(node.enemy_id)
 	if pack == null or tree == null:
 		return
 	var post_panels: Array[CutscenePanel] = pack.get_boss_post_panels(node.enemy_id)
@@ -98,3 +99,20 @@ static func on_boss_victory(node: RunNode, pack: ContentPackBase, tree: SceneTre
 		if root != null and root.has_node("CutscenePlayer"):
 			var cp: Node = root.get_node("CutscenePlayer")
 			cp.play("boss_post_" + node.enemy_id, post_panels)
+
+
+## Boss 胜利后必给 1 件未装备 slot 的装备（优先空槽；全满则随机替换）。
+static func _maybe_award_equipment_after_boss(_boss_id: String) -> void:
+	if typeof(RunState) == TYPE_NIL or RunState == null:
+		return
+	var pool: Array[Equipment] = EquipmentRegistry.get_all()
+	pool.shuffle()
+	for eq in pool:
+		var already_equipped: bool = (
+			RunState.equipped_weapon == eq
+			or RunState.equipped_shield == eq
+			or RunState.equipped_ring == eq
+		)
+		if not already_equipped:
+			RunState.equip(eq)
+			return

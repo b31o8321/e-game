@@ -239,9 +239,19 @@ func _render_analysis() -> void:
 
 
 func _render_equipment() -> void:
-	# Phase 4.2 只读占位（Phase 4.3 接入完整槽位选择）
+	# 读取 RunState 中三个装备槽并展示摘要
+	var weapon_text: String = "无"
+	var shield_text: String = "无"
+	var ring_text: String = "无"
+	if typeof(RunState) != TYPE_NIL and RunState != null:
+		if RunState.equipped_weapon != null:
+			weapon_text = "%s %s" % [RunState.equipped_weapon.icon, RunState.equipped_weapon.display_name]
+		if RunState.equipped_shield != null:
+			shield_text = "%s %s" % [RunState.equipped_shield.icon, RunState.equipped_shield.display_name]
+		if RunState.equipped_ring != null:
+			ring_text = "%s %s" % [RunState.equipped_ring.icon, RunState.equipped_ring.display_name]
 	if _equipment_label != null:
-		_equipment_label.text = "装备：⚔ 木剑  /  🛡 无  /  💍 无"
+		_equipment_label.text = "武器：%s  /  护盾：%s  /  戒指：%s" % [weapon_text, shield_text, ring_text]
 	if _spice_label != null:
 		_spice_label.text = "卷轴：📜 (Phase 4.3)"
 

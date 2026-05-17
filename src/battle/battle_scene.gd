@@ -27,6 +27,25 @@ const WRONG_ANSWER_MODAL_SCENE: String = "res://src/battle/wrong_answer_modal.ts
 const TUTORIAL_CFG_PATH: String = "user://battle_prefs.cfg"
 const TUTORIAL_FLAG_KEY: String = "seen_battle_tutorial"
 
+const TUTORIAL_STEPS: Array = [
+	{
+		"title": "选卡片",
+		"body": "点底部一张单词卡选中。绿色框 = 完美匹配，蓝色 = 通用。",
+	},
+	{
+		"title": "放入题板",
+		"body": "三种方式放卡：\n• 双击该卡 → 自动放入第一个合法槽\n• 按 Enter / Space → 同上\n• 拖动卡片到题板的 ___ 空格",
+	},
+	{
+		"title": "结束回合",
+		"body": "解完手上的题或卡住了 → 点右下 [结束回合]。\n敌人会出招，然后题板补满新题。",
+	},
+	{
+		"title": "Boss 卷轴",
+		"body": "Boss 战开始可能弹出 [卷轴] modal — 朗读 / 听写 / 选词 → 成功额外暴击。",
+	},
+]
+
 const SLOT_PLACEHOLDER: String = "___"
 
 const TYPE_COLORS: Dictionary = {
@@ -198,6 +217,11 @@ var _hovered_slot: Vector2i = Vector2i(-1, -1)
 @onready var _end_sub_label: Label = $EndOverlay/EndContent/EndSubLabel
 @onready var _end_button: Button = $EndOverlay/EndContent/EndButton
 @onready var _tutorial_overlay: ColorRect = $TutorialOverlay
+@onready var _tutorial_step_label: Label = get_node_or_null("TutorialOverlay/TutorialContent/TutorialBox/StepLabel")
+@onready var _tutorial_title_label: Label = get_node_or_null("TutorialOverlay/TutorialContent/TutorialBox/TutorialTitle")
+@onready var _tutorial_body_label: Label = get_node_or_null("TutorialOverlay/TutorialContent/TutorialBox/TutorialBody")
+@onready var _tutorial_next_button: Button = get_node_or_null("TutorialOverlay/TutorialContent/TutorialBox/TutorialButtons/NextButton")
+@onready var _tutorial_skip_button: Button = get_node_or_null("TutorialOverlay/TutorialContent/TutorialBox/TutorialButtons/SkipButton")
 @onready var _log_toggle_button: Button = get_node_or_null("TopBar/TopRow/LogToggleButton")
 @onready var _log_panel: PanelContainer = get_node_or_null("LogPanel")
 @onready var _log_text: RichTextLabel = get_node_or_null("LogPanel/LogMargin/LogColumn/LogText")
@@ -212,6 +236,7 @@ const FeedbackModalScene = preload("res://src/feedback/feedback_modal.tscn")
 const ANIM_PER_AP_BLOCK_S: float = 0.4
 
 var _is_resolving: bool = false
+var _tutorial_step: int = 0
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -2270,7 +2295,7 @@ func _maybe_play_boss_post(enemy: EnemyData) -> void:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# First-time tutorial overlay
+# First-time tutorial overlay (multi-step)
 # ═══════════════════════════════════════════════════════════════════
 
 func _maybe_show_tutorial() -> void:
@@ -2279,17 +2304,57 @@ func _maybe_show_tutorial() -> void:
 	if _has_seen_tutorial():
 		_tutorial_overlay.visible = false
 		return
+	# Wire step buttons (safe to call multiple times; guard with is_connected check)
+	if _tutorial_next_button != null and not _tutorial_next_button.pressed.is_connected(_on_tutorial_next_pressed):
+		_tutorial_next_button.pressed.connect(_on_tutorial_next_pressed)
+	if _tutorial_skip_button != null and not _tutorial_skip_button.pressed.is_connected(_dismiss_tutorial):
+		_tutorial_skip_button.pressed.connect(_dismiss_tutorial)
+	_tutorial_step = 0
+	_show_tutorial_step()
+
+
+func _show_tutorial_step() -> void:
+	if _tutorial_overlay == null:
+		return
+	if _tutorial_step >= TUTORIAL_STEPS.size():
+		_dismiss_tutorial()
+		return
+	var step: Dictionary = TUTORIAL_STEPS[_tutorial_step]
+	if _tutorial_step_label != null:
+		_tutorial_step_label.text = "教程 %d/%d" % [_tutorial_step + 1, TUTORIAL_STEPS.size()]
+	if _tutorial_title_label != null:
+		_tutorial_title_label.text = step.get("title", "")
+	if _tutorial_body_label != null:
+		_tutorial_body_label.text = step.get("body", "")
+	# Last step: change button label to "完成"
+	if _tutorial_next_button != null:
+		if _tutorial_step >= TUTORIAL_STEPS.size() - 1:
+			_tutorial_next_button.text = "完成"
+		else:
+			_tutorial_next_button.text = "下一步 >"
 	_tutorial_overlay.visible = true
 
 
+func _on_tutorial_next_pressed() -> void:
+	_tutorial_step += 1
+	_show_tutorial_step()
+
+
 func _dismiss_tutorial() -> void:
-	if _tutorial_overlay == null:
-		return
-	_tutorial_overlay.visible = false
+	if _tutorial_overlay != null:
+		_tutorial_overlay.visible = false
 	_set_seen_tutorial()
 
 
 func _has_seen_tutorial() -> bool:
+	# Primary: check SaveSystem flag "tutorial_battle_seen"
+	if typeof(GameState) != TYPE_NIL and GameState != null:
+		var ss: Variant = GameState.get("save_system")
+		if ss != null:
+			var state: Dictionary = ss.load_game_state()
+			if state.get("tutorial_battle_seen", false):
+				return true
+	# Fallback: legacy ConfigFile flag (keeps backward compat)
 	var cfg := ConfigFile.new()
 	var err: int = cfg.load(TUTORIAL_CFG_PATH)
 	if err != OK:
@@ -2298,6 +2363,14 @@ func _has_seen_tutorial() -> bool:
 
 
 func _set_seen_tutorial() -> void:
+	# Write to SaveSystem
+	if typeof(GameState) != TYPE_NIL and GameState != null:
+		var ss: Variant = GameState.get("save_system")
+		if ss != null:
+			var state: Dictionary = ss.load_game_state()
+			state["tutorial_battle_seen"] = true
+			ss.save_game_state(state)
+	# Also write legacy ConfigFile so old checks still work
 	var cfg := ConfigFile.new()
 	cfg.load(TUTORIAL_CFG_PATH)
 	cfg.set_value("battle", TUTORIAL_FLAG_KEY, true)

@@ -3,7 +3,7 @@
 		{
 			"id": "letter_chaos",
 			"display_name": "字母混乱者",
-			"max_hp": 60,
+			"max_hp": 108,
 			"phases": 1,
 			"weak_axes": [
 				"letter"
@@ -30,7 +30,7 @@
 		{
 			"id": "phonics_spirit",
 			"display_name": "发音之灵",
-			"max_hp": 70,
+			"max_hp": 107,
 			"phases": 1,
 			"weak_axes": [
 				"syllable",
@@ -54,7 +54,7 @@
 		{
 			"id": "letter_warden",
 			"display_name": "字母守关者",
-			"max_hp": 120,
+			"max_hp": 114,
 			"phases": 2,
 			"weak_axes": [
 				"letter",
@@ -81,7 +81,7 @@
 		{
 			"id": "fog_whisperer",
 			"display_name": "迷雾低吟者",
-			"max_hp": 80,
+			"max_hp": 143,
 			"phases": 1,
 			"weak_axes": [
 				"emotion",
@@ -106,7 +106,7 @@
 		{
 			"id": "silent_sigher",
 			"display_name": "静默叹息者",
-			"max_hp": 90,
+			"max_hp": 157,
 			"phases": 1,
 			"weak_axes": [
 				"personality"
@@ -133,7 +133,7 @@
 		{
 			"id": "librarian",
 			"display_name": "图书管理员",
-			"max_hp": 180,
+			"max_hp": 140,
 			"phases": 2,
 			"weak_axes": [
 				"adjective",
@@ -162,7 +162,7 @@
 		{
 			"id": "family_scatter",
 			"display_name": "家族散乱者",
-			"max_hp": 90,
+			"max_hp": 179,
 			"phases": 1,
 			"weak_axes": [
 				"family"
@@ -186,7 +186,7 @@
 		{
 			"id": "body_lost",
 			"display_name": "形体迷失者",
-			"max_hp": 100,
+			"max_hp": 174,
 			"phases": 1,
 			"weak_axes": [
 				"body"
@@ -209,7 +209,7 @@
 		{
 			"id": "verb_phantom",
 			"display_name": "动词幻影",
-			"max_hp": 90,
+			"max_hp": 210,
 			"phases": 1,
 			"weak_axes": [
 				"verb",
@@ -234,7 +234,7 @@
 		{
 			"id": "action_spirit",
 			"display_name": "行动之灵",
-			"max_hp": 100,
+			"max_hp": 217,
 			"phases": 1,
 			"weak_axes": [
 				"verb",
@@ -260,7 +260,7 @@
 		{
 			"id": "tense_guardian",
 			"display_name": "时态守卫者",
-			"max_hp": 200,
+			"max_hp": 202,
 			"phases": 2,
 			"weak_axes": [
 				"verb",
@@ -289,7 +289,7 @@
 		{
 			"id": "number_chaos",
 			"display_name": "数字混乱者",
-			"max_hp": 90,
+			"max_hp": 245,
 			"phases": 1,
 			"weak_axes": [
 				"number",
@@ -314,7 +314,7 @@
 		{
 			"id": "time_spirit",
 			"display_name": "时间之灵",
-			"max_hp": 100,
+			"max_hp": 234,
 			"phases": 1,
 			"weak_axes": [
 				"time",
@@ -339,7 +339,7 @@
 		{
 			"id": "count_warden",
 			"display_name": "数量守关者",
-			"max_hp": 210,
+			"max_hp": 235,
 			"phases": 2,
 			"weak_axes": [
 				"number",
@@ -367,7 +367,7 @@
 		{
 			"id": "sentence_weaver",
 			"display_name": "句子编织者",
-			"max_hp": 100,
+			"max_hp": 320,
 			"phases": 1,
 			"weak_axes": [
 				"verb",
@@ -393,7 +393,7 @@
 		{
 			"id": "grammar_lord",
 			"display_name": "语法领主",
-			"max_hp": 110,
+			"max_hp": 302,
 			"phases": 1,
 			"weak_axes": [
 				"verb",
@@ -419,7 +419,7 @@
 		{
 			"id": "final_warden",
 			"display_name": "终极守关者",
-			"max_hp": 220,
+			"max_hp": 284,
 			"phases": 2,
 			"weak_axes": [
 				"verb",
@@ -449,7 +449,7 @@
 		{
 			"id": "family_guardian",
 			"display_name": "家庭守护者",
-			"max_hp": 200,
+			"max_hp": 184,
 			"phases": 2,
 			"weak_axes": [
 				"family",

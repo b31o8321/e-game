@@ -13,7 +13,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -39,7 +39,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -85,7 +85,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -108,7 +108,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -134,7 +134,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -157,7 +157,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -180,7 +180,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -203,7 +203,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -229,7 +229,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -298,7 +298,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -344,7 +344,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -367,7 +367,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -413,7 +413,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -436,7 +436,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -459,7 +459,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -505,7 +505,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 4,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -528,7 +528,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -551,7 +551,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -645,7 +645,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -669,7 +669,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 8,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -717,7 +717,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 7,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -741,7 +741,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -765,7 +765,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -789,7 +789,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 7,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -813,7 +813,7 @@
         "grade_3"
       ],
       "skill": "phonetics",
-      "base_damage": 8,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -883,7 +883,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -938,7 +938,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -989,7 +989,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1094,7 +1094,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1117,7 +1117,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 4,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1140,7 +1140,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1163,7 +1163,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1185,7 +1185,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1210,7 +1210,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1237,7 +1237,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1261,7 +1261,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1286,7 +1286,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1310,7 +1310,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 10,
+      "base_damage": 5,
       "rarity": "rare",
       "on_play_effect": "",
       "icon_path": "",
@@ -1336,7 +1336,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1362,7 +1362,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1388,7 +1388,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1412,7 +1412,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1438,7 +1438,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 5,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1462,7 +1462,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1486,7 +1486,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1510,7 +1510,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 10,
+      "base_damage": 6,
       "rarity": "rare",
       "on_play_effect": "",
       "icon_path": "",
@@ -1537,7 +1537,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1561,7 +1561,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1586,7 +1586,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1611,7 +1611,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1636,7 +1636,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 5,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1660,7 +1660,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 5,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1683,7 +1683,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 10,
+      "base_damage": 6,
       "rarity": "rare",
       "on_play_effect": "",
       "icon_path": "",
@@ -1710,7 +1710,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 10,
+      "base_damage": 6,
       "rarity": "rare",
       "on_play_effect": "",
       "icon_path": "",
@@ -1737,7 +1737,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 10,
+      "base_damage": 7,
       "rarity": "rare",
       "on_play_effect": "",
       "icon_path": "",
@@ -1762,7 +1762,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 4,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1787,7 +1787,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 4,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1809,7 +1809,7 @@
         "grade_3"
       ],
       "skill": "grammar",
-      "base_damage": 4,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1833,7 +1833,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1860,7 +1860,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1884,7 +1884,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 10,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1908,7 +1908,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1932,7 +1932,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -1956,7 +1956,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 10,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2004,7 +2004,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2027,7 +2027,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 10,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2054,7 +2054,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2102,7 +2102,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2126,7 +2126,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2150,7 +2150,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2198,7 +2198,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2222,7 +2222,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2270,7 +2270,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 9,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2294,7 +2294,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2318,7 +2318,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2342,7 +2342,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2366,7 +2366,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2390,7 +2390,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2414,7 +2414,7 @@
         "grade_3"
       ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2438,7 +2438,7 @@
         "grade_4"
       ],
       "skill": "grammar",
-      "base_damage": 6,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2487,7 +2487,7 @@
         "grade_4"
       ],
       "skill": "grammar",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2587,7 +2587,7 @@
         "grade_4"
       ],
       "skill": "grammar",
-      "base_damage": 6,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2659,7 +2659,7 @@
         "grade_4"
       ],
       "skill": "grammar",
-      "base_damage": 8,
+      "base_damage": 6,
       "rarity": "rare",
       "on_play_effect": "",
       "icon_path": "",
@@ -2674,9 +2674,15 @@
       "text": "run",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_verb", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_verb",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2691,7 +2697,13 @@
       "text": "eat",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_verb", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_verb",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 7,
       "rarity": "common",
@@ -2708,9 +2720,16 @@
       "text": "play",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_verb", "3F_action", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_verb",
+        "3F_action",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2725,7 +2744,13 @@
       "text": "swim",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_action", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_action",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 7,
       "rarity": "common",
@@ -2742,7 +2767,13 @@
       "text": "read",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_action", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_action",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 7,
       "rarity": "common",
@@ -2759,9 +2790,15 @@
       "text": "write",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_action", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_action",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2776,7 +2813,14 @@
       "text": "go",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_present_simple", "3F_verb", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_present_simple",
+        "3F_verb",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 8,
       "rarity": "common",
@@ -2793,7 +2837,13 @@
       "text": "like",
       "type": "word",
       "pos": "verb",
-      "tags": ["verb", "action", "present_tense", "3F_present_simple", "grade_3"],
+      "tags": [
+        "verb",
+        "action",
+        "present_tense",
+        "3F_present_simple",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 7,
       "rarity": "common",
@@ -2810,7 +2860,12 @@
       "text": "one",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 6,
       "rarity": "common",
@@ -2827,7 +2882,12 @@
       "text": "two",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 6,
       "rarity": "common",
@@ -2844,9 +2904,14 @@
       "text": "three",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2861,7 +2926,12 @@
       "text": "four",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 6,
       "rarity": "common",
@@ -2878,9 +2948,15 @@
       "text": "five",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "4F_time", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "4F_time",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 6,
+      "base_damage": 7,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2895,9 +2971,14 @@
       "text": "six",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2912,9 +2993,15 @@
       "text": "seven",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "4F_quantity", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "4F_quantity",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2929,9 +3016,15 @@
       "text": "eight",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "4F_quantity", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "4F_quantity",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2946,7 +3039,13 @@
       "text": "nine",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "4F_quantity", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "4F_quantity",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 7,
       "rarity": "common",
@@ -2963,9 +3062,15 @@
       "text": "ten",
       "type": "word",
       "pos": "number",
-      "tags": ["number", "quantity", "4F_number", "4F_quantity", "grade_3"],
+      "tags": [
+        "number",
+        "quantity",
+        "4F_number",
+        "4F_quantity",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 6,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2980,9 +3085,14 @@
       "text": "morning",
       "type": "word",
       "pos": "noun",
-      "tags": ["noun", "time", "4F_time", "grade_3"],
+      "tags": [
+        "noun",
+        "time",
+        "4F_time",
+        "grade_3"
+      ],
       "skill": "vocab",
-      "base_damage": 7,
+      "base_damage": 8,
       "rarity": "common",
       "on_play_effect": "",
       "icon_path": "",
@@ -2997,7 +3107,12 @@
       "text": "afternoon",
       "type": "word",
       "pos": "noun",
-      "tags": ["noun", "time", "4F_time", "grade_3"],
+      "tags": [
+        "noun",
+        "time",
+        "4F_time",
+        "grade_3"
+      ],
       "skill": "vocab",
       "base_damage": 7,
       "rarity": "common",

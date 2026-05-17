@@ -128,7 +128,9 @@ func test_english_pack_loads_8_enemies() -> void:
 	var pack := loader.get_pack("english_grade46")
 	var wisp: EnemyData = pack.get_enemy("letter_wisp")
 	assert_not_null(wisp, "letter_wisp should be loaded")
-	assert_eq(wisp.max_hp, 30)
+	# 0F 普通敌人 max_hp 在 30-40 区间（Slice 23 楼层曲线后；具体值 hash 决定）
+	assert_gte(wisp.max_hp, 30)
+	assert_lte(wisp.max_hp, 40)
 	assert_true("letter" in wisp.weak_axes)
 
 
@@ -137,7 +139,9 @@ func test_english_pack_loads_9_bosses() -> void:
 	var b: BossBase = pack.get_boss("librarian")
 	assert_not_null(b, "librarian boss should load")
 	assert_eq(b.boss_id, "librarian")
-	assert_eq(b.max_hp, 180)
+	# Slice 23 楼层曲线后 boss HP 100-320 区间，librarian 落在 1F-2F 段
+	assert_gte(b.max_hp, 100)
+	assert_lte(b.max_hp, 200)
 	b.queue_free()  # BossBase 是 Node，需手动释放避免 orphan
 
 

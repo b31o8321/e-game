@@ -160,7 +160,6 @@ text = "预估本局新卡奖励：+0 词晶"
 modulate = Color(1.0, 0.85, 0.4, 1.0)
 
 [node name="EquipmentRow" type="VBoxContainer" parent="Body/Split/RightCol"]
-visible = false
 layout_mode = 2
 
 [node name="EquipmentHeader" type="Label" parent="Body/Split/RightCol/EquipmentRow"]

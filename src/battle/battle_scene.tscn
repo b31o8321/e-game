@@ -390,7 +390,7 @@ modulate = Color(0.85, 0.85, 0.95, 1)
 layout_mode = 2
 text = "继续"
 
-; ─── Tutorial overlay (first battle) ─────────────────────
+; ─── Tutorial overlay (first battle, multi-step) ──────────
 [node name="TutorialOverlay" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -406,27 +406,42 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -260.0
-offset_top = -140.0
-offset_right = 260.0
-offset_bottom = 140.0
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = 160.0
 
 [node name="TutorialBox" type="VBoxContainer" parent="TutorialOverlay/TutorialContent"]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="StepLabel" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
+layout_mode = 2
+text = "教程 1/4"
+modulate = Color(0.7, 0.85, 1.0, 1)
+horizontal_alignment = 1
 
 [node name="TutorialTitle" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
 layout_mode = 2
-text = "玩法提示"
+text = "选卡片"
 horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
 
 [node name="TutorialBody" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
 layout_mode = 2
-text = "题板有多道题，每道效果不同（⚔伤害 / 💚回血 / 🛡护盾 / 🎴抽牌 / 📚加题）。\n点一道题选中 → 选手牌 → 点空格放入。\n点📌留下可保留某题到下回合，类似留卡。"
+text = "点底部一张单词卡选中。绿色框 = 完美匹配，蓝色 = 通用。"
 autowrap_mode = 2
 horizontal_alignment = 1
 
-[node name="TutorialFooter" type="Label" parent="TutorialOverlay/TutorialContent/TutorialBox"]
+[node name="TutorialButtons" type="HBoxContainer" parent="TutorialOverlay/TutorialContent/TutorialBox"]
 layout_mode = 2
-text = "（点击任意处或按 ESC 关闭）"
-modulate = Color(0.7, 0.7, 0.8, 1)
-horizontal_alignment = 1
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="SkipButton" type="Button" parent="TutorialOverlay/TutorialContent/TutorialBox/TutorialButtons"]
+layout_mode = 2
+text = "跳过"
+
+[node name="NextButton" type="Button" parent="TutorialOverlay/TutorialContent/TutorialBox/TutorialButtons"]
+layout_mode = 2
+text = "下一步 >"

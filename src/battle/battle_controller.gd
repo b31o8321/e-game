@@ -919,9 +919,9 @@ func submit_challenge(challenge_index: int = -1) -> void:
 	var shield_mod: float = float(card_result.get("shield_modifier", 1.0))
 	base_damage = int(round(float(base_damage) * dmg_mod))
 
-	# 遗物：damage_boost（每次攻击基础伤害 +magnitude）
+	# 遗物 + 装备：damage_boost（每次攻击基础伤害 +magnitude）
 	if _has_run_state():
-		var relic_dmg_boost: int = RunState.get_relic_total_magnitude("damage_boost")
+		var relic_dmg_boost: int = RunState.get_combined_magnitude("damage_boost")
 		if relic_dmg_boost > 0:
 			base_damage += relic_dmg_boost
 
@@ -1073,9 +1073,9 @@ func _combo_increment_with_extra(extra: int) -> void:
 	_combo.increment()
 	for _i in max(0, extra):
 		_combo.increment()
-	# 遗物：combo_extra_chance
+	# 遗物 + 装备：combo_extra_chance
 	if _has_run_state():
-		var relic_chance: int = RunState.get_relic_total_magnitude("combo_extra_chance")
+		var relic_chance: int = RunState.get_combined_magnitude("combo_extra_chance")
 		if relic_chance > 0 and randi() % 100 < relic_chance:
 			_combo.increment()
 
@@ -1100,9 +1100,9 @@ func end_player_turn() -> void:
 			slots[j] = null
 	cards_played_this_turn = 0
 	challenges_solved_this_turn = 0
-	# 遗物：heal_per_turn（回合结束回血）
+	# 遗物 + 装备：heal_per_turn（回合结束回血）
 	if _has_run_state():
-		var relic_heal: int = RunState.get_relic_total_magnitude("heal_per_turn")
+		var relic_heal: int = RunState.get_combined_magnitude("heal_per_turn")
 		if relic_heal > 0:
 			var actual_heal: int = min(relic_heal, player_max_hp - player_hp)
 			if actual_heal > 0:
@@ -1341,9 +1341,9 @@ func _run_enemy_turn() -> void:
 	# 刷新棋盘：保留 kept 题，其它换新
 	refill_board()
 	hand_changed.emit(card_library.duplicate())
-	# 遗物：shield_per_turn（每回合开始给玩家加护盾）
+	# 遗物 + 装备：shield_per_turn（每回合开始给玩家加护盾）
 	if _has_run_state():
-		var relic_shield: int = RunState.get_relic_total_magnitude("shield_per_turn")
+		var relic_shield: int = RunState.get_combined_magnitude("shield_per_turn")
 		if relic_shield > 0:
 			player_shield += relic_shield
 			shielded.emit(relic_shield)
@@ -1360,8 +1360,8 @@ func _on_enemy_dead() -> void:
 			RunState.add_crystals(5 * new_card_ids.size())
 			RunState.add_crystals(10)
 			new_cards_unlocked.emit(new_card_ids)
-		# 遗物：crystal_bonus（战斗胜利额外词晶）
-		var relic_crystals: int = RunState.get_relic_total_magnitude("crystal_bonus")
+		# 遗物 + 装备：crystal_bonus（战斗胜利额外词晶）
+		var relic_crystals: int = RunState.get_combined_magnitude("crystal_bonus")
 		if relic_crystals > 0:
 			RunState.add_crystals(relic_crystals)
 	if _has_game_state() and GameState.save_system != null and _enemy != null:
