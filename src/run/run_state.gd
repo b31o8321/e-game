@@ -90,42 +90,57 @@ func start_floor(floor_id: String, pack: ContentPackBase) -> void:
 	if pack == null:
 		push_warning("[RunState] start_floor called with null pack")
 		floor_config = {}
-		floor_started.emit(floor_id)
-		return
+	else:
+		floor_config = pack.get_floor_config(floor_id)
+		if floor_config.is_empty():
+			# 内容包没实现 / 没该楼层；提供合理默认让流程不至于完全跑不通
+			push_warning("[RunState] floor_config empty for %s; using default skeleton" % floor_id)
+			floor_config = _default_floor_skeleton(floor_id)
 
-	floor_config = pack.get_floor_config(floor_id)
-	if floor_config.is_empty():
-		# 内容包没实现 / 没该楼层；提供合理默认让流程不至于完全跑不通
-		push_warning("[RunState] floor_config empty for %s; using default skeleton" % floor_id)
-		floor_config = _default_floor_skeleton(floor_id)
-
-	# 起手牌组：优先按楼层定制（解决"题目与手卡不对应"）；
-	# 子类未实现 get_starting_deck_for_floor 时基类回退到 get_starting_deck_card_ids。
-	var starting_ids: Array[String] = []
-	if pack != null:
-		starting_ids = pack.get_starting_deck_for_floor(floor_id)
+		# 起手牌组：优先按楼层定制（解决"题目与手卡不对应"）；
+		# 子类未实现 get_starting_deck_for_floor 时基类回退到 get_starting_deck_card_ids。
+		var starting_ids: Array[String] = pack.get_starting_deck_for_floor(floor_id)
 		if starting_ids.is_empty():
 			starting_ids = pack.get_starting_deck_card_ids()
-	for cid in starting_ids:
-		var c: Card = pack.get_card(cid)
-		if c != null:
-			current_deck.append(c)
+		for cid in starting_ids:
+			var c: Card = pack.get_card(cid)
+			if c != null:
+				current_deck.append(c)
 
-	# 玩家 HP
+		# 生成三幕地图
+		var acts_in: Variant = floor_config.get("acts", [])
+		var acts: Array = acts_in if acts_in is Array else []
+		for i in acts.size():
+			var act_cfg_in: Variant = acts[i]
+			var act_cfg: Dictionary = act_cfg_in if act_cfg_in is Dictionary else {}
+			var gen_cfg: Dictionary = act_cfg.duplicate()
+			gen_cfg["act_index"] = i
+			gen_cfg["floor_id"] = floor_id
+			var run_map: RunMap = RunMapGenerator.generate(gen_cfg)
+			act_maps.append(run_map)
+
+	# 玩家 HP（基础值来自 floor_config，pack=null 时用默认 100）
 	player_max_hp = int(floor_config.get("player_starting_hp", 100))
 	player_hp = player_max_hp
 
-	# 生成三幕地图
-	var acts_in: Variant = floor_config.get("acts", [])
-	var acts: Array = acts_in if acts_in is Array else []
-	for i in acts.size():
-		var act_cfg_in: Variant = acts[i]
-		var act_cfg: Dictionary = act_cfg_in if act_cfg_in is Dictionary else {}
-		var gen_cfg: Dictionary = act_cfg.duplicate()
-		gen_cfg["act_index"] = i
-		gen_cfg["floor_id"] = floor_id
-		var run_map: RunMap = RunMapGenerator.generate(gen_cfg)
-		act_maps.append(run_map)
+	# 应用永久升级
+	if typeof(GameState) != TYPE_NIL and GameState.save_system != null:
+		var u: Dictionary = GameState.save_system.load_game_state().get("permanent_upgrades", {})
+		var hp_lv: int = int(u.get("starting_hp_plus", 0))
+		var cry_lv: int = int(u.get("starting_crystals_plus", 0))
+		var relic_lv: int = int(u.get("relic_init_plus", 0))
+		player_max_hp += 10 * hp_lv
+		player_hp = player_max_hp
+		crystals_collected += 5 * cry_lv
+		# 起始遗物：从 RelicRegistry 随机抽 relic_lv 个未装备的
+		if relic_lv > 0:
+			var pool: Array[Relic] = []
+			for r in RelicRegistry.get_all():
+				if not has_relic(r.id):
+					pool.append(r)
+			pool.shuffle()
+			for i in min(relic_lv, pool.size()):
+				add_relic(pool[i])
 
 	floor_started.emit(floor_id)
 

@@ -178,6 +178,7 @@ func get_pos_values() -> Array[Dictionary]:
 		{"id": "letter",      "display": "字母"},
 		{"id": "syllable",    "display": "音节"},
 		{"id": "sight_word",  "display": "高频词"},
+		{"id": "number",      "display": "数词"},
 	]
 
 func get_tag_namespaces() -> Array[Dictionary]:
@@ -423,6 +424,54 @@ func get_starting_deck_for_floor(floor_id: String) -> Array[String]:
 				"card_pronoun_she",
 				"card_pronoun_we",
 				"card_be_are",
+				"card_kind",
+			]
+		"3F":
+			# 8 动词 + 4 代词/系动词 = 12 张（匹配 3F 动词题）
+			return [
+				"card_verb_run",
+				"card_verb_eat",
+				"card_verb_play",
+				"card_verb_swim",
+				"card_verb_read",
+				"card_verb_write",
+				"card_verb_go",
+				"card_verb_like",
+				"card_pronoun_i",
+				"card_pronoun_you",
+				"card_pronoun_he",
+				"card_pronoun_she",
+			]
+		"4F":
+			# 10 数字 + 2 时间词 = 12 张（匹配 4F 数字时间题）
+			return [
+				"card_num_one",
+				"card_num_two",
+				"card_num_three",
+				"card_num_four",
+				"card_num_five",
+				"card_num_six",
+				"card_num_seven",
+				"card_num_eight",
+				"card_num_nine",
+				"card_num_ten",
+				"card_time_morning",
+				"card_time_afternoon",
+			]
+		"5F":
+			# 综合复习：3 代词 + 3 动词 + 2 数字 + 2 系动词 + 2 形容词 = 12 张
+			return [
+				"card_pronoun_i",
+				"card_pronoun_she",
+				"card_pronoun_he",
+				"card_verb_go",
+				"card_verb_eat",
+				"card_verb_play",
+				"card_num_three",
+				"card_num_five",
+				"card_be_am",
+				"card_be_is",
+				"card_happy",
 				"card_kind",
 			]
 	# 未识别楼层 → 回退默认

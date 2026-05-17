@@ -146,6 +146,9 @@ var _srs: SRSSystem
 ## 本场战斗已抽过的题模板 id，用于避免重复（池足够大时）
 var _seen_template_ids: Array[String] = []
 var _used_card_ids_this_battle: Array[String] = []
+## 本场战斗待触发的 spice id 队列（从 ability_ids 中 invoke_spice_ 前缀提取）。
+## start_battle 时填充；每次 _maybe_emit_next_spice() 弹队首并 emit。
+var _pending_spices: Array[String] = []
 
 # === 战斗日志（B6: 玩家可回顾近 30 条行动）===
 ## 每条字符串可含 BBCode 标签，UI 用 RichTextLabel 渲染。
@@ -191,6 +194,9 @@ signal combo_boost_armed()
 signal challenge_failed(challenge_index: int, correct_card_id: String)
 ## B6 战斗日志：每次 _log() 调用后发，UI 可增量追加到滚动面板。
 signal log_appended(message: String)
+## Spice 触发信号：敌人配置了 invoke_spice_<id> 能力时，战斗开始后 emit 一次。
+## UI 层监听此信号并弹出对应 spice modal。
+signal spice_invoked(spice_id: String)
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -273,6 +279,12 @@ func setup(
 	_seen_template_ids.clear()
 	_used_card_ids_this_battle.clear()
 	_used_ability_card_ids_this_turn.clear()
+	# 解析 invoke_spice_ 前缀能力，填入待触发队列
+	_pending_spices.clear()
+	if enemy != null:
+		for aid in enemy.ability_ids:
+			if str(aid).begins_with("invoke_spice_"):
+				_pending_spices.append(str(aid).substr("invoke_spice_".length()))
 	battle_log.clear()
 	cards_played_this_turn = 0
 	challenges_solved_this_turn = 0
@@ -286,6 +298,9 @@ func setup(
 		_combo = ComboSystem.new()
 	_apply_boss_topic_coverage()
 	state = State.IDLE
+	# 敌人首次出现时记录到图鉴
+	if _enemy != null and _has_game_state() and GameState.save_system != null:
+		GameState.save_system.record_enemy_seen(_enemy.enemy_id)
 
 
 ## Alias for clarity in new code (T1 of card-library redesign).
@@ -315,6 +330,15 @@ func _apply_boss_topic_coverage() -> void:
 func set_selector(selector: ChallengeSelector) -> void:
 	_selector = selector
 
+## 弹出 _pending_spices 队首并 emit spice_invoked 信号。
+## 每次调用只触发一个；UI 层处理完 modal 后可再次调用（目前仅战斗开始时调一次）。
+func _maybe_emit_next_spice() -> void:
+	if _pending_spices.is_empty():
+		return
+	var sid: String = _pending_spices.pop_front()
+	spice_invoked.emit(sid)
+
+
 func set_combo_system(combo: ComboSystem) -> void:
 	_combo = combo
 
@@ -338,6 +362,8 @@ func start_battle() -> void:
 	# B6 日志
 	var enemy_name: String = (_enemy.enemy_name if _enemy != null and _enemy.enemy_name != "" else "?")
 	_log("[color=#ffd86b]进入战斗：%s[/color]" % enemy_name)
+	# 触发 invoke_spice_ 能力（整局只一次）
+	_maybe_emit_next_spice()
 
 
 ## 选中棋盘上的某道题（之后的 try_place_card 都填到这里）。

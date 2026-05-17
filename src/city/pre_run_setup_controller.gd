@@ -124,6 +124,9 @@ func _resolve_pending_floor_id() -> String:
 func _load_permanent_upgrades() -> void:
 	# 默认值（来自 spec 第 246 行附近）
 	_deck_slot_max = 12
+	if typeof(GameState) != TYPE_NIL and GameState.save_system != null:
+		var u: Dictionary = GameState.save_system.load_game_state().get("permanent_upgrades", {})
+		_deck_slot_max += int(u.get("deck_slot_plus", 0))
 
 
 func _load_floor_config() -> void:

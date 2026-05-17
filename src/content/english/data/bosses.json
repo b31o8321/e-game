@@ -201,6 +201,174 @@
 			"post_dialogue_id": "boss_body_lost_post"
 		},
 		{
+			"id": "verb_phantom",
+			"display_name": "动词幻影",
+			"max_hp": 90,
+			"phases": 1,
+			"weak_axes": ["verb", "action"],
+			"topic_id": "3F_verb",
+			"challenge_template_ids": [
+				"3F_verb_go_school",
+				"3F_verb_eat_apple",
+				"3F_verb_play_ball",
+				"3F_verb_run_park"
+			],
+			"drops": {"crystals": 50, "blueprints": 1, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/goblin_0.png",
+			"pre_dialogue_id": "boss_verb_phantom_pre",
+			"post_dialogue_id": "boss_verb_phantom_post"
+		},
+		{
+			"id": "action_spirit",
+			"display_name": "行动之灵",
+			"max_hp": 100,
+			"phases": 1,
+			"weak_axes": ["verb", "action", "present_tense"],
+			"topic_id": "3F_action",
+			"challenge_template_ids": [
+				"3F_verb_swim_lake",
+				"3F_verb_read_book",
+				"3F_verb_write_letter",
+				"3F_she_reads_book"
+			],
+			"drops": {"crystals": 50, "blueprints": 1, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/bat_0.png",
+			"pre_dialogue_id": "boss_action_spirit_pre",
+			"post_dialogue_id": "boss_action_spirit_post"
+		},
+		{
+			"id": "tense_guardian",
+			"display_name": "时态守卫者",
+			"max_hp": 200,
+			"phases": 2,
+			"weak_axes": ["verb", "action", "present_tense", "be_verb"],
+			"topic_id": "3F_present_simple",
+			"challenge_template_ids": [
+				"3F_verb_go_school",
+				"3F_she_reads_book",
+				"3F_he_plays_tennis",
+				"3F_present_she_eats",
+				"3F_verb_like_cats",
+				"3F_verb_play_ball"
+			],
+			"drops": {"crystals": 100, "blueprints": 3, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/dragon_0.png",
+			"pre_dialogue_id": "boss_tense_guardian_pre",
+			"post_dialogue_id": "boss_tense_guardian_post"
+		},
+		{
+			"id": "number_chaos",
+			"display_name": "数字混乱者",
+			"max_hp": 90,
+			"phases": 1,
+			"weak_axes": ["number", "quantity"],
+			"topic_id": "4F_number",
+			"challenge_template_ids": [
+				"4F_num_apples_five",
+				"4F_num_birds_three",
+				"4F_num_dogs_two",
+				"4F_num_books_four"
+			],
+			"drops": {"crystals": 55, "blueprints": 1, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/slime_0.png",
+			"pre_dialogue_id": "boss_number_chaos_pre",
+			"post_dialogue_id": "boss_number_chaos_post"
+		},
+		{
+			"id": "time_spirit",
+			"display_name": "时间之灵",
+			"max_hp": 100,
+			"phases": 1,
+			"weak_axes": ["time", "number"],
+			"topic_id": "4F_time",
+			"challenge_template_ids": [
+				"4F_time_morning_wake",
+				"4F_time_afternoon_play",
+				"4F_num_seven_stars",
+				"4F_time_morning_class"
+			],
+			"drops": {"crystals": 55, "blueprints": 1, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/vampire_0.png",
+			"pre_dialogue_id": "boss_time_spirit_pre",
+			"post_dialogue_id": "boss_time_spirit_post"
+		},
+		{
+			"id": "count_warden",
+			"display_name": "数量守关者",
+			"max_hp": 210,
+			"phases": 2,
+			"weak_axes": ["number", "quantity", "time"],
+			"topic_id": "4F_quantity",
+			"challenge_template_ids": [
+				"4F_num_apples_five",
+				"4F_time_morning_wake",
+				"4F_num_ten_fingers",
+				"4F_num_eight_crayons",
+				"4F_num_six_pens",
+				"4F_num_nine_chairs"
+			],
+			"drops": {"crystals": 110, "blueprints": 3, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/wizard_0.png",
+			"pre_dialogue_id": "boss_count_warden_pre",
+			"post_dialogue_id": "boss_count_warden_post"
+		},
+		{
+			"id": "sentence_weaver",
+			"display_name": "句子编织者",
+			"max_hp": 100,
+			"phases": 1,
+			"weak_axes": ["verb", "pronoun", "sentence_pattern"],
+			"topic_id": "5F_sentence_form",
+			"challenge_template_ids": [
+				"5F_i_go_school",
+				"5F_she_is_happy",
+				"5F_he_eats_apple",
+				"5F_i_am_student"
+			],
+			"drops": {"crystals": 60, "blueprints": 1, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/demon_0.png",
+			"pre_dialogue_id": "boss_sentence_weaver_pre",
+			"post_dialogue_id": "boss_sentence_weaver_post"
+		},
+		{
+			"id": "grammar_lord",
+			"display_name": "语法领主",
+			"max_hp": 110,
+			"phases": 1,
+			"weak_axes": ["verb", "adjective", "be_verb"],
+			"topic_id": "5F_compound",
+			"challenge_template_ids": [
+				"5F_she_is_kind",
+				"5F_i_like_cats",
+				"5F_he_is_smart",
+				"5F_i_have_three"
+			],
+			"drops": {"crystals": 60, "blueprints": 1, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/witch_0.png",
+			"pre_dialogue_id": "boss_grammar_lord_pre",
+			"post_dialogue_id": "boss_grammar_lord_post"
+		},
+		{
+			"id": "final_warden",
+			"display_name": "终极守关者",
+			"max_hp": 220,
+			"phases": 2,
+			"weak_axes": ["verb", "pronoun", "adjective", "be_verb", "number"],
+			"topic_id": "5F_review",
+			"challenge_template_ids": [
+				"5F_i_go_school",
+				"5F_she_is_happy",
+				"5F_i_like_cats",
+				"5F_she_is_kind",
+				"5F_i_am_student",
+				"5F_she_eats_five"
+			],
+			"drops": {"crystals": 120, "blueprints": 3, "equipment_id": ""},
+			"portrait_path": "res://assets/external/anime_characters/knight_0.png",
+			"pre_dialogue_id": "boss_final_warden_pre",
+			"post_dialogue_id": "boss_final_warden_post"
+		},
+		{
 			"id": "family_guardian",
 			"display_name": "家庭守护者",
 			"max_hp": 200,

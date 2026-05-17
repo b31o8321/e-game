@@ -56,14 +56,25 @@ func _read_codex() -> Dictionary:
 
 func _render_cards() -> void:
 	_cards_list.clear()
+	# 合并永久解锁(unlocked_card_ids)与本局发现(codex.discovered_cards)
+	var state: Dictionary = {}
+	if typeof(GameState) != TYPE_NIL and GameState.save_system != null:
+		state = GameState.save_system.load_game_state()
+	var unlocked_arr: Variant = state.get("unlocked_card_ids", [])
+	var unlocked: Array = unlocked_arr if unlocked_arr is Array else []
 	var codex: Dictionary = _read_codex()
-	var arr: Variant = codex.get("discovered_cards", [])
-	var discovered: Array = arr if arr is Array else []
-	_cards_header.text = "已发现卡片：%d" % discovered.size()
-	if discovered.is_empty():
+	var disc_arr: Variant = codex.get("discovered_cards", [])
+	var discovered: Array = disc_arr if disc_arr is Array else []
+	# 合并去重
+	var all_ids: Array = unlocked.duplicate()
+	for cid in discovered:
+		if cid not in all_ids:
+			all_ids.append(cid)
+	_cards_header.text = "已发现卡片：%d" % all_ids.size()
+	if all_ids.is_empty():
 		_cards_list.add_item("? (尚未发现任何卡)")
 		return
-	for cid in discovered:
+	for cid in all_ids:
 		var label: String = str(cid)
 		if _pack != null:
 			var c: Card = _pack.get_card(str(cid))
@@ -75,18 +86,30 @@ func _render_cards() -> void:
 func _render_enemies() -> void:
 	_enemies_list.clear()
 	var codex: Dictionary = _read_codex()
-	var arr: Variant = codex.get("defeated_enemies", [])
-	var defeated: Array = arr if arr is Array else []
-	_enemies_header.text = "已击败敌人：%d" % defeated.size()
-	if defeated.is_empty():
-		_enemies_list.add_item("? (还没击败任何敌人)")
-		return
+	# 优先展示"见过"的敌人（seen_enemy_ids），回退到"已击败"（defeated_enemies）
+	var seen_arr: Variant = codex.get("seen_enemy_ids", [])
+	var seen: Array = seen_arr if seen_arr is Array else []
+	var defeat_arr: Variant = codex.get("defeated_enemies", [])
+	var defeated: Array = defeat_arr if defeat_arr is Array else []
+	# 合并去重
+	var all_ids: Array = seen.duplicate()
 	for eid in defeated:
+		if eid not in all_ids:
+			all_ids.append(eid)
+	_enemies_header.text = "已见过敌人：%d" % all_ids.size()
+	if all_ids.is_empty():
+		_enemies_list.add_item("? (还没见过任何敌人)")
+		return
+	for eid in all_ids:
 		var label: String = str(eid)
 		if _pack != null:
 			var e: EnemyData = _pack.get_enemy(str(eid))
-			if e != null and not e.enemy_name.is_empty():
-				label = e.enemy_name
+			if e != null:
+				var info: String = e.enemy_name
+				if not info.is_empty():
+					label = "%s  HP %d · ATK %d" % [info, e.max_hp, e.base_attack]
+					if not e.weak_axes.is_empty():
+						label += " · 弱点:" + ", ".join(e.weak_axes)
 		_enemies_list.add_item(label)
 
 

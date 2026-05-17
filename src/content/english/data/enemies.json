@@ -210,6 +210,154 @@
 				"shield_at_50"
 			],
 			"portrait_path": "res://assets/external/anime_characters/knight_0.png"
+		},
+		{
+			"id": "verb_runner",
+			"display_name": "动词逃跑者",
+			"max_hp": 55,
+			"base_attack": 9,
+			"topic_id": "3F_verb",
+			"weak_axes": ["verb", "action"],
+			"challenge_template_ids": [
+				"3F_verb_go_school",
+				"3F_verb_eat_apple",
+				"3F_verb_play_ball",
+				"3F_verb_run_park",
+				"3F_verb_like_cats"
+			],
+			"portrait_path": "res://assets/external/anime_characters/goblin_0.png"
+		},
+		{
+			"id": "action_seeker",
+			"display_name": "动作追寻者",
+			"max_hp": 65,
+			"base_attack": 10,
+			"topic_id": "3F_action",
+			"weak_axes": ["verb", "action", "present_tense"],
+			"challenge_template_ids": [
+				"3F_verb_swim_lake",
+				"3F_verb_read_book",
+				"3F_verb_write_letter",
+				"3F_she_reads_book",
+				"3F_he_plays_tennis"
+			],
+			"portrait_path": "res://assets/external/anime_characters/bat_0.png"
+		},
+		{
+			"id": "elite_verb_master",
+			"display_name": "[精英] 动词主宰",
+			"max_hp": 110,
+			"base_attack": 14,
+			"topic_id": "3F_verb",
+			"weak_axes": ["verb", "action", "present_tense"],
+			"challenge_template_ids": [
+				"3F_verb_go_school",
+				"3F_verb_play_ball",
+				"3F_she_reads_book",
+				"3F_he_plays_tennis",
+				"3F_present_she_eats"
+			],
+			"ability_ids": ["regen_2", "shield_at_50"],
+			"portrait_path": "res://assets/external/anime_characters/orc_0.png"
+		},
+		{
+			"id": "number_sprite",
+			"display_name": "数字精灵",
+			"max_hp": 60,
+			"base_attack": 9,
+			"topic_id": "4F_number",
+			"weak_axes": ["number", "quantity"],
+			"challenge_template_ids": [
+				"4F_num_apples_five",
+				"4F_num_birds_three",
+				"4F_num_dogs_two",
+				"4F_num_books_four",
+				"4F_num_cats_one"
+			],
+			"portrait_path": "res://assets/external/anime_characters/slime_0.png"
+		},
+		{
+			"id": "clock_phantom",
+			"display_name": "时钟幻影",
+			"max_hp": 70,
+			"base_attack": 10,
+			"topic_id": "4F_time",
+			"weak_axes": ["time", "number"],
+			"challenge_template_ids": [
+				"4F_time_morning_wake",
+				"4F_time_afternoon_play",
+				"4F_num_seven_stars",
+				"4F_time_morning_class",
+				"4F_num_ten_fingers"
+			],
+			"portrait_path": "res://assets/external/anime_characters/vampire_0.png"
+		},
+		{
+			"id": "elite_count_keeper",
+			"display_name": "[精英] 数量守护者",
+			"max_hp": 120,
+			"base_attack": 15,
+			"topic_id": "4F_number",
+			"weak_axes": ["number", "quantity", "time"],
+			"challenge_template_ids": [
+				"4F_num_apples_five",
+				"4F_time_morning_wake",
+				"4F_num_ten_fingers",
+				"4F_num_eight_crayons",
+				"4F_num_six_pens"
+			],
+			"ability_ids": ["multi_action_2", "regen_2"],
+			"portrait_path": "res://assets/external/anime_characters/wizard_0.png"
+		},
+		{
+			"id": "sentence_breaker",
+			"display_name": "句子破坏者",
+			"max_hp": 75,
+			"base_attack": 11,
+			"topic_id": "5F_sentence_form",
+			"weak_axes": ["verb", "pronoun", "sentence_pattern"],
+			"challenge_template_ids": [
+				"5F_i_go_school",
+				"5F_she_is_happy",
+				"5F_he_eats_apple",
+				"5F_i_am_student",
+				"5F_we_play_ball"
+			],
+			"portrait_path": "res://assets/external/anime_characters/demon_0.png"
+		},
+		{
+			"id": "grammar_ghost",
+			"display_name": "语法游魂",
+			"max_hp": 80,
+			"base_attack": 12,
+			"topic_id": "5F_compound",
+			"weak_axes": ["verb", "adjective", "be_verb"],
+			"challenge_template_ids": [
+				"5F_she_is_kind",
+				"5F_i_like_cats",
+				"5F_he_is_smart",
+				"5F_i_have_three",
+				"5F_she_eats_five"
+			],
+			"portrait_path": "res://assets/external/anime_characters/witch_0.png"
+		},
+		{
+			"id": "elite_sentence_lord",
+			"display_name": "[精英] 句型领主",
+			"max_hp": 130,
+			"base_attack": 16,
+			"topic_id": "5F_sentence_form",
+			"weak_axes": ["verb", "pronoun", "adjective", "be_verb"],
+			"challenge_template_ids": [
+				"5F_i_go_school",
+				"5F_she_is_happy",
+				"5F_he_eats_apple",
+				"5F_i_like_cats",
+				"5F_she_is_kind",
+				"5F_i_am_student"
+			],
+			"ability_ids": ["shield_each_turn_5", "multi_action_2"],
+			"portrait_path": "res://assets/external/anime_characters/mage_0.png"
 		}
 	]
 }

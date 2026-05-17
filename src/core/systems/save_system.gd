@@ -439,6 +439,9 @@ func record_lore(lore_id: String) -> void:
 func record_card_discovered(card_id: String) -> void:
 	_append_to_codex("discovered_cards", card_id)
 
+func record_enemy_seen(enemy_id: String) -> void:
+	_append_to_codex("seen_enemy_ids", enemy_id)
+
 func record_enemy_defeated(enemy_id: String) -> void:
 	_append_to_codex("defeated_enemies", enemy_id)
 

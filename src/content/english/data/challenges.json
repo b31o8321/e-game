@@ -1286,6 +1286,746 @@
       "topic_hint": "精英：代词 + 家人",
       "effect_type": "damage",
       "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_go_school",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ to school.",
+      "topic_id": "3F_verb",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_go"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_go"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_eat_apple",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ an apple.",
+      "topic_id": "3F_verb",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_eat"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_eat"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_play_ball",
+      "kind": "fill_in_blank",
+      "dialogue": "We ___ ball outside.",
+      "topic_id": "3F_verb",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_play"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_play"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_run_park",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ in the park.",
+      "topic_id": "3F_verb",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_run"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_run"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_like_cats",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ cats very much.",
+      "topic_id": "3F_verb",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_like"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_like"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_swim_lake",
+      "kind": "fill_in_blank",
+      "dialogue": "We ___ in the lake.",
+      "topic_id": "3F_action",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_swim"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_swim"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_read_book",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ a book every night.",
+      "topic_id": "3F_action",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_read"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_read"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_verb_write_letter",
+      "kind": "fill_in_blank",
+      "dialogue": "She ___ a letter to mom.",
+      "topic_id": "3F_action",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_write"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_write"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_she_reads_book",
+      "kind": "fill_in_blank",
+      "dialogue": "She ___ a book.",
+      "topic_id": "3F_action",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_read"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_read"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_he_plays_tennis",
+      "kind": "fill_in_blank",
+      "dialogue": "He ___ tennis after school.",
+      "topic_id": "3F_present_simple",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_play"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_play"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_present_she_eats",
+      "kind": "fill_in_blank",
+      "dialogue": "She ___ rice for lunch.",
+      "topic_id": "3F_present_simple",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_eat"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_eat"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "3F_they_go_park",
+      "kind": "fill_in_blank",
+      "dialogue": "They ___ to the park.",
+      "topic_id": "3F_present_simple",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_go"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_go"],
+      "audio_path": "",
+      "effect_type": "draw_card",
+      "effect_magnitude": 1
+    },
+    {
+      "template_id": "4F_num_apples_five",
+      "kind": "fill_in_blank",
+      "dialogue": "I have ___ apples.",
+      "topic_id": "4F_number",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_five"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_five"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_birds_three",
+      "kind": "fill_in_blank",
+      "dialogue": "I see ___ birds in the tree.",
+      "topic_id": "4F_number",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_three"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_three"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_dogs_two",
+      "kind": "fill_in_blank",
+      "dialogue": "There are ___ dogs here.",
+      "topic_id": "4F_number",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_two"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_two"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_books_four",
+      "kind": "fill_in_blank",
+      "dialogue": "I have ___ books on my desk.",
+      "topic_id": "4F_number",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_four"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_four"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_cats_one",
+      "kind": "fill_in_blank",
+      "dialogue": "I have ___ cat.",
+      "topic_id": "4F_number",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_one"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_one"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_time_morning_wake",
+      "kind": "fill_in_blank",
+      "dialogue": "I wake up in the ___.",
+      "topic_id": "4F_time",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["time"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_time_morning"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_time_morning"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_time_afternoon_play",
+      "kind": "fill_in_blank",
+      "dialogue": "We play outside in the ___.",
+      "topic_id": "4F_time",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["time"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_time_afternoon"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_time_afternoon"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_seven_stars",
+      "kind": "fill_in_blank",
+      "dialogue": "I see ___ stars tonight.",
+      "topic_id": "4F_time",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_seven"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_seven"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_time_morning_class",
+      "kind": "fill_in_blank",
+      "dialogue": "We have class in the ___.",
+      "topic_id": "4F_time",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "noun",
+          "required_tags": ["time"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_time_morning"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_time_morning"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_ten_fingers",
+      "kind": "fill_in_blank",
+      "dialogue": "I have ___ fingers.",
+      "topic_id": "4F_quantity",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_ten"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_ten"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_eight_crayons",
+      "kind": "fill_in_blank",
+      "dialogue": "I have ___ crayons.",
+      "topic_id": "4F_quantity",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_eight"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_eight"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_six_pens",
+      "kind": "fill_in_blank",
+      "dialogue": "There are ___ pens in the box.",
+      "topic_id": "4F_quantity",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_six"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_six"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "4F_num_nine_chairs",
+      "kind": "fill_in_blank",
+      "dialogue": "There are ___ chairs in the room.",
+      "topic_id": "4F_quantity",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_nine"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_nine"],
+      "audio_path": "",
+      "effect_type": "draw_card",
+      "effect_magnitude": 1
+    },
+    {
+      "template_id": "5F_i_go_school",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ to school every day.",
+      "topic_id": "5F_sentence_form",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_go"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_go"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_she_is_happy",
+      "kind": "fill_in_blank",
+      "dialogue": "She is very ___.",
+      "topic_id": "5F_sentence_form",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["positive_emotion"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_happy"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_happy"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_he_eats_apple",
+      "kind": "fill_in_blank",
+      "dialogue": "He ___ an apple.",
+      "topic_id": "5F_sentence_form",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_eat"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_eat"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_i_am_student",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ a student.",
+      "topic_id": "5F_sentence_form",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["be_verb"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_be_am"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_be_am"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_we_play_ball",
+      "kind": "fill_in_blank",
+      "dialogue": "We ___ ball together.",
+      "topic_id": "5F_sentence_form",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_play"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_play"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_she_is_kind",
+      "kind": "fill_in_blank",
+      "dialogue": "She is very ___.",
+      "topic_id": "5F_compound",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["personality"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_kind"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_kind"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_i_like_cats",
+      "kind": "fill_in_blank",
+      "dialogue": "I ___ cats.",
+      "topic_id": "5F_compound",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_like"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_like"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_he_is_smart",
+      "kind": "fill_in_blank",
+      "dialogue": "He is very ___.",
+      "topic_id": "5F_compound",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["personality"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_smart"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_smart"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_i_have_three",
+      "kind": "fill_in_blank",
+      "dialogue": "I have ___ books.",
+      "topic_id": "5F_compound",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_three"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_three"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_she_eats_five",
+      "kind": "fill_in_blank",
+      "dialogue": "She eats ___ oranges.",
+      "topic_id": "5F_review",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "number",
+          "required_tags": ["number"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_num_five"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_num_five"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_i_am_happy",
+      "kind": "fill_in_blank",
+      "dialogue": "I am very ___.",
+      "topic_id": "5F_review",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "adjective",
+          "required_tags": ["positive_emotion"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_happy"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_happy"],
+      "audio_path": "",
+      "effect_type": "damage",
+      "effect_magnitude": 0
+    },
+    {
+      "template_id": "5F_we_go_park",
+      "kind": "fill_in_blank",
+      "dialogue": "We ___ to the park.",
+      "topic_id": "5F_review",
+      "slots": [
+        {
+          "required_type": "word",
+          "required_pos": "verb",
+          "required_tags": ["present_tense"],
+          "forbidden_tags": [],
+          "accept_card_ids": ["card_verb_go"],
+          "tag_match_mode": "any"
+        }
+      ],
+      "perfect_match_card_ids": ["card_verb_go"],
+      "audio_path": "",
+      "effect_type": "draw_card",
+      "effect_magnitude": 1
     }
   ]
 }
