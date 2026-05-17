@@ -327,6 +327,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		# Enter / Space：选中卡后快速确认放入第一个合法槽
+		if event.keycode == KEY_ENTER or event.keycode == KEY_SPACE:
+			if _selected_card != null:
+				_confirm_selected_card_action()
+				get_viewport().set_input_as_handled()
+				return
 		if _is_debug_enabled():
 			match event.keycode:
 				KEY_F1:
@@ -338,6 +344,51 @@ func _unhandled_input(event: InputEvent) -> void:
 				KEY_F3:
 					_debug_force_defeat()
 					get_viewport().set_input_as_handled()
+
+
+## 找一个能放选中卡的位置。优先 selected 题；退而遍历所有未失败题。
+## 返回 [challenge_idx, slot_idx] 或空数组。
+func _find_auto_place_target() -> Array:
+	if _selected_card == null or _controller == null:
+		return []
+	# 1. 试 selected 题
+	var sci: int = _controller.selected_challenge_index
+	if sci >= 0 and sci < _controller.available_challenges.size() and not _controller.is_failed(sci):
+		var si: int = _find_any_valid_slot(_selected_card)
+		if si >= 0:
+			return [sci, si]
+	# 2. 退而遍历所有未失败题
+	for ci in _controller.available_challenges.size():
+		if _controller.is_failed(ci):
+			continue
+		var tmpl: ChallengeTemplate = _controller.available_challenges[ci]
+		if tmpl == null:
+			continue
+		var slots: Array = _controller.available_filled_slots[ci] if ci < _controller.available_filled_slots.size() else []
+		for slot_i in tmpl.slots.size():
+			var existing = slots[slot_i] if slot_i < slots.size() else null
+			if existing != null:
+				continue
+			if CardValidator.can_place(_selected_card, tmpl.slots[slot_i]):
+				return [ci, slot_i]
+	return []
+
+
+## 双击 / Enter 触发：把选中卡自动放进合法槽，调走原 drop 流程。
+func _confirm_selected_card_action() -> void:
+	if _is_casting:
+		return
+	if _selected_card == null:
+		return
+	var target: Array = _find_auto_place_target()
+	if target.is_empty():
+		_set_status_hint("没合适的槽 — 选别的题或换卡")
+		_sfx("card_drop_fail")
+		return
+	var ci: int = target[0]
+	var si: int = target[1]
+	# 复用 drop 路径（含 cast 锁 / 动画 / submit）
+	_on_card_dropped_to_slot(_selected_card, ci, si)
 
 
 func _connect_signals() -> void:
@@ -1383,11 +1434,24 @@ func _make_card_button(card: Card, srs: SRSSystem) -> Button:
 	_apply_card_button_style(btn, card, false, false)
 	_populate_card_button_layout(btn, card, srs)
 	btn.pressed.connect(_on_card_button_pressed.bind(card, btn))
+	# 双击 → 自动放卡到第一个合法槽（让操作更流畅）
+	btn.gui_input.connect(_on_card_button_gui_input.bind(card))
 	# Hover：抬起 + 高 z_index 让卡盖到右侧邻居上方，露出完整内容
 	btn.mouse_entered.connect(_on_card_hover_enter.bind(btn))
 	btn.mouse_exited.connect(_on_card_hover_exit.bind(btn))
 	btn.set_meta("base_position_y", 0.0)
 	return btn
+
+
+## 双击卡 → 选中卡 + 自动找合法槽放入。单击仍走 Button.pressed → toggle 选中。
+func _on_card_button_gui_input(event: InputEvent, card: Card) -> void:
+	if not (event is InputEventMouseButton):
+		return
+	var mb: InputEventMouseButton = event as InputEventMouseButton
+	if mb.pressed and mb.button_index == MOUSE_BUTTON_LEFT and mb.double_click:
+		_selected_card = card
+		_confirm_selected_card_action()
+		get_viewport().set_input_as_handled()
 
 
 ## 给卡按钮挂上 "左竖字母 + 右详情" 两个子 Label/VBox。
