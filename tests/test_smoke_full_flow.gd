@@ -99,10 +99,11 @@ func test_smoke_battle_completes_for_each_floor() -> void:
 	if _pack == null:
 		pending("no pack; skipping battle smoke")
 		return
-	for fid in ["0F", "1F", "2F"]:
+	# 0F-5F 全跑（Slice 18+19 扩展后）
+	for fid in ["0F", "1F", "2F", "3F", "4F", "5F"]:
 		var result: Dictionary = await _run_battle_for_floor(fid)
 		assert_true(result.get("ended", false),
-			"%s battle must reach END state (not stuck) — got: %s" % [fid, str(result)])
+			"%s battle must reach END state — got: %s" % [fid, str(result)])
 
 
 ## 启动 BattleScene + 自动玩到战斗结束（END）；返回 {ended: bool, turns: int, ...}

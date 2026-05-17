@@ -74,6 +74,13 @@ static func _resolve_boss_enemy(boss_id: String, pack: ContentPackBase) -> Enemy
 			for v in raw_ids:
 				ids.append(str(v))
 			ed.challenge_template_ids = ids
+			# 关键：复制 ability_ids，否则 invoke_spice_<id> / multi_action / regen 等
+			# boss 能力全部丢失（之前 spice 永不触发的 bug 根因）
+			var raw_abilities: Array = data.get("ability_ids", [])
+			var abilities: Array[String] = []
+			for v in raw_abilities:
+				abilities.append(str(v))
+			ed.ability_ids = abilities
 			return ed
 	return null
 
