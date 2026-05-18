@@ -1283,7 +1283,11 @@ func _render_hand() -> void:
 func _render_library() -> void:
 	if _hand_row == null:
 		return
+	# remove_child + queue_free 同步从 HBoxContainer 摘下：
+	# 单纯 queue_free 是延迟释放，HBox 当帧仍把旧 child 算进 layout，
+	# 与新 child 叠加导致定位错乱（cards 飘到右下角的 bug 根因）。
 	for child in _hand_row.get_children():
+		_hand_row.remove_child(child)
 		child.queue_free()
 	_card_buttons.clear()
 	if _controller == null:
@@ -1583,8 +1587,10 @@ func _on_card_hover_enter(btn: Button) -> void:
 	if btn == null or not is_instance_valid(btn):
 		return
 	btn.z_index = 100
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(btn, "position:y", btn.position.y - _CARD_HOVER_LIFT, 0.08)
+	# 只用 scale + pivot 视觉抬升；不动 position（动 position 会跟 HBoxContainer
+	# 的 layout 打架，多次 hover/exit 错位累积，造成 cards 飘移 bug）。
+	btn.pivot_offset = btn.size * 0.5
+	var tw := create_tween()
 	tw.tween_property(btn, "scale", _CARD_HOVER_SCALE, 0.08)
 
 
@@ -1592,8 +1598,7 @@ func _on_card_hover_exit(btn: Button) -> void:
 	if btn == null or not is_instance_valid(btn):
 		return
 	btn.z_index = 0
-	var tw := create_tween().set_parallel(true)
-	tw.tween_property(btn, "position:y", btn.position.y + _CARD_HOVER_LIFT, 0.08)
+	var tw := create_tween()
 	tw.tween_property(btn, "scale", Vector2.ONE, 0.08)
 
 
